@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Types.h"
+#include "../../Types.h"
 
 class ILiquidCrystal;
-using ILiquidCrystal_ptr = std::shared_ptr<ILiquidCrystal>;
-using ILiquidCrystal_wptr = std::weak_ptr<ILiquidCrystal>;
+using ILiquidCrystal_uptr = std::unique_ptr<ILiquidCrystal>;
 
 class ILiquidCrystal {
 public:

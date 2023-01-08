@@ -1,0 +1,63 @@
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include "../../src/model/mocks/MockRealTimeClock.h"
+
+#include "../../src/presenter/Presenter.h"
+
+#include "../../src/view/Display.h"
+#include "../../src/view/mocks/MockLiquidCrystal.h"
+
+#include "../../src/view/Key.h"
+#include "../../src/view/mocks/MockPushSwitch.h"
+
+#include "../../src/view/CurrentTimeTab.h"
+#include "../../src/view/Keys.h"
+
+#include "../../src/view/mocks/MockTabView.h"
+
+TEST(TabSuite, NextTabTest) {
+  auto display = CDisplay::Create();
+  auto lcd = std::make_unique<MockLiquidCrystal>();
+
+  auto next_tab_key = CKey::Create("next_tab");
+  auto next_tab_push_switch = std::make_unique<MockPushSwitch>();
+
+  EXPECT_CALL(*next_tab_push_switch, GetState)
+      .Times(2)
+      .WillOnce(testing::Return(false)) // on set
+      .WillOnce(testing::Return(true))  // first call (press)
+      ;
+
+  testing::Mock::AllowLeak(next_tab_push_switch.get());
+
+  next_tab_key->SetPushSwitch(std::move(next_tab_push_switch));
+
+  //
+
+  auto rtc = std::make_unique<MockRealTimeClock>();
+  EXPECT_CALL(*rtc, getHours).Times(1).WillOnce(testing::Return(11));
+  EXPECT_CALL(*rtc, getMinutes).Times(1).WillOnce(testing::Return(42));
+  testing::Mock::AllowLeak(rtc.get());
+
+  auto presenter = CPresenter::Create();
+  presenter->SetRealTimeClock(std::move(rtc));
+
+  //
+
+  auto keys = CKeys::Create(CKey_ptr(), next_tab_key, CKey_ptr(), CKey_ptr());
+
+  //
+
+  auto tab_view = std::make_shared<MockTabView>();
+  EXPECT_CALL(*tab_view, NextTab).Times(1);
+
+  //
+
+  auto current_time_tab =
+      CCurrentTimeTab::Create(presenter, tab_view, keys, display);
+
+  current_time_tab->Update();
+
+  display->Print();
+}

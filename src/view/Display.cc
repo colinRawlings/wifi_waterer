@@ -10,8 +10,10 @@ CDisplay_ptr CDisplay::Create() {
   return CDisplay_ptr(new CDisplay, destroy);
 }
 
-void CDisplay::SetLcd(ILiquidCrystal_ptr lcd) { _lcd = lcd; }
+void CDisplay::SetLcd(ILiquidCrystal_uptr lcd) { _lcd = std::move(lcd); }
+
 void CDisplay::SetRow0(String msg) { SetRow(0, msg); }
+
 void CDisplay::SetRow1(String msg) { SetRow(1, msg); }
 
 void CDisplay::SetRow(int row_idx, String msg) {
@@ -23,14 +25,13 @@ void CDisplay::SetRow(int row_idx, String msg) {
 
   _rows[row_idx] = msg;
 
-  auto lcd = _lcd.lock();
-  if (!lcd)
+  if (!_lcd)
     return;
 
-  lcd->clear();
+  _lcd->clear();
   for (const auto &idx : {0, 1}) {
-    lcd->setCursor(0, idx);
-    lcd->print(_rows[idx]);
+    _lcd->setCursor(0, idx);
+    _lcd->print(_rows[idx]);
   }
 }
 

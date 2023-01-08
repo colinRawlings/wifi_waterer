@@ -2,7 +2,7 @@
 
 #include <gmock/gmock.h>
 
-#include "../../src/ILiquidCrystal.h"
+#include "../interfaces/ILiquidCrystal.h"
 
 class MockLiquidCrystal : public ILiquidCrystal {
 public:
