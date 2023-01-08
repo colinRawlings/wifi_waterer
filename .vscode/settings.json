@@ -1,6 +1,7 @@
 {
     "cmake.buildDirectory": "${workspaceFolder}/build",
     "cmake.ctestArgs": [
+        "-V",
         "--test-dir",
         "${workspaceFolder}/build/tests"
     ],
