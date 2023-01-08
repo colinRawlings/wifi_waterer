@@ -34,4 +34,9 @@ void CCurrentTimeTab::OnFuncLeftKey() {
   _presenter->IncCurrentTimeHour();
 }
 
-void CCurrentTimeTab::OnFuncRightKey() {}
+void CCurrentTimeTab::OnFuncRightKey() {
+  if (!_presenter)
+    return;
+
+  _presenter->IncCurrentTimeMinute();
+}
