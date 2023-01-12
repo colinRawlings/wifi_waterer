@@ -1,6 +1,7 @@
 #pragma once
 
-#include <string>
-
-using String = std::string;
+#ifdef ARDUINO_TESTING
 using byte = unsigned char;
+#else
+#include "Arduino.h"
+#endif

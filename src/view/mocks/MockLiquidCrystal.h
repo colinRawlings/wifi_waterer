@@ -4,9 +4,10 @@
 
 #include "../interfaces/ILiquidCrystal.h"
 
-class MockLiquidCrystal : public ILiquidCrystal {
-public:
-  MOCK_METHOD(void, print, (String msg), (override));
-  MOCK_METHOD(void, clear, (), (override));
-  MOCK_METHOD(void, setCursor, (int column, int row), (override));
+class MockLiquidCrystal : public ILiquidCrystal
+{
+  public:
+    MOCK_METHOD(void, Print, (std::string msg), (override));
+    MOCK_METHOD(void, Clear, (), (override));
+    MOCK_METHOD(void, SetCursor, (int column, int row), (override));
 };

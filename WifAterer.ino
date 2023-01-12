@@ -1,22 +1,41 @@
 #include <memory>
 #include <vector>
+#include <LiquidCrystal.h>
 
-auto val = std::make_shared<int>(2);
+#include "src/hardware/PushSwitch.h"
+#include "src/hardware/LiquidCrystalDisplay.h"
 
-std::pair<int, int> pair{1, 2};
-std::vector<int> vec{1, 2, 3};
+#include "src/view/Key.h"
+#include "src/view/Display.h"
+
+// defs
+
+const byte pin_func_right = 2;
+auto lcd_pins = SLCDPins({4, 5, 6, 7}, 9, 8);
+
+auto key = CKey::Create("dummy");
+auto display = CDisplay::Create();
+
+int counter{0};
 
 // the setup function runs once when you press reset or power the board
-void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+void setup()
+{
+    auto sw = CPushSwitch::Create(2, true);
+    key->SetPushSwitch(std::move(sw));
+
+    auto lcd = CLiquidCrystalDisplay::Create(lcd_pins);
+    display->SetLcd(std::move(lcd));
+
+    // initialize digital pin LED_BUILTIN as an output.
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 // the loop function runs over and over again forever
-void loop() {
-  digitalWrite(LED_BUILTIN,
-               HIGH);             // turn the LED on (HIGH is the voltage level)
-  delay(1000);                    // wait for a second
-  digitalWrite(LED_BUILTIN, LOW); // turn the LED off by making the voltage LOW
-  delay(1000);                    // wait for a second
+void loop()
+{
+    if (key->KeyPressed())
+        ++counter;
+
+    display->SetRow0(std::to_string(counter));
 }

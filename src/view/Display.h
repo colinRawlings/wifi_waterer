@@ -15,16 +15,16 @@ public:
 
   void SetLcd(ILiquidCrystal_uptr lcd);
 
-  void SetRow0(String msg);
-  void SetRow1(String msg);
+  void SetRow0(std::string msg);
+  void SetRow1(std::string msg);
 
   void Print();
 
 private:
   CDisplay() = default;
 
-  void SetRow(int row_index, String msg);
+  void SetRow(int row_index, std::string msg);
 
   ILiquidCrystal_uptr _lcd;
-  std::array<String, 2> _rows;
+  std::array<std::string, 2> _rows;
 };

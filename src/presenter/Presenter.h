@@ -21,18 +21,18 @@ public:
   // Current Time
   void SetRealTimeClock(IRealTimeClock_uptr rtc);
 
-  String GetCurrentTime();
+  std::string GetCurrentTime();
   void IncCurrentTimeHour();
   void IncCurrentTimeMinute();
 
   // FB Settings
   void SetFBSettings(CFBSettings_uptr fb_settings);
 
-  String GetFBTime();
+  std::string GetFBTime();
   void IncFBTime();
   void DecFBTime();
 
-  String GetFBHumidityV();
+  std::string GetFBHumidityV();
   void IncFBHumidityV();
   void DecFBHumidityV();
 

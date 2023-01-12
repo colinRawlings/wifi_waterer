@@ -1,5 +1,7 @@
 #include "Keys.h"
 
+#include "../Types.h"
+
 CKeys_ptr CKeys::Create(CKey_ptr tab_left, CKey_ptr tab_right,
                         CKey_ptr func_left, CKey_ptr func_right) {
   auto destroy = [](CKeys *display) { delete display; };

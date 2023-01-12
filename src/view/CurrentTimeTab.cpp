@@ -1,3 +1,5 @@
+#include "../Types.h"
+
 #include "CurrentTimeTab.h"
 
 #include "Display.h"

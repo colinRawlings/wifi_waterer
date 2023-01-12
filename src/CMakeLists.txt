@@ -1,12 +1,16 @@
 add_library(waterer)
 
+add_definitions(-DARDUINO_TESTING)
+add_compile_definitions(ARDUINO_TESTING)
+
+
 target_sources(waterer PUBLIC
 #
-model/FBSettings.cc
+model/FBSettings.cpp
 #
-presenter/Presenter.cc
+presenter/Presenter.cpp
 #
-view/Display.cc view/Keys.cc view/Key.cc view/TabBase.cc  view/CurrentTimeTab.cc view/FBHourTab.cc )
+view/Display.cpp view/Keys.cpp view/Key.cpp view/TabBase.cpp  view/CurrentTimeTab.cpp view/FBHourTab.cpp )
 
 target_link_libraries(
   waterer

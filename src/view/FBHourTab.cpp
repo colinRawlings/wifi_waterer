@@ -1,3 +1,5 @@
+#include "../Types.h"
+
 #include "FBHourTab.h"
 
 #include "Display.h"
@@ -14,7 +16,7 @@ CFBHourTab_ptr CFBHourTab::Create(CPresenter_ptr presenter,
 
 CFBHourTab::CFBHourTab(CPresenter_ptr presenter, ITabView_ptr tab_view,
                        CKeys_ptr keys, CDisplay_ptr display)
-    : CTabBase("FB Humidity (V)", presenter, tab_view, keys, display) {}
+    : CTabBase("FB Time", presenter, tab_view, keys, display) {}
 
 void CFBHourTab::UpdateDisplay() {
   CTabBase::UpdateDisplay();
@@ -22,19 +24,19 @@ void CFBHourTab::UpdateDisplay() {
   if (!_display || !_presenter)
     return;
 
-  _display->SetRow1(_presenter->GetFBHumidityV());
+  _display->SetRow1(_presenter->GetFBTime());
 }
 
 void CFBHourTab::OnFuncLeftKey() {
   if (!_presenter)
     return;
 
-  _presenter->IncFBHumidityV();
+  _presenter->IncFBTime();
 }
 
 void CFBHourTab::OnFuncRightKey() {
   if (!_presenter)
     return;
 
-  _presenter->DecFBHumidityV();
+  _presenter->DecFBTime();
 }

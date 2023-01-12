@@ -27,7 +27,7 @@ public:
   void Update();
 
 protected:
-  CTabBase(String name, CPresenter_ptr presenter, ITabView_ptr tab_view,
+  CTabBase(std::string name, CPresenter_ptr presenter, ITabView_ptr tab_view,
            CKeys_ptr keys, CDisplay_ptr display);
 
   virtual ~CTabBase() = default;
@@ -41,7 +41,7 @@ protected:
   void OnTabLeftKey();
   void OnTabRightKey();
 
-  String _name;
+  std::string _name;
   CPresenter_ptr _presenter;
   ITabView_ptr _tab_view;
   CKeys_ptr _keys;

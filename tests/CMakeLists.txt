@@ -2,9 +2,9 @@ enable_testing()
 
 add_executable(
   test_runner
-  ./view/display_test.cc
-  ./view/key_test.cc
-  ./view/current_time_tab_test.cc
+  ./view/display_test.cpp
+  ./view/key_test.cpp
+  ./view/current_time_tab_test.cpp
 )
 target_link_libraries(
   test_runner

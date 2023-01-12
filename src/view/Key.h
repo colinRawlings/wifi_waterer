@@ -8,16 +8,16 @@ using CKey_ptr = std::shared_ptr<CKey>;
 
 class CKey {
 public:
-  static CKey_ptr Create(String name);
+  static CKey_ptr Create(std::string name);
 
   void SetPushSwitch(IPushSwitch_uptr push_switch);
 
   bool KeyPressed();
 
 private:
-  CKey(String name);
+  CKey(std::string name);
 
-  String _name;
-  bool _last_switch_state{false};
+  std::string _name;
+  PushSwitchState _last_switch_state{PushSwitchState::UNPRESSED};
   IPushSwitch_uptr _push_switch;
 };

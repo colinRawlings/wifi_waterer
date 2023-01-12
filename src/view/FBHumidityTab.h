@@ -2,16 +2,16 @@
 
 #include "TabBase.h"
 
-class CFBHourTab;
-using CFBHourTab_ptr = std::shared_ptr<CFBHourTab>;
+class CFBHumdity;
+using CFBHumdity_ptr = std::shared_ptr<CFBHumdity>;
 
-class CFBHourTab : public CTabBase {
+class CFBHumdity : public CTabBase {
 public:
-  static CFBHourTab_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
+  static CFBHumdity_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
                                CKeys_ptr keys, CDisplay_ptr display);
 
 protected:
-  CFBHourTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,
+  CFBHumdity(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,
              CDisplay_ptr display);
 
   void UpdateDisplay() override;

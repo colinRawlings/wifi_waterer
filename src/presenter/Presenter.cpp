@@ -1,10 +1,12 @@
+#include "../Types.h"
+
 #include "Presenter.h"
 
 #include "../model/FBSettings.h"
 
 namespace {
-String FmtTimeGroup(byte value) {
-  String str;
+std::string FmtTimeGroup(byte value) {
+  std::string str;
   if (value < 10)
     str += "0";
 
@@ -24,7 +26,7 @@ void CPresenter::SetRealTimeClock(IRealTimeClock_uptr rtc) {
   _rtc = std::move(rtc);
 }
 
-String CPresenter::GetCurrentTime() {
+std::string CPresenter::GetCurrentTime() {
   if (!_rtc)
     return "";
 
@@ -50,7 +52,7 @@ void CPresenter::SetFBSettings(CFBSettings_uptr fb_settings) {
   _fb_settings = std::move(fb_settings);
 }
 
-String CPresenter::GetFBTime() {
+std::string CPresenter::GetFBTime() {
   if (!_fb_settings)
     return "";
 
@@ -69,7 +71,7 @@ void CPresenter::DecFBTime() {
   _fb_settings->SetFBHour(_fb_settings->FBHour() - 1);
 }
 
-String CPresenter::GetFBHumidityV() {
+std::string CPresenter::GetFBHumidityV() {
   if (!_fb_settings)
     return "";
 

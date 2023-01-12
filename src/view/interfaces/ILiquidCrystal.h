@@ -2,12 +2,16 @@
 
 #include "../../Types.h"
 
+#include <memory>
+#include <string>
+
 class ILiquidCrystal;
 using ILiquidCrystal_uptr = std::unique_ptr<ILiquidCrystal>;
 
-class ILiquidCrystal {
-public:
-  virtual void print(String msg) = 0;
-  virtual void clear() = 0;
-  virtual void setCursor(int column, int row) = 0;
+class ILiquidCrystal
+{
+  public:
+    virtual void Print(std::string msg) = 0;
+    virtual void Clear() = 0;
+    virtual void SetCursor(int column, int row) = 0;
 };
