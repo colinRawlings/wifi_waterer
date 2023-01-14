@@ -86,5 +86,4 @@ void CTabBase::UpdateDisplay()
         return;
 
     _display->SetRow0(_name);
-    _display->SetRow1("");
 }

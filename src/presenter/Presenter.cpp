@@ -98,9 +98,9 @@ void CPresenter::DecFBTime()
 std::string CPresenter::GetFBHumidityV()
 {
     if (!_fb_settings)
-        return "";
+        return "<err>";
 
-    return std::to_string(_fb_settings->HumidityV());
+    return std::to_string(_fb_settings->HumidityV()).substr(0, 4);
 }
 void CPresenter::IncFBHumidityV()
 {

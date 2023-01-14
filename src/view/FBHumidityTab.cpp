@@ -35,7 +35,7 @@ void CFBHumdityTab::OnFuncLeftKey()
     if (!_presenter)
         return;
 
-    _presenter->IncFBHumidityV();
+    _presenter->DecFBHumidityV();
 }
 
 void CFBHumdityTab::OnFuncRightKey()
@@ -43,5 +43,5 @@ void CFBHumdityTab::OnFuncRightKey()
     if (!_presenter)
         return;
 
-    _presenter->DecFBHumidityV();
+    _presenter->IncFBHumidityV();
 }
