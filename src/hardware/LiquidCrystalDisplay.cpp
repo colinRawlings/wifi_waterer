@@ -31,4 +31,6 @@ CLiquidCrystalDisplay::CLiquidCrystalDisplay(SLCDPins pins)
         pins.D4_D7[1],
         pins.D4_D7[2],
         pins.D4_D7[3]));
+
+    _lcd->begin(16, 2);
 }

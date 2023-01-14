@@ -1,7 +1,7 @@
 #include "TabBase.h"
 
 #include "Key.h"
-#include "Keys.h"
+#include "DisplayKeys.h"
 
 #include "Display.h"
 
@@ -9,65 +9,82 @@
 
 CTabBase::CTabBase(std::string name, CPresenter_ptr presenter,
                    ITabView_ptr tab_view, CKeys_ptr keys, CDisplay_ptr display)
-    : _name(name), _presenter(presenter), _tab_view(tab_view), _keys(keys),
-      _display(display) {}
+    : _name(name)
+    , _presenter(presenter)
+    , _tab_view(tab_view)
+    , _keys(keys)
+    , _display(display)
+{}
 
-void CTabBase::OnTabLeftKey() {
-  if (!_tab_view)
-    return;
+void CTabBase::OnTabLeftKey()
+{
+    if (!_tab_view)
+        return;
 
-  _tab_view->PreviousTab();
+    _tab_view->PreviousTab();
 }
-void CTabBase::OnTabRightKey() {
-  if (!_tab_view)
-    return;
+void CTabBase::OnTabRightKey()
+{
+    if (!_tab_view)
+        return;
 
-  _tab_view->NextTab();
-}
-
-void CTabBase::Update() {
-  UpdateDisplay();
-  HandleKeys();
-}
-
-void CTabBase::HandleKeys() {
-
-  if (!_keys)
-    return;
-
-  if (auto key = _keys->TabLeft()) {
-    if (key->KeyPressed()) {
-      OnTabLeftKey();
-      return;
-    }
-  }
-
-  if (auto key = _keys->TabRight()) {
-    if (key->KeyPressed()) {
-      OnTabRightKey();
-      return;
-    }
-  }
-
-  if (auto key = _keys->FuncLeft()) {
-    if (key->KeyPressed()) {
-      OnFuncLeftKey();
-      return;
-    }
-  }
-
-  if (auto key = _keys->FuncRight()) {
-    if (key->KeyPressed()) {
-      OnFuncRightKey();
-      return;
-    }
-  }
+    _tab_view->NextTab();
 }
 
-void CTabBase::UpdateDisplay() {
-  if (!_display)
-    return;
+void CTabBase::Update()
+{
+    UpdateDisplay();
+    HandleKeys();
+}
 
-  _display->SetRow0(_name);
-  _display->SetRow1("");
+void CTabBase::HandleKeys()
+{
+
+    if (!_keys)
+        return;
+
+    if (auto key = _keys->TabLeft())
+    {
+        if (key->KeyPressed())
+        {
+            OnTabLeftKey();
+            return;
+        }
+    }
+
+    if (auto key = _keys->TabRight())
+    {
+        if (key->KeyPressed())
+        {
+            OnTabRightKey();
+            return;
+        }
+    }
+
+    if (auto key = _keys->FuncLeft())
+    {
+        if (key->KeyPressed())
+        {
+            OnFuncLeftKey();
+            return;
+        }
+    }
+
+    if (auto key = _keys->FuncRight())
+    {
+        if (key->KeyPressed())
+        {
+            OnFuncRightKey();
+            return;
+        }
+    }
+}
+
+void CTabBase::UpdateDisplay()
+{
+    if (!_display)
+        return;
+
+    _display->SetRow0(_name);
+    _display->SetRow1("");
 }

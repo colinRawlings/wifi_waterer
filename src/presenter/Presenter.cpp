@@ -1,90 +1,117 @@
-#include "../Types.h"
+#include "Arduino.h"
 
 #include "Presenter.h"
 
 #include "../model/FBSettings.h"
+#include "../hardware/RealTimeClock.h"
 
-namespace {
-std::string FmtTimeGroup(byte value) {
-  std::string str;
-  if (value < 10)
-    str += "0";
+#include <string>
 
-  str += std::to_string(value);
+std::string FmtTimeGroup(byte value)
+{
+    std::string str;
+    if (value < 10)
+        str += "0";
 
-  return str;
+    str += std::to_string(value);
+
+    return str;
 }
-} // namespace
 
-CPresenter_ptr CPresenter::Create() {
-  auto destroy = [](CPresenter *display) { delete display; };
-  return CPresenter_ptr(new CPresenter, destroy);
+CPresenter_ptr CPresenter::Create(bool create_children)
+{
+    auto destroy = [](CPresenter * display) { delete display; };
+    auto presenter = CPresenter_ptr(new CPresenter, destroy);
+
+    if (!create_children)
+        return presenter;
+
+    auto rtc = CRealTimeClock::Create();
+    presenter->SetRealTimeClock(std::move(rtc));
+
+    auto fb_settings = CFBSettings::Create();
+    presenter->SetFBSettings(std::move(fb_settings));
+
+    return presenter;
 }
+
+CPresenter::CPresenter() {}
 
 // Current Time
-void CPresenter::SetRealTimeClock(IRealTimeClock_uptr rtc) {
-  _rtc = std::move(rtc);
+void CPresenter::SetRealTimeClock(IRealTimeClock_uptr rtc)
+{
+    _rtc = std::move(rtc);
 }
 
-std::string CPresenter::GetCurrentTime() {
-  if (!_rtc)
-    return "";
+std::string CPresenter::GetCurrentTime()
+{
+    if (!_rtc)
+        return "";
 
-  return FmtTimeGroup(_rtc->getHours()) + ":" +
-         FmtTimeGroup(_rtc->getMinutes());
+    return FmtTimeGroup(_rtc->GetHours()) + ":" +
+           FmtTimeGroup(_rtc->GetMinutes());
 }
 
-void CPresenter::IncCurrentTimeHour() {
-  if (!_rtc)
-    return;
+void CPresenter::IncCurrentTimeHour()
+{
+    if (!_rtc)
+        return;
 
-  _rtc->setHours(_rtc->getHours() + 1);
+    _rtc->SetHours(_rtc->GetHours() + 1);
 }
 
-void CPresenter::IncCurrentTimeMinute() {
-  if (!_rtc)
-    return;
+void CPresenter::IncCurrentTimeMinute()
+{
+    if (!_rtc)
+        return;
 
-  _rtc->setMinutes(_rtc->getMinutes() + 1);
+    _rtc->SetMinutes(_rtc->GetMinutes() + 1);
 }
 
-void CPresenter::SetFBSettings(CFBSettings_uptr fb_settings) {
-  _fb_settings = std::move(fb_settings);
+void CPresenter::SetFBSettings(CFBSettings_uptr fb_settings)
+{
+    _fb_settings = std::move(fb_settings);
 }
 
-std::string CPresenter::GetFBTime() {
-  if (!_fb_settings)
-    return "";
+std::string CPresenter::GetFBTime()
+{
+    if (!_fb_settings)
+        return "";
 
-  return FmtTimeGroup(_fb_settings->FBHour()) + ":" + FmtTimeGroup(0);
+    return FmtTimeGroup(_fb_settings->FBHour()) + ":" + FmtTimeGroup(0);
 }
-void CPresenter::IncFBTime() {
-  if (!_fb_settings)
-    return;
+void CPresenter::IncFBTime()
+{
+    if (!_fb_settings)
+        return;
 
-  _fb_settings->SetFBHour(_fb_settings->FBHour() + 1);
+    _fb_settings->SetFBHour(_fb_settings->FBHour() + 1);
 }
-void CPresenter::DecFBTime() {
-  if (!_fb_settings)
-    return;
+void CPresenter::DecFBTime()
+{
+    if (!_fb_settings)
+        return;
 
-  _fb_settings->SetFBHour(_fb_settings->FBHour() - 1);
+    _fb_settings->SetFBHour(_fb_settings->FBHour() - 1);
 }
 
-std::string CPresenter::GetFBHumidityV() {
-  if (!_fb_settings)
-    return "";
+std::string CPresenter::GetFBHumidityV()
+{
+    if (!_fb_settings)
+        return "";
 
-  return std::to_string(_fb_settings->HumidityV());
+    return std::to_string(_fb_settings->HumidityV());
 }
-void CPresenter::IncFBHumidityV() {
-  if (!_fb_settings)
-    return;
-  _fb_settings->SetHumidityV(_fb_settings->HumidityV() + 0.05);
+void CPresenter::IncFBHumidityV()
+{
+    if (!_fb_settings)
+        return;
+    _fb_settings->SetHumidityV(_fb_settings->HumidityV() + 0.05);
 }
-void CPresenter::DecFBHumidityV() {
-  if (!_fb_settings)
-    return;
+void CPresenter::DecFBHumidityV()
+{
+    if (!_fb_settings)
+        return;
 
-  _fb_settings->SetHumidityV(_fb_settings->HumidityV() - 0.05);
+    _fb_settings->SetHumidityV(_fb_settings->HumidityV() - 0.05);
 }

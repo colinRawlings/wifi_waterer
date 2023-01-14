@@ -1,23 +1,27 @@
 #pragma once
 
 #include "../Types.h"
+
 #include "interfaces/IPushSwitch.h"
 
 class CKey;
 using CKey_ptr = std::shared_ptr<CKey>;
 
-class CKey {
-public:
-  static CKey_ptr Create(std::string name);
+class CKey
+{
+  public:
+    static CKey_ptr Create(std::string name, byte pin, bool pull_up);
 
-  void SetPushSwitch(IPushSwitch_uptr push_switch);
+    static CKey_ptr Create(std::string name);
 
-  bool KeyPressed();
+    void SetPushSwitch(IPushSwitch_uptr push_switch);
 
-private:
-  CKey(std::string name);
+    bool KeyPressed();
 
-  std::string _name;
-  PushSwitchState _last_switch_state{PushSwitchState::UNPRESSED};
-  IPushSwitch_uptr _push_switch;
+  private:
+    CKey(std::string name);
+
+    std::string _name;
+    PushSwitchState _last_switch_state{PushSwitchState::UNPRESSED};
+    IPushSwitch_uptr _push_switch;
 };

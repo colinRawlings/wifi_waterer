@@ -1,21 +1,24 @@
 #pragma once
 
+#include "../Types.h"
+
 #include "TabBase.h"
 
-class CFBHumdity;
-using CFBHumdity_ptr = std::shared_ptr<CFBHumdity>;
+class CFBHumdityTab;
+using CFBHumdity_ptr = std::shared_ptr<CFBHumdityTab>;
 
-class CFBHumdity : public CTabBase {
-public:
-  static CFBHumdity_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
-                               CKeys_ptr keys, CDisplay_ptr display);
+class CFBHumdityTab : public CTabBase
+{
+  public:
+    static CFBHumdity_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
+                                 CKeys_ptr keys, CDisplay_ptr display);
 
-protected:
-  CFBHumdity(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,
-             CDisplay_ptr display);
+  protected:
+    CFBHumdityTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,
+                  CDisplay_ptr display);
 
-  void UpdateDisplay() override;
+    void UpdateDisplay() override;
 
-  void OnFuncLeftKey() override;
-  void OnFuncRightKey() override;
+    void OnFuncLeftKey() override;
+    void OnFuncRightKey() override;
 };

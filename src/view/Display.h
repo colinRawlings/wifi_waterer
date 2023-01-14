@@ -1,30 +1,36 @@
 #pragma once
 
+#include "../Types.h"
+
+#include "../hardware/SLCDPins.h"
+
+#include "interfaces/ILiquidCrystal.h"
+
 #include <array>
 #include <memory>
-
-#include "../Types.h"
-#include "interfaces/ILiquidCrystal.h"
 
 class CDisplay;
 using CDisplay_ptr = std::shared_ptr<CDisplay>;
 
-class CDisplay {
-public:
-  static CDisplay_ptr Create();
+class CDisplay
+{
+  public:
+    static CDisplay_ptr Create(SLCDPins pins);
 
-  void SetLcd(ILiquidCrystal_uptr lcd);
+    static CDisplay_ptr Create();
 
-  void SetRow0(std::string msg);
-  void SetRow1(std::string msg);
+    void SetLcd(ILiquidCrystal_uptr lcd);
 
-  void Print();
+    void SetRow0(std::string msg);
+    void SetRow1(std::string msg);
 
-private:
-  CDisplay() = default;
+    void Print();
 
-  void SetRow(int row_index, std::string msg);
+  private:
+    CDisplay() = default;
 
-  ILiquidCrystal_uptr _lcd;
-  std::array<std::string, 2> _rows;
+    void SetRow(int row_index, std::string msg);
+
+    ILiquidCrystal_uptr _lcd;
+    std::array<std::string, 2> _rows;
 };

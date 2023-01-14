@@ -5,7 +5,6 @@
         "--test-dir",
         "${workspaceFolder}/build/tests"
     ],
-    "ar"
     "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
     "files.associations": {
         "Makefile.*": "makefile",
@@ -69,6 +68,7 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "fstream": "cpp"
     }
 }

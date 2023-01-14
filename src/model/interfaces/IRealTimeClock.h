@@ -7,13 +7,14 @@
 class IRealTimeClock;
 using IRealTimeClock_uptr = std::unique_ptr<IRealTimeClock>;
 
-class IRealTimeClock {
-public:
-  virtual byte getHours() = 0;
-  virtual byte getMinutes() = 0;
-  virtual byte getSeconds() = 0;
+class IRealTimeClock
+{
+  public:
+    virtual byte GetHours() = 0;
+    virtual byte GetMinutes() = 0;
+    virtual byte GetSeconds() = 0;
 
-  virtual void setHours(byte) = 0;
-  virtual void setMinutes(byte) = 0;
-  virtual void setSeconds(byte) = 0;
+    virtual void SetHours(byte) = 0;
+    virtual void SetMinutes(byte) = 0;
+    virtual void SetSeconds(byte) = 0;
 };
