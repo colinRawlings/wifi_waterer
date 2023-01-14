@@ -43,8 +43,8 @@ TEST(TabSuite, NextTabTest)
 
     EXPECT_CALL(*next_tab_push_switch, GetState)
         .Times(2)
-        .WillOnce(testing::Return(false)) // on set
-        .WillOnce(testing::Return(true))  // first call (press)
+        .WillOnce(testing::Return(PushSwitchState::UNPRESSED)) // on set
+        .WillOnce(testing::Return(PushSwitchState::PRESSED))   // first call (press)
         ;
 
     testing::Mock::AllowLeak(next_tab_push_switch.get());
@@ -92,8 +92,8 @@ TEST(TabSuite, IncHourTest)
 
     EXPECT_CALL(*left_func_push_switch, GetState)
         .Times(2)
-        .WillOnce(testing::Return(false)) // on set
-        .WillOnce(testing::Return(true))  // first call (press)
+        .WillOnce(testing::Return(PushSwitchState::UNPRESSED)) // on set
+        .WillOnce(testing::Return(PushSwitchState::PRESSED))   // first call (press)
         ;
 
     testing::Mock::AllowLeak(left_func_push_switch.get());

@@ -1,18 +1,6 @@
-#include "Arduino.h"
-
 #include "../hardware/PushSwitch.h"
 
 #include "Key.h"
-
-CKey_ptr CKey::Create(std::string name, byte pin, bool pull_up)
-{
-    auto key = CKey::Create(name);
-
-    auto sw = CPushSwitch::Create(pin, pull_up);
-    key->SetPushSwitch(std::move(sw));
-
-    return key;
-}
 
 CKey_ptr CKey::Create(std::string name)
 {

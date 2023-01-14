@@ -13,7 +13,9 @@
 #include "src/view/Key.h"
 #include "src/view/DisplayKeys.h"
 #include "src/view/Application.h"
-#include "src/view/Display.h"
+#include "src/view/DisplayFactory.h"
+#include "src/view/DisplayKeysFactory.h"
+#include "src/presenter/PresenterFactory.h"
 
 // defs
 const byte pin_func_left = 3;
@@ -32,14 +34,14 @@ CApplication_ptr app;
 
 void setup()
 {
-    auto display = CDisplay::Create(lcd_pins);
+    auto display = CreateDisplay(lcd_pins);
 
-    auto keys = CDisplayKeys::Create(pin_tab_left,
-                                     pin_tab_right,
-                                     pin_func_left,
-                                     pin_func_right);
+    auto keys = CreateDisplayKeys(pin_tab_left,
+                                  pin_tab_right,
+                                  pin_func_left,
+                                  pin_func_right);
 
-    auto presenter = CPresenter::Create(true);
+    auto presenter = CreatePresenter();
 
     app = CApplication::Create(presenter, keys, display);
 }

@@ -4,6 +4,8 @@
 #include "../../src/view/Display.h"
 #include "../../src/view/mocks/MockLiquidCrystal.h"
 
+#include <memory>
+
 TEST(DisplaySuite, SetRow_withCache)
 {
     auto display = CDisplay::Create();

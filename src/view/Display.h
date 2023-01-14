@@ -2,8 +2,6 @@
 
 #include "../Types.h"
 
-#include "../hardware/SLCDPins.h"
-
 #include "interfaces/ILiquidCrystal.h"
 
 #include <array>
@@ -15,8 +13,6 @@ using CDisplay_ptr = std::shared_ptr<CDisplay>;
 class CDisplay
 {
   public:
-    static CDisplay_ptr Create(SLCDPins pins);
-
     static CDisplay_ptr Create();
 
     void SetLcd(ILiquidCrystal_uptr lcd);

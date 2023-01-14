@@ -4,14 +4,14 @@
 
 #include "interfaces/IPushSwitch.h"
 
+#include <string>
+
 class CKey;
 using CKey_ptr = std::shared_ptr<CKey>;
 
 class CKey
 {
   public:
-    static CKey_ptr Create(std::string name, byte pin, bool pull_up);
-
     static CKey_ptr Create(std::string name);
 
     void SetPushSwitch(IPushSwitch_uptr push_switch);

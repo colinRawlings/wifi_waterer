@@ -3,7 +3,7 @@
 #ifdef ARDUINO_TESTING
 using byte = unsigned char;
 #else
-    #include "Arduino.h"
-    #include <LiquidCrystal.h>
-    #include <RTCZero.h>
+    #include "Arduino.h"       // NOLINT
+    #include <LiquidCrystal.h> // NOLINT
+    #include <RTCZero.h>       // NOLINT
 #endif

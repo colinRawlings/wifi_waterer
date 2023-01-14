@@ -19,7 +19,7 @@ using CPresenter_ptr = std::shared_ptr<CPresenter>;
 class CPresenter
 {
   public:
-    static CPresenter_ptr Create(bool create_children); // remove once pump is implemented
+    static CPresenter_ptr Create();
 
     // Current Time
     void SetRealTimeClock(IRealTimeClock_uptr rtc);

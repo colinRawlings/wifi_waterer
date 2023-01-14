@@ -9,36 +9,41 @@
 CCurrentTimeTab_ptr CCurrentTimeTab::Create(CPresenter_ptr presenter,
                                             ITabView_ptr tab_view,
                                             CKeys_ptr keys,
-                                            CDisplay_ptr display) {
-  auto destroy = [](CCurrentTimeTab *display) { delete display; };
-  return CCurrentTimeTab_ptr(
-      new CCurrentTimeTab(presenter, tab_view, keys, display), destroy);
+                                            CDisplay_ptr display)
+{
+    auto destroy = [](CCurrentTimeTab * display) { delete display; };
+    return CCurrentTimeTab_ptr(
+        new CCurrentTimeTab(presenter, tab_view, keys, display), destroy);
 }
 
 CCurrentTimeTab::CCurrentTimeTab(CPresenter_ptr presenter,
                                  ITabView_ptr tab_view, CKeys_ptr keys,
                                  CDisplay_ptr display)
-    : CTabBase("Time", presenter, tab_view, keys, display) {}
+    : CTabBase("Time", presenter, tab_view, keys, display)
+{}
 
-void CCurrentTimeTab::UpdateDisplay() {
-  CTabBase::UpdateDisplay();
+void CCurrentTimeTab::UpdateDisplay()
+{
+    CTabBase::UpdateDisplay();
 
-  if (!_display || !_presenter)
-    return;
+    if (!_display || !_presenter)
+        return;
 
-  _display->SetRow1(_presenter->GetCurrentTime());
+    _display->SetRow1(_presenter->GetCurrentTime());
 }
 
-void CCurrentTimeTab::OnFuncLeftKey() {
-  if (!_presenter)
-    return;
+void CCurrentTimeTab::OnFuncLeftKey()
+{
+    if (!_presenter)
+        return;
 
-  _presenter->IncCurrentTimeHour();
+    _presenter->IncCurrentTimeHour();
 }
 
-void CCurrentTimeTab::OnFuncRightKey() {
-  if (!_presenter)
-    return;
+void CCurrentTimeTab::OnFuncRightKey()
+{
+    if (!_presenter)
+        return;
 
-  _presenter->IncCurrentTimeMinute();
+    _presenter->IncCurrentTimeMinute();
 }

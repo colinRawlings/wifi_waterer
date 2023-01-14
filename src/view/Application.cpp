@@ -7,13 +7,12 @@
 CApplication_ptr CApplication::Create(CPresenter_ptr presenter,
                                       CKeys_ptr keys, CDisplay_ptr display)
 {
-    auto destroy = [](CApplication * display) { delete display; };
-    auto tabs = CApplication_ptr(new CApplication(presenter, keys, display),
-                                 destroy);
+    auto destroy = [](CApplication * raw_app) { delete raw_app; };
+    auto app = CApplication_ptr(new CApplication, destroy);
 
-    tabs->OnCreate(presenter, keys, display);
+    app->OnCreate(presenter, keys, display);
 
-    return tabs;
+    return app;
 }
 
 void CApplication::OnCreate(CPresenter_ptr presenter,
@@ -46,7 +45,6 @@ void CApplication::PreviousTab()
     --_active_tab;
 }
 
-CApplication::CApplication(CPresenter_ptr presenter,
-                           CKeys_ptr keys, CDisplay_ptr display)
+CApplication::CApplication()
 {
 }

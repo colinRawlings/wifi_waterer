@@ -6,22 +6,6 @@
 
 #include "../hardware/PushSwitch.h"
 
-CDisplayKeys_ptr CDisplayKeys::Create(const byte pin_tab_left,
-                                      const byte pin_tab_right,
-                                      const byte pin_func_left,
-                                      const byte pin_func_right)
-{
-    auto left_tab = CKey::Create("tab_left", pin_tab_left, true);
-    auto right_tab = CKey::Create("tab_right", pin_tab_right, true);
-
-    auto left_func = CKey::Create("func_left", pin_func_left, true);
-    auto right_func = CKey::Create("func_right", pin_func_right, true);
-
-    //
-
-    return CDisplayKeys::Create(left_tab, right_tab, left_func, right_func);
-}
-
 CDisplayKeys_ptr CDisplayKeys::Create(CKey_ptr tab_left, CKey_ptr tab_right,
                                       CKey_ptr func_left, CKey_ptr func_right)
 {

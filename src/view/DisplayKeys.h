@@ -15,11 +15,6 @@ using CDisplayKeys_ptr = std::shared_ptr<CDisplayKeys>;
 class CDisplayKeys
 {
   public:
-    static CDisplayKeys_ptr Create(const byte pin_func_left,
-                                   const byte pin_func_right,
-                                   const byte pin_tab_left,
-                                   const byte pin_tab_right);
-
     static CDisplayKeys_ptr Create(CKey_ptr tab_left, CKey_ptr tab_right,
                                    CKey_ptr func_left, CKey_ptr func_right);
 

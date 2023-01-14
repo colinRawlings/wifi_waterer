@@ -4,7 +4,8 @@
 
 #include "../interfaces/IPushSwitch.h"
 
-class MockPushSwitch : public IPushSwitch {
-public:
-  MOCK_METHOD(bool, GetState, (), (override));
+class MockPushSwitch : public IPushSwitch
+{
+  public:
+    MOCK_METHOD(PushSwitchState, GetState, (), (override));
 };

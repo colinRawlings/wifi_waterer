@@ -1,9 +1,6 @@
-#include "Arduino.h"
-
 #include "Presenter.h"
 
 #include "../model/FBSettings.h"
-#include "../hardware/RealTimeClock.h"
 
 #include <string>
 
@@ -18,21 +15,10 @@ std::string FmtTimeGroup(byte value)
     return str;
 }
 
-CPresenter_ptr CPresenter::Create(bool create_children)
+CPresenter_ptr CPresenter::Create()
 {
     auto destroy = [](CPresenter * display) { delete display; };
-    auto presenter = CPresenter_ptr(new CPresenter, destroy);
-
-    if (!create_children)
-        return presenter;
-
-    auto rtc = CRealTimeClock::Create();
-    presenter->SetRealTimeClock(std::move(rtc));
-
-    auto fb_settings = CFBSettings::Create();
-    presenter->SetFBSettings(std::move(fb_settings));
-
-    return presenter;
+    return CPresenter_ptr(new CPresenter, destroy);
 }
 
 CPresenter::CPresenter() {}

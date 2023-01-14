@@ -35,8 +35,8 @@ class CApplication : public ITabView, public std::enable_shared_from_this<CAppli
     void PreviousTab() override;
 
   private:
-    CApplication(CPresenter_ptr presenter,
-                 CKeys_ptr keys, CDisplay_ptr display);
+    CApplication();
+    virtual ~CApplication() = default;
 
     void OnCreate(CPresenter_ptr presenter,
                   CKeys_ptr keys, CDisplay_ptr display);

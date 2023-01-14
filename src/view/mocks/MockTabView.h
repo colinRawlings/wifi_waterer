@@ -4,8 +4,9 @@
 
 #include "../interfaces/ITabView.h"
 
-class MockTabView : public ITabView {
-public:
-  MOCK_METHOD(void, NextTab, (), (override));
-  MOCK_METHOD(void, PreviousTab, (), (override));
+class MockTabView : public ITabView
+{
+  public:
+    MOCK_METHOD(void, NextTab, (), (override));
+    MOCK_METHOD(void, PreviousTab, (), (override));
 };

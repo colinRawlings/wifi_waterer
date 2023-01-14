@@ -1,21 +1,9 @@
 #include "Display.h"
 
-#include "../hardware/LiquidCrystalDisplay.h"
-
 #include <iostream>
 #include <vector>
 
 static const int kRowLength{16};
-
-CDisplay_ptr CDisplay::Create(SLCDPins pins)
-{
-    auto display = CDisplay::Create();
-
-    auto lcd = CLiquidCrystalDisplay::Create(pins);
-    display->SetLcd(std::move(lcd));
-
-    return display;
-}
 
 CDisplay_ptr CDisplay::Create()
 {
