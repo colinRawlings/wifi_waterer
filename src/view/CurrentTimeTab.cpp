@@ -4,6 +4,8 @@
 
 #include "Display.h"
 
+#include "Helpers.h"
+
 #include "../presenter/Presenter.h"
 
 CCurrentTimeTab_ptr CCurrentTimeTab::Create(CPresenter_ptr presenter,
@@ -29,7 +31,7 @@ void CCurrentTimeTab::UpdateDisplay()
     if (!_display || !_presenter)
         return;
 
-    _display->SetRow1(_presenter->GetCurrentTime());
+    _display->SetRow1(FormatRow("+H", _presenter->GetCurrentTime(), "+M"));
 }
 
 void CCurrentTimeTab::OnFuncLeftKey()

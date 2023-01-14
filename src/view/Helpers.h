@@ -1,5 +1,10 @@
+#pragma once
+
 #include "../Types.h"
 
 #include <string>
 
-std::string fmt_tab_msg(std::string left_func_lbl, std::string value, std::string right_func_label);
+int RowLength();
+int EndLblLength();
+
+std::string FormatRow(std::string left_label, std::string center_label, std::string right_label);

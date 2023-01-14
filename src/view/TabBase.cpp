@@ -2,6 +2,7 @@
 
 #include "Key.h"
 #include "DisplayKeys.h"
+#include "Helpers.h"
 
 #include "Display.h"
 
@@ -85,5 +86,5 @@ void CTabBase::UpdateDisplay()
     if (!_display)
         return;
 
-    _display->SetRow0(_name);
+    _display->SetRow0(FormatRow("<", _name, ">"));
 }

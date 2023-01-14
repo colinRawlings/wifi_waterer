@@ -3,6 +3,7 @@
 #include "FBHumidityTab.h"
 
 #include "Display.h"
+#include "Helpers.h"
 
 #include "../presenter/Presenter.h"
 
@@ -27,7 +28,7 @@ void CFBHumdityTab::UpdateDisplay()
     if (!_display || !_presenter)
         return;
 
-    _display->SetRow1(_presenter->GetFBHumidityV());
+    _display->SetRow1(FormatRow("-", _presenter->GetFBHumidityV(), "+"));
 }
 
 void CFBHumdityTab::OnFuncLeftKey()

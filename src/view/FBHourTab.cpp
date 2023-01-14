@@ -3,6 +3,7 @@
 #include "FBHourTab.h"
 
 #include "Display.h"
+#include "Helpers.h"
 
 #include "../presenter/Presenter.h"
 
@@ -27,7 +28,7 @@ void CFBHourTab::UpdateDisplay()
     if (!_display || !_presenter)
         return;
 
-    _display->SetRow1(_presenter->GetFBTime());
+    _display->SetRow1(FormatRow("-H", _presenter->GetFBTime(), "+H"));
 }
 
 void CFBHourTab::OnFuncLeftKey()
