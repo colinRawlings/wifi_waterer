@@ -12,7 +12,7 @@
 static const long kDisplayOffMs{30000};
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
-                                            CKeys_ptr keys, CDisplay_ptr display)
+                                            CDisplayKeys_ptr keys, CDisplay_ptr display)
 {
     auto destroy = [](CSoftkeyDisplay * raw_app) { delete raw_app; };
     auto app = CSoftkeyDisplay_ptr(new CSoftkeyDisplay(presenter, keys, display), destroy);
@@ -23,7 +23,7 @@ CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
 }
 
 void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
-                               CKeys_ptr keys, CDisplay_ptr display)
+                               CDisplayKeys_ptr keys, CDisplay_ptr display)
 {
     _tabs = {
         CHomeTab::Create(presenter, shared_from_this(), keys, display),
@@ -86,10 +86,10 @@ void CSoftkeyDisplay::OnKeyPressed()
 }
 
 CSoftkeyDisplay::CSoftkeyDisplay(CPresenter_ptr presenter,
-                                 CKeys_ptr keys, CDisplay_ptr display)
+                                 CDisplayKeys_ptr keys, CDisplay_ptr display)
     : _presenter(presenter)
     , _display(display)
-
+    , _keys(keys)
 {
     OnKeyPressed();
 }

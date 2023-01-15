@@ -63,6 +63,7 @@ class CPresenter : public CUpdateable
 
   protected:
     CPresenter();
+    virtual ~CPresenter() = default;
 
     IRealTimeClock_uptr _rtc;
     CFBSettings_uptr _fb_settings;

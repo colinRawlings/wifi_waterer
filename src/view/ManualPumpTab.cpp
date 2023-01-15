@@ -9,7 +9,7 @@
 
 CManualPumpTab_ptr
 CManualPumpTab::Create(CPresenter_ptr presenter,
-                       ITabView_ptr tab_view, CKeys_ptr keys,
+                       ITabView_ptr tab_view, CDisplayKeys_ptr keys,
                        CDisplay_ptr display)
 {
     auto destroy = [](CManualPumpTab * display) { delete display; };
@@ -18,7 +18,7 @@ CManualPumpTab::Create(CPresenter_ptr presenter,
 }
 
 CManualPumpTab::CManualPumpTab(CPresenter_ptr presenter, ITabView_ptr tab_view,
-                               CKeys_ptr keys, CDisplay_ptr display)
+                               CDisplayKeys_ptr keys, CDisplay_ptr display)
     : CTabBase("Pump", presenter, tab_view, keys, display)
 {}
 

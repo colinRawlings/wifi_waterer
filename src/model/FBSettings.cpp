@@ -8,7 +8,9 @@ typedef struct
     long pump_duration_ms;
 } SPersistentFbSettings;
 
+#ifndef ARDUINO_TESTING
 FlashStorage(flash_store_fb_settings, SPersistentFbSettings);
+#endif
 
 //
 
@@ -57,17 +59,23 @@ void CFBSettings::SetPumpDurationMs(long duration_ms)
 
 void CFBSettings::SaveToFlash()
 {
+#ifndef ARDUINO_TESTING
     SPersistentFbSettings settings{true, _fb_hour, _humidity_v, _pump_duration_ms};
     flash_store_fb_settings.write(settings);
+#endif
 }
 
 bool CFBSettings::LoadFromFlash()
 {
+#ifndef ARDUINO_TESTING
     SPersistentFbSettings settings = flash_store_fb_settings.read();
     if (settings.valid)
     {
         _fb_hour = settings.fb_hour;
         _humidity_v = settings.humidity_v;
         _pump_duration_ms = settings.pump_duration_ms;
+        return true;
     }
+#endif
+    return false;
 }

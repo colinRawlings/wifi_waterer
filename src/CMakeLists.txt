@@ -2,7 +2,9 @@ add_library(waterer)
 
 target_sources(
   waterer
-  PUBLIC #
+  PUBLIC Updateable.cpp
+         Types.cpp
+         #
          model/FBSettings.cpp
          #
          presenter/Presenter.cpp
@@ -12,6 +14,10 @@ target_sources(
          view/Key.cpp
          view/TabBase.cpp
          view/CurrentTimeTab.cpp
+         view/HomeTab.cpp
+         view/ManualPumpTab.cpp
+         view/FBDurationTab.cpp
+         view/SaveTab.cpp
          view/FBHourTab.cpp
          view/FBHumidityTab.cpp
          view/SoftkeyDisplay.cpp

@@ -11,12 +11,12 @@ class CSaveTab : public CTabBase
 {
   public:
     static CSaveTab_ptr Create(CPresenter_ptr presenter,
-                               ITabView_ptr tab_view, CKeys_ptr keys,
+                               ITabView_ptr tab_view, CDisplayKeys_ptr keys,
                                CDisplay_ptr display);
 
   protected:
     CSaveTab(CPresenter_ptr presenter, ITabView_ptr tab_view,
-             CKeys_ptr keys, CDisplay_ptr display);
+             CDisplayKeys_ptr keys, CDisplay_ptr display);
 
     void UpdateDisplay() override;
 

@@ -11,10 +11,10 @@ class CHomeTab : public CTabBase
 {
   public:
     static CHomeTab_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
-                               CKeys_ptr keys, CDisplay_ptr display);
+                               CDisplayKeys_ptr keys, CDisplay_ptr display);
 
   protected:
-    CHomeTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,
+    CHomeTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CDisplayKeys_ptr keys,
              CDisplay_ptr display);
 
     void UpdateDisplay() override;

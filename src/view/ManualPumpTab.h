@@ -11,10 +11,10 @@ class CManualPumpTab : public CTabBase
 {
   public:
     static CManualPumpTab_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
-                                     CKeys_ptr keys, CDisplay_ptr display);
+                                     CDisplayKeys_ptr keys, CDisplay_ptr display);
 
   protected:
-    CManualPumpTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,
+    CManualPumpTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CDisplayKeys_ptr keys,
                    CDisplay_ptr display);
 
     void UpdateDisplay() override;

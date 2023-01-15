@@ -11,7 +11,7 @@
 #include <vector>
 
 class CDisplayKeys;
-using CKeys_ptr = std::shared_ptr<CDisplayKeys>;
+using CDisplayKeys_ptr = std::shared_ptr<CDisplayKeys>;
 
 class CDisplay;
 using CDisplay_ptr = std::shared_ptr<CDisplay>;
@@ -28,7 +28,7 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 {
   public:
     static CSoftkeyDisplay_ptr Create(CPresenter_ptr presenter,
-                                      CKeys_ptr keys, CDisplay_ptr display);
+                                      CDisplayKeys_ptr keys, CDisplay_ptr display);
 
     void Update() override;
 
@@ -39,11 +39,11 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 
   private:
     CSoftkeyDisplay(CPresenter_ptr presenter,
-                    CKeys_ptr keys, CDisplay_ptr display);
+                    CDisplayKeys_ptr keys, CDisplay_ptr display);
     virtual ~CSoftkeyDisplay() = default;
 
     void OnCreate(CPresenter_ptr presenter,
-                  CKeys_ptr keys, CDisplay_ptr display);
+                  CDisplayKeys_ptr keys, CDisplay_ptr display);
 
     void TurnOnDisplay();
     void TurnOffDisplay();
@@ -53,6 +53,7 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 
     CPresenter_ptr _presenter;
     CDisplay_ptr _display;
+    CDisplayKeys_ptr _keys;
 
     long _last_keypress_ms;
 };

@@ -10,7 +10,7 @@
 
 CSaveTab_ptr CSaveTab::Create(CPresenter_ptr presenter,
                               ITabView_ptr tab_view,
-                              CKeys_ptr keys,
+                              CDisplayKeys_ptr keys,
                               CDisplay_ptr display)
 {
     auto destroy = [](CSaveTab * display) { delete display; };
@@ -19,7 +19,7 @@ CSaveTab_ptr CSaveTab::Create(CPresenter_ptr presenter,
 }
 
 CSaveTab::CSaveTab(CPresenter_ptr presenter,
-                   ITabView_ptr tab_view, CKeys_ptr keys,
+                   ITabView_ptr tab_view, CDisplayKeys_ptr keys,
                    CDisplay_ptr display)
     : CTabBase("Save/Load", presenter, tab_view, keys, display)
 {}

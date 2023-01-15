@@ -8,7 +8,7 @@
 #include "../presenter/Presenter.h"
 
 CFBHumdityTab_ptr CFBHumdityTab::Create(CPresenter_ptr presenter,
-                                        ITabView_ptr tab_view, CKeys_ptr keys,
+                                        ITabView_ptr tab_view, CDisplayKeys_ptr keys,
                                         CDisplay_ptr display)
 {
     auto destroy = [](CFBHumdityTab * display) { delete display; };
@@ -17,7 +17,7 @@ CFBHumdityTab_ptr CFBHumdityTab::Create(CPresenter_ptr presenter,
 }
 
 CFBHumdityTab::CFBHumdityTab(CPresenter_ptr presenter, ITabView_ptr tab_view,
-                             CKeys_ptr keys, CDisplay_ptr display)
+                             CDisplayKeys_ptr keys, CDisplay_ptr display)
     : CTabBase("FB Humidity", presenter, tab_view, keys, display)
 {}
 

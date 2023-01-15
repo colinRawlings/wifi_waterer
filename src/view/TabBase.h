@@ -14,7 +14,7 @@ class CPresenter;
 using CPresenter_ptr = std::shared_ptr<CPresenter>;
 
 class CDisplayKeys;
-using CKeys_ptr = std::shared_ptr<CDisplayKeys>;
+using CDisplayKeys_ptr = std::shared_ptr<CDisplayKeys>;
 
 class CDisplay;
 using CDisplay_ptr = std::shared_ptr<CDisplay>;
@@ -31,7 +31,7 @@ class CTabBase : public CUpdateable
 
   protected:
     CTabBase(std::string name, CPresenter_ptr presenter, ITabView_ptr tab_view,
-             CKeys_ptr keys, CDisplay_ptr display);
+             CDisplayKeys_ptr keys, CDisplay_ptr display);
 
     virtual ~CTabBase() = default;
 
@@ -47,6 +47,6 @@ class CTabBase : public CUpdateable
     std::string _name;
     CPresenter_ptr _presenter;
     ITabView_ptr _tab_view;
-    CKeys_ptr _keys;
+    CDisplayKeys_ptr _keys;
     CDisplay_ptr _display;
 };

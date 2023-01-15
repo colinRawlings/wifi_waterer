@@ -10,7 +10,7 @@
 
 CCurrentTimeTab_ptr CCurrentTimeTab::Create(CPresenter_ptr presenter,
                                             ITabView_ptr tab_view,
-                                            CKeys_ptr keys,
+                                            CDisplayKeys_ptr keys,
                                             CDisplay_ptr display)
 {
     auto destroy = [](CCurrentTimeTab * display) { delete display; };
@@ -19,7 +19,7 @@ CCurrentTimeTab_ptr CCurrentTimeTab::Create(CPresenter_ptr presenter,
 }
 
 CCurrentTimeTab::CCurrentTimeTab(CPresenter_ptr presenter,
-                                 ITabView_ptr tab_view, CKeys_ptr keys,
+                                 ITabView_ptr tab_view, CDisplayKeys_ptr keys,
                                  CDisplay_ptr display)
     : CTabBase("Time Now", presenter, tab_view, keys, display)
 {}

@@ -2,6 +2,7 @@
 
 #ifdef ARDUINO_TESTING
 using byte = unsigned char;
+long millis();
 #else
     #include "Arduino.h"       // NOLINT
     #include <LiquidCrystal.h> // NOLINT
