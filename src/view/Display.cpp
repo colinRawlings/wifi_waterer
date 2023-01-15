@@ -13,6 +13,14 @@ CDisplay_ptr CDisplay::Create()
 
 void CDisplay::SetLcd(ILiquidCrystal_uptr lcd) { _lcd = std::move(lcd); }
 
+void CDisplay::SetBacklight(bool is_on)
+{
+    if (!_lcd)
+        return;
+
+    _lcd->SetBacklight(is_on);
+}
+
 void CDisplay::SetRow0(std::string msg) { SetRow(0, msg); }
 
 void CDisplay::SetRow1(std::string msg) { SetRow(1, msg); }

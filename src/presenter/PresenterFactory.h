@@ -5,9 +5,10 @@
 #include "Presenter.h"
 
 #include "../hardware/RealTimeClock.h"
+#include "../hardware/SmartPump.h"
 #include "../model/FBSettings.h"
 
-CPresenter_ptr CreatePresenter()
+CPresenter_ptr CreatePresenter(byte pump_pin, byte sensor_pin)
 {
     auto presenter = CPresenter::Create();
 
@@ -16,6 +17,9 @@ CPresenter_ptr CreatePresenter()
 
     auto fb_settings = CFBSettings::Create();
     presenter->SetFBSettings(std::move(fb_settings));
+
+    auto pump = CSmartPump::Create(pump_pin, sensor_pin);
+    presenter->SetSmartPump(std::move(pump));
 
     return presenter;
 }

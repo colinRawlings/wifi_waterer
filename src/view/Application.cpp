@@ -3,12 +3,13 @@
 #include "CurrentTimeTab.h"
 #include "FBHourTab.h"
 #include "FBHumidityTab.h"
+#include "ManualPumpTab.h"
 
 CApplication_ptr CApplication::Create(CPresenter_ptr presenter,
                                       CKeys_ptr keys, CDisplay_ptr display)
 {
     auto destroy = [](CApplication * raw_app) { delete raw_app; };
-    auto app = CApplication_ptr(new CApplication, destroy);
+    auto app = CApplication_ptr(new CApplication(presenter, keys, display), destroy);
 
     app->OnCreate(presenter, keys, display);
 
@@ -22,6 +23,7 @@ void CApplication::OnCreate(CPresenter_ptr presenter,
         CCurrentTimeTab::Create(presenter, shared_from_this(), keys, display),
         CFBHourTab::Create(presenter, shared_from_this(), keys, display),
         CFBHumdityTab::Create(presenter, shared_from_this(), keys, display),
+        CManualPumpTab::Create(presenter, shared_from_this(), keys, display),
     };
 }
 
@@ -45,6 +47,8 @@ void CApplication::PreviousTab()
     --_active_tab;
 }
 
-CApplication::CApplication()
+CApplication::CApplication(CPresenter_ptr presenter,
+                           CKeys_ptr keys, CDisplay_ptr display)
+
 {
 }

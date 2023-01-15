@@ -3,6 +3,7 @@
 #include "../Types.h"
 
 #include "../model/interfaces/IRealTimeClock.h"
+#include "../model/interfaces/ISmartPump.h"
 
 #include <string>
 
@@ -39,9 +40,20 @@ class CPresenter
     void IncFBHumidityV();
     void DecFBHumidityV();
 
+    // Smart Pump
+    void SetSmartPump(ISmartPump_uptr pump);
+
+    float GetHumidityV();
+    void TurnOnPumpFor(long duration_ms);
+    void TurnOffPump();
+
+    //
+    void Update();
+
   protected:
     CPresenter();
 
     IRealTimeClock_uptr _rtc;
     CFBSettings_uptr _fb_settings;
+    ISmartPump_uptr _pump;
 };

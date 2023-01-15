@@ -54,6 +54,8 @@ void CPresenter::IncCurrentTimeMinute()
     _rtc->SetMinutes(_rtc->GetMinutes() + 1);
 }
 
+// FB Settings
+
 void CPresenter::SetFBSettings(CFBSettings_uptr fb_settings)
 {
     _fb_settings = std::move(fb_settings);
@@ -100,4 +102,43 @@ void CPresenter::DecFBHumidityV()
         return;
 
     _fb_settings->SetHumidityV(_fb_settings->HumidityV() - 0.05);
+}
+
+// Smart Pump
+void CPresenter::SetSmartPump(ISmartPump_uptr pump)
+{
+    _pump = std::move(pump);
+}
+
+float CPresenter::GetHumidityV()
+{
+    if (!_pump)
+        return 0.0f;
+
+    return _pump->GetHumidityV();
+}
+
+void CPresenter::TurnOnPumpFor(long duration_ms)
+{
+    if (!_pump)
+        return;
+
+    _pump->TurnOnFor(duration_ms);
+}
+void CPresenter::TurnOffPump()
+{
+    if (!_pump)
+        return;
+
+    _pump->TurnOff();
+}
+
+//
+
+void CPresenter::Update()
+{
+    if (_pump)
+    {
+        _pump->Update();
+    }
 }

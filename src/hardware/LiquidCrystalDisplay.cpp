@@ -1,5 +1,7 @@
 #include "LiquidCrystalDisplay.h"
 
+#include "DigitalOutput.h"
+
 #include <LiquidCrystal.h>
 
 CLiquidCrystalDisplay_uptr CLiquidCrystalDisplay::Create(SLCDPins pins)
@@ -22,6 +24,17 @@ void CLiquidCrystalDisplay::SetCursor(int column, int row)
     _lcd->setCursor(column, row);
 }
 
+void CLiquidCrystalDisplay::SetBacklight(bool is_on)
+{
+    if (is_on == (_backlight_power->GetOutputState() == OutputStates::ON))
+        return;
+
+    if (is_on)
+        _backlight_power->TurnOn();
+    else
+        _backlight_power->TurnOff();
+}
+
 CLiquidCrystalDisplay::CLiquidCrystalDisplay(SLCDPins pins)
 {
     _lcd = std::unique_ptr<LiquidCrystal>(new LiquidCrystal(
@@ -33,4 +46,7 @@ CLiquidCrystalDisplay::CLiquidCrystalDisplay(SLCDPins pins)
         pins.D4_D7[3]));
 
     _lcd->begin(16, 2);
+
+    _backlight_power = std::unique_ptr<CDigitalOutput>(new CDigitalOutput(pins.backlight, false));
+    _backlight_power->TurnOn();
 }

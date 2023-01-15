@@ -24,7 +24,10 @@ const byte pin_func_right = 2;
 const byte pin_tab_left = 15;
 const byte pin_tab_right = 14;
 
-auto lcd_pins = SLCDPins({4, 5, 6, 7}, 9, 8);
+const byte pump_pin = 16;
+const byte sensor_pin = A3;
+
+auto lcd_pins = SLCDPins({4, 5, 6, 7}, 9, 8, 18);
 
 //
 
@@ -41,7 +44,7 @@ void setup()
                                   pin_func_left,
                                   pin_func_right);
 
-    auto presenter = CreatePresenter();
+    auto presenter = CreatePresenter(pump_pin, sensor_pin);
 
     app = CApplication::Create(presenter, keys, display);
 }
