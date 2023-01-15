@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SmartPumpPins.h"
+
 #include "DigitalOutput.h"
 #include "AnalogueInput.h"
 
@@ -10,7 +12,7 @@
 class CSmartPump : public ISmartPump
 {
   public:
-    static ISmartPump_uptr Create(byte pump_pin, byte sensor_pin);
+    static ISmartPump_uptr Create(SSmartPumpPins pins);
 
     // sensor
     float GetHumidityV() override;
@@ -24,7 +26,7 @@ class CSmartPump : public ISmartPump
     void Update() override;
 
   private:
-    CSmartPump(byte pump_pin, byte sensor_pin);
+    CSmartPump(SSmartPumpPins pins);
 
     CDigitalOutput _pump;
     CAnalogueInput _humidity_sensor;

@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "SoftkeyDisplay.h"
 
 #include "CurrentTimeTab.h"
 #include "FBHourTab.h"
@@ -29,6 +29,7 @@ void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
 
 void CSoftkeyDisplay::Update()
 {
+    CUpdateable::Update();
     _tabs[_active_tab]->Update();
 }
 

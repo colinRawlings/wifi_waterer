@@ -10,7 +10,8 @@
 
 CTabBase::CTabBase(std::string name, CPresenter_ptr presenter,
                    ITabView_ptr tab_view, CKeys_ptr keys, CDisplay_ptr display)
-    : _name(name)
+    : CUpdateable({})
+    , _name(name)
     , _presenter(presenter)
     , _tab_view(tab_view)
     , _keys(keys)
@@ -34,6 +35,8 @@ void CTabBase::OnTabRightKey()
 
 void CTabBase::Update()
 {
+    CUpdateable::Update();
+
     UpdateDisplay();
     HandleKeys();
 }

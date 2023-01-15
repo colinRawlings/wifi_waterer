@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Types.h"
+#include "../Updateable.h"
 
 #include "interfaces/ITabView.h"
 
@@ -23,7 +24,7 @@ using CDisplay_ptr = std::shared_ptr<CDisplay>;
 class CTabBase;
 using CTabBase_ptr = std::shared_ptr<CTabBase>;
 
-class CTabBase
+class CTabBase : public CUpdateable
 {
   public:
     void Update();

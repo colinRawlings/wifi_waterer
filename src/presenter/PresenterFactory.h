@@ -4,11 +4,13 @@
 
 #include "Presenter.h"
 
+#include "../hardware/SmartPumpPins.h"
+
 #include "../hardware/RealTimeClock.h"
 #include "../hardware/SmartPump.h"
 #include "../model/FBSettings.h"
 
-CPresenter_ptr CreatePresenter(byte pump_pin, byte sensor_pin)
+CPresenter_ptr CreatePresenter(SSmartPumpPins smart_pump_pins)
 {
     auto presenter = CPresenter::Create();
 
@@ -18,7 +20,7 @@ CPresenter_ptr CreatePresenter(byte pump_pin, byte sensor_pin)
     auto fb_settings = CFBSettings::Create();
     presenter->SetFBSettings(std::move(fb_settings));
 
-    auto pump = CSmartPump::Create(pump_pin, sensor_pin);
+    auto pump = CSmartPump::Create(smart_pump_pins);
     presenter->SetSmartPump(std::move(pump));
 
     return presenter;

@@ -137,6 +137,8 @@ void CPresenter::TurnOffPump()
 
 void CPresenter::Update()
 {
+    CUpdateable::Update();
+
     if (_pump)
     {
         _pump->Update();

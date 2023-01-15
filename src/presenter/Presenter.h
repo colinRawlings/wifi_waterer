@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Types.h"
+#include "../Updateable.h"
 
 #include "../model/interfaces/IRealTimeClock.h"
 #include "../model/interfaces/ISmartPump.h"
@@ -17,7 +18,7 @@ using CFBSettings_uptr = std::unique_ptr<CFBSettings>;
 class CPresenter;
 using CPresenter_ptr = std::shared_ptr<CPresenter>;
 
-class CPresenter
+class CPresenter : public CUpdateable
 {
   public:
     static CPresenter_ptr Create();
@@ -48,7 +49,7 @@ class CPresenter
     void TurnOffPump();
 
     //
-    void Update();
+    void Update() override;
 
   protected:
     CPresenter();

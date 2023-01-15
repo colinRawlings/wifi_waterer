@@ -1,13 +1,13 @@
 #include "SmartPump.h"
 
-ISmartPump_uptr CSmartPump::Create(byte pump_pin, byte sensor_pin)
+ISmartPump_uptr CSmartPump::Create(SSmartPumpPins pins)
 {
-    return std::unique_ptr<CSmartPump>(new CSmartPump(pump_pin, sensor_pin));
+    return std::unique_ptr<CSmartPump>(new CSmartPump(pins));
 }
 
-CSmartPump::CSmartPump(byte pump_pin, byte sensor_pin)
-    : _pump(pump_pin, false)
-    , _humidity_sensor(sensor_pin, false)
+CSmartPump::CSmartPump(SSmartPumpPins pins)
+    : _pump(pins.pump_pin, false)
+    , _humidity_sensor(pins.sensor_pin, false)
 {}
 
 float CSmartPump::GetHumidityV()

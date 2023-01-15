@@ -4,9 +4,8 @@
 
 #include <memory>
 
-class SLCDPins
+struct SLCDPins
 {
-  public:
     SLCDPins(std::array<byte, 4> d4_d7, byte Rs_, byte E_, byte backlight_)
         : D4_D7(d4_d7)
         , Rs(Rs_)

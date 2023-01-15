@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Types.h"
+#include "../Updateable.h"
 
 #include "TabBase.h"
 
@@ -23,13 +24,13 @@ using CPresenter_ptr = std::shared_ptr<CPresenter>;
 class CSoftkeyDisplay;
 using CSoftkeyDisplay_ptr = std::shared_ptr<CSoftkeyDisplay>;
 
-class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSoftkeyDisplay>
+class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSoftkeyDisplay>, public CUpdateable
 {
   public:
     static CSoftkeyDisplay_ptr Create(CPresenter_ptr presenter,
                                       CKeys_ptr keys, CDisplay_ptr display);
 
-    void Update();
+    void Update() override;
 
     void NextTab() override;
     void PreviousTab() override;

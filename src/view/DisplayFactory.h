@@ -1,6 +1,6 @@
 #include "../Types.h"
 
-#include "../hardware/SLCDPins.h"
+#include "../hardware/LCDPins.h"
 #include "../hardware/LiquidCrystalDisplay.h"
 
 #include "Display.h"

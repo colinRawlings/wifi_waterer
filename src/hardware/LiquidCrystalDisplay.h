@@ -2,7 +2,7 @@
 
 #include "../Types.h"
 
-#include "SLCDPins.h"
+#include "LCDPins.h"
 
 #include "../view/interfaces/ILiquidCrystal.h"
 

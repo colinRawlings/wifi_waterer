@@ -14,7 +14,7 @@ target_sources(
          view/CurrentTimeTab.cpp
          view/FBHourTab.cpp
          view/FBHumidityTab.cpp
-         view/Application.cpp
+         view/SoftkeyDisplay.cpp
          view/Helpers.cpp)
 
 target_link_libraries(waterer GTest::gmock_main)
