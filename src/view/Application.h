@@ -20,14 +20,14 @@ using CPresenter_ptr = std::shared_ptr<CPresenter>;
 
 //
 
-class CApplication;
-using CApplication_ptr = std::shared_ptr<CApplication>;
+class CSoftkeyDisplay;
+using CSoftkeyDisplay_ptr = std::shared_ptr<CSoftkeyDisplay>;
 
-class CApplication : public ITabView, public std::enable_shared_from_this<CApplication>
+class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSoftkeyDisplay>
 {
   public:
-    static CApplication_ptr Create(CPresenter_ptr presenter,
-                                   CKeys_ptr keys, CDisplay_ptr display);
+    static CSoftkeyDisplay_ptr Create(CPresenter_ptr presenter,
+                                      CKeys_ptr keys, CDisplay_ptr display);
 
     void Update();
 
@@ -35,9 +35,9 @@ class CApplication : public ITabView, public std::enable_shared_from_this<CAppli
     void PreviousTab() override;
 
   private:
-    CApplication(CPresenter_ptr presenter,
-                 CKeys_ptr keys, CDisplay_ptr display);
-    virtual ~CApplication() = default;
+    CSoftkeyDisplay(CPresenter_ptr presenter,
+                    CKeys_ptr keys, CDisplay_ptr display);
+    virtual ~CSoftkeyDisplay() = default;
 
     void OnCreate(CPresenter_ptr presenter,
                   CKeys_ptr keys, CDisplay_ptr display);

@@ -31,7 +31,7 @@ auto lcd_pins = SLCDPins({4, 5, 6, 7}, 9, 8, 18);
 
 //
 
-CApplication_ptr app;
+CSoftkeyDisplay_ptr app;
 
 //
 
@@ -46,7 +46,7 @@ void setup()
 
     auto presenter = CreatePresenter(pump_pin, sensor_pin);
 
-    app = CApplication::Create(presenter, keys, display);
+    app = CSoftkeyDisplay::Create(presenter, keys, display);
 }
 
 void loop()

@@ -5,19 +5,19 @@
 #include "FBHumidityTab.h"
 #include "ManualPumpTab.h"
 
-CApplication_ptr CApplication::Create(CPresenter_ptr presenter,
-                                      CKeys_ptr keys, CDisplay_ptr display)
+CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
+                                            CKeys_ptr keys, CDisplay_ptr display)
 {
-    auto destroy = [](CApplication * raw_app) { delete raw_app; };
-    auto app = CApplication_ptr(new CApplication(presenter, keys, display), destroy);
+    auto destroy = [](CSoftkeyDisplay * raw_app) { delete raw_app; };
+    auto app = CSoftkeyDisplay_ptr(new CSoftkeyDisplay(presenter, keys, display), destroy);
 
     app->OnCreate(presenter, keys, display);
 
     return app;
 }
 
-void CApplication::OnCreate(CPresenter_ptr presenter,
-                            CKeys_ptr keys, CDisplay_ptr display)
+void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
+                               CKeys_ptr keys, CDisplay_ptr display)
 {
     _tabs = {
         CCurrentTimeTab::Create(presenter, shared_from_this(), keys, display),
@@ -27,16 +27,16 @@ void CApplication::OnCreate(CPresenter_ptr presenter,
     };
 }
 
-void CApplication::Update()
+void CSoftkeyDisplay::Update()
 {
     _tabs[_active_tab]->Update();
 }
 
-void CApplication::NextTab()
+void CSoftkeyDisplay::NextTab()
 {
     _active_tab = (_active_tab + 1) % _tabs.size();
 }
-void CApplication::PreviousTab()
+void CSoftkeyDisplay::PreviousTab()
 {
     if (_active_tab == 0)
     {
@@ -47,8 +47,8 @@ void CApplication::PreviousTab()
     --_active_tab;
 }
 
-CApplication::CApplication(CPresenter_ptr presenter,
-                           CKeys_ptr keys, CDisplay_ptr display)
+CSoftkeyDisplay::CSoftkeyDisplay(CPresenter_ptr presenter,
+                                 CKeys_ptr keys, CDisplay_ptr display)
 
 {
 }
