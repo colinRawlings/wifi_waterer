@@ -6,4 +6,5 @@ using byte = unsigned char;
     #include "Arduino.h"       // NOLINT
     #include <LiquidCrystal.h> // NOLINT
     #include <RTCZero.h>       // NOLINT
+    #include <WiFiNINA.h>      // NOLINT
 #endif

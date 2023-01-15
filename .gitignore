@@ -1,3 +1,4 @@
 build/
 arduino_build/
 .venv/
+ConnectInfo.h

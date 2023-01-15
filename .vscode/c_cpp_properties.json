@@ -27,6 +27,8 @@
                 "/home/test/.arduino15/packages/arduino/hardware/samd/1.8.12/variants/nano_33_iot",
                 "/home/test/Arduino/libraries/LiquidCrystal/src",
                 "/home/test/Arduino/libraries/RTCZero/src",
+                "/home/test/Arduino/libraries/WiFiNINA/src",
+                "/home/test/.arduino15/packages/arduino/hardware/samd/1.8.12/libraries/SPI",
                 "/home/test/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/7-2017q4/arm-none-eabi/include/c++/7.2.1",
                 "/home/test/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/7-2017q4/arm-none-eabi/include/c++/7.2.1/arm-none-eabi",
                 "/home/test/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/7-2017q4/arm-none-eabi/include/c++/7.2.1/backward",
