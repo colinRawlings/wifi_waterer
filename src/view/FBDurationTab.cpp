@@ -36,7 +36,7 @@ void CFBDurationTab::OnFuncLeftKey()
     if (!_presenter)
         return;
 
-    _presenter->IncFBPumpDurationMs();
+    _presenter->DecFBPumpDurationMs();
 }
 
 void CFBDurationTab::OnFuncRightKey()
@@ -44,5 +44,5 @@ void CFBDurationTab::OnFuncRightKey()
     if (!_presenter)
         return;
 
-    _presenter->DecFBPumpDurationMs();
+    _presenter->IncFBPumpDurationMs();
 }

@@ -42,8 +42,12 @@ class CPresenter : public CUpdateable
     void DecFBHumidityV();
 
     std::string GetFBPumpDurationS();
+    long GetFBPumpDurationMs();
     void IncFBPumpDurationMs();
     void DecFBPumpDurationMs();
+
+    void LoadFBSettingsFromFlash();
+    void SaveFBSettingsToFlash();
 
     // Smart Pump
     void SetSmartPump(ISmartPump_uptr pump);

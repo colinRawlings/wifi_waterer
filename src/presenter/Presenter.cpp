@@ -114,6 +114,15 @@ std::string CPresenter::GetFBPumpDurationS()
 
     return std::to_string(_fb_settings->PumpDurationMs() / 1000) + "s";
 }
+
+long CPresenter::GetFBPumpDurationMs()
+{
+    if (!_fb_settings)
+        return 0;
+
+    return _fb_settings->PumpDurationMs();
+}
+
 void CPresenter::IncFBPumpDurationMs()
 {
     if (!_fb_settings)
@@ -126,6 +135,22 @@ void CPresenter::DecFBPumpDurationMs()
         return;
 
     _fb_settings->SetPumpDurationMs(_fb_settings->PumpDurationMs() - 10000);
+}
+
+void CPresenter::LoadFBSettingsFromFlash()
+{
+    if (!_fb_settings)
+        return;
+
+    _fb_settings->LoadFromFlash();
+};
+
+void CPresenter::SaveFBSettingsToFlash()
+{
+    if (!_fb_settings)
+        return;
+
+    _fb_settings->SaveToFlash();
 }
 
 // Smart Pump

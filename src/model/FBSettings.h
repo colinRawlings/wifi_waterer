@@ -22,6 +22,9 @@ class CFBSettings
     void SetHumidityV(float);
     void SetPumpDurationMs(long);
 
+    void SaveToFlash();
+    bool LoadFromFlash();
+
   protected:
     CFBSettings();
 

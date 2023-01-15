@@ -36,7 +36,7 @@ void CFBHourTab::OnFuncLeftKey()
     if (!_presenter)
         return;
 
-    _presenter->IncFBTime();
+    _presenter->DecFBTime();
 }
 
 void CFBHourTab::OnFuncRightKey()
@@ -44,5 +44,5 @@ void CFBHourTab::OnFuncRightKey()
     if (!_presenter)
         return;
 
-    _presenter->DecFBTime();
+    _presenter->IncFBTime();
 }

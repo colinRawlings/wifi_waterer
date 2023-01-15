@@ -7,4 +7,5 @@ using byte = unsigned char;
     #include <LiquidCrystal.h> // NOLINT
     #include <RTCZero.h>       // NOLINT
     #include <WiFiNINA.h>      // NOLINT
+    #include <FlashStorage.h>  // NOLINT
 #endif

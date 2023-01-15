@@ -6,9 +6,10 @@
 #include "FBHumidityTab.h"
 #include "ManualPumpTab.h"
 #include "FBDurationTab.h"
+#include "SaveTab.h"
 #include "Display.h"
 
-static const long kDisplayOffMs{10000};
+static const long kDisplayOffMs{30000};
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
                                             CKeys_ptr keys, CDisplay_ptr display)
@@ -31,6 +32,7 @@ void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
         CFBHourTab::Create(presenter, shared_from_this(), keys, display),
         CFBDurationTab::Create(presenter, shared_from_this(), keys, display),
         CFBHumdityTab::Create(presenter, shared_from_this(), keys, display),
+        CSaveTab::Create(presenter, shared_from_this(), keys, display),
     };
 }
 
@@ -42,6 +44,7 @@ void CSoftkeyDisplay::Update()
     if (millis() - _last_keypress_ms > kDisplayOffMs)
     {
         TurnOffDisplay();
+        _active_tab = 0;
     }
 }
 
@@ -51,7 +54,6 @@ void CSoftkeyDisplay::TurnOnDisplay()
         return;
 
     _display->SetBacklight(true);
-    _active_tab = 0;
 }
 
 void CSoftkeyDisplay::TurnOffDisplay()

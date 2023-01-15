@@ -31,18 +31,18 @@ void CManualPumpTab::UpdateDisplay()
 
     auto remaining_time_msg = _presenter->RemainingPumpOnTimeS();
 
-    _display->SetRow1(FormatRow("+", PumpIcon(_presenter->GetPumpStatus()) + " " + remaining_time_msg, "-"));
+    _display->SetRow1(FormatRow("-", PumpIcon(_presenter->GetPumpStatus()) + " " + remaining_time_msg, "+"));
 }
 
-void CManualPumpTab::OnFuncLeftKey()
+void CManualPumpTab::OnFuncRightKey()
 {
     if (!_presenter)
         return;
 
-    _presenter->TurnOnPumpFor(5000);
+    _presenter->TurnOnPumpFor(_presenter->GetFBPumpDurationMs());
 }
 
-void CManualPumpTab::OnFuncRightKey()
+void CManualPumpTab::OnFuncLeftKey()
 {
     if (!_presenter)
         return;

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-static const std::string kSpinner = "-/|\\";
+static const char kSpinner[5] = "-/|";
 
 int RowLength() { return 16; }
 int MaxEndLblLength() { return 2; }
@@ -71,7 +71,8 @@ std::string PumpIcon(bool pump_running)
 {
     if (pump_running)
     {
-        return "[" + std::to_string(kSpinner[(millis() / 1000) % kSpinner.size()]) + "]";
+        char icon = kSpinner[(millis() / 1000) % 3];
+        return "[" + std::string(1, icon) + "]";
     }
     else
     {
