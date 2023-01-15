@@ -29,6 +29,8 @@ class CSmartPump : public ISmartPump
   private:
     CSmartPump(SSmartPumpPins pins);
 
+    float _smoothed_humidity_V;
+
     CDigitalOutput _pump;
     CAnalogueInput _humidity_sensor;
 };

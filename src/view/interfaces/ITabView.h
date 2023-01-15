@@ -10,6 +10,8 @@ using ITabView_ptr = std::shared_ptr<ITabView>;
 class ITabView
 {
   public:
-    virtual void NextTab() = 0;
-    virtual void PreviousTab() = 0;
+    virtual void OnNextTab() = 0;
+    virtual void OnPreviousTab() = 0;
+
+    virtual void OnKeyPressed() = 0;
 };

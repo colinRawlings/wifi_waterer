@@ -1,5 +1,7 @@
 #include "Presenter.h"
 
+#include "../view/Helpers.h"
+
 #include "../model/FBSettings.h"
 
 #include <string>
@@ -88,10 +90,7 @@ std::string CPresenter::GetFBHumidityV()
     if (!_fb_settings)
         return "<err>";
 
-    char buffer[20];
-    std::snprintf(buffer, 20, "%.2f", _fb_settings->HumidityV());
-
-    return std::string(buffer) + std::string("V");
+    return FormatHumidityV(_fb_settings->HumidityV());
 }
 void CPresenter::IncFBHumidityV()
 {
@@ -144,12 +143,12 @@ bool CPresenter::GetPumpStatus()
     return _pump->GetStatus();
 }
 
-float CPresenter::GetHumidityV()
+std::string CPresenter::GetHumidityV()
 {
     if (!_pump)
-        return 0.0f;
+        return "err";
 
-    return _pump->GetHumidityV();
+    return FormatHumidityV(_pump->GetHumidityV());
 }
 
 void CPresenter::TurnOnPumpFor(long duration_ms)

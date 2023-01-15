@@ -21,7 +21,7 @@ CCurrentTimeTab_ptr CCurrentTimeTab::Create(CPresenter_ptr presenter,
 CCurrentTimeTab::CCurrentTimeTab(CPresenter_ptr presenter,
                                  ITabView_ptr tab_view, CKeys_ptr keys,
                                  CDisplay_ptr display)
-    : CTabBase("Time", presenter, tab_view, keys, display)
+    : CTabBase("Time Now", presenter, tab_view, keys, display)
 {}
 
 void CCurrentTimeTab::UpdateDisplay()
@@ -31,7 +31,7 @@ void CCurrentTimeTab::UpdateDisplay()
     if (!_display || !_presenter)
         return;
 
-    _display->SetRow1(FormatRow("+H", _presenter->GetCurrentTime(), "+M"));
+    _display->SetRow1(FormatRow("H", _presenter->GetCurrentTime(), "M"));
 }
 
 void CCurrentTimeTab::OnFuncLeftKey()

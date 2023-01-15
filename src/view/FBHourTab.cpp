@@ -28,7 +28,7 @@ void CFBHourTab::UpdateDisplay()
     if (!_display || !_presenter)
         return;
 
-    _display->SetRow1(FormatRow("-H", _presenter->GetFBTime(), "+H"));
+    _display->SetRow1(FormatRow("-", _presenter->GetFBTime(), "+"));
 }
 
 void CFBHourTab::OnFuncLeftKey()

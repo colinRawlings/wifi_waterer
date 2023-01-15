@@ -5,13 +5,13 @@
 #include "TabBase.h"
 
 class CFBHumdityTab;
-using CFBHumdity_ptr = std::shared_ptr<CFBHumdityTab>;
+using CFBHumdityTab_ptr = std::shared_ptr<CFBHumdityTab>;
 
 class CFBHumdityTab : public CTabBase
 {
   public:
-    static CFBHumdity_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
-                                 CKeys_ptr keys, CDisplay_ptr display);
+    static CFBHumdityTab_ptr Create(CPresenter_ptr presenter, ITabView_ptr tab_view,
+                                    CKeys_ptr keys, CDisplay_ptr display);
 
   protected:
     CFBHumdityTab(CPresenter_ptr presenter, ITabView_ptr tab_view, CKeys_ptr keys,

@@ -7,8 +7,6 @@
 
 #include "../presenter/Presenter.h"
 
-static const std::string kSpinner = "-/|\\";
-
 CManualPumpTab_ptr
 CManualPumpTab::Create(CPresenter_ptr presenter,
                        ITabView_ptr tab_view, CKeys_ptr keys,
@@ -33,17 +31,7 @@ void CManualPumpTab::UpdateDisplay()
 
     auto remaining_time_msg = _presenter->RemainingPumpOnTimeS();
 
-    std::string spinner;
-    if (_presenter->GetPumpStatus())
-    {
-        spinner = kSpinner[(millis() / 1000) % kSpinner.size()];
-    }
-    else
-    {
-        spinner = "-";
-    }
-
-    _display->SetRow1(FormatRow("+", spinner + " " + remaining_time_msg, "-"));
+    _display->SetRow1(FormatRow("+", PumpIcon(_presenter->GetPumpStatus()) + " " + remaining_time_msg, "-"));
 }
 
 void CManualPumpTab::OnFuncLeftKey()

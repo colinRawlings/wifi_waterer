@@ -2,8 +2,10 @@
 
 #include <vector>
 
+static const std::string kSpinner = "-/|\\";
+
 int RowLength() { return 16; }
-int EndLblLength() { return 2; }
+int MaxEndLblLength() { return 2; }
 
 std::string FormatRow(std::string left_label, std::string center_label, std::string right_label)
 {
@@ -14,23 +16,27 @@ std::string FormatRow(std::string left_label, std::string center_label, std::str
         }
     };
 
-    auto center_label_length = RowLength() - 2 - 2 * EndLblLength();
+    int end_label_length = std::min(std::min(static_cast<int>(left_label.size()),
+                                             static_cast<int>(right_label.size())),
+                                    MaxEndLblLength());
 
-    trim_func(left_label, EndLblLength());
-    trim_func(right_label, EndLblLength());
+    auto center_label_length = RowLength() - 2 - 2 * end_label_length;
+
+    trim_func(left_label, end_label_length);
+    trim_func(right_label, end_label_length);
     trim_func(center_label, center_label_length);
 
     //
 
-    if (static_cast<int>(left_label.size()) < EndLblLength())
+    if (static_cast<int>(left_label.size()) < end_label_length)
     {
-        std::string padding(EndLblLength() - left_label.size(), ' ');
+        std::string padding(end_label_length - left_label.size(), ' ');
         left_label.insert(left_label.end(), padding.begin(), padding.end());
     }
 
-    if (static_cast<int>(right_label.size()) < EndLblLength())
+    if (static_cast<int>(right_label.size()) < end_label_length)
     {
-        std::string padding(EndLblLength() - right_label.size(), ' ');
+        std::string padding(end_label_length - right_label.size(), ' ');
         right_label.insert(right_label.begin(), padding.begin(), padding.end());
     }
 
@@ -44,5 +50,31 @@ std::string FormatRow(std::string left_label, std::string center_label, std::str
 
     //
 
-    return left_label + "|" + center_label + "|" + right_label;
+    std::string separator;
+    if (end_label_length)
+    {
+        separator = "|";
+    }
+
+    return left_label + separator + center_label + separator + right_label;
+}
+
+std::string FormatHumidityV(float humidity_V)
+{
+    char buffer[20];
+    std::snprintf(buffer, 20, "%.2f", humidity_V);
+
+    return std::string(buffer) + std::string("V");
+}
+
+std::string PumpIcon(bool pump_running)
+{
+    if (pump_running)
+    {
+        return "[" + std::to_string(kSpinner[(millis() / 1000) % kSpinner.size()]) + "]";
+    }
+    else
+    {
+        return "[-]";
+    }
 }

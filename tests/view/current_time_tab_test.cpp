@@ -34,7 +34,7 @@ TEST(TabSuite, NextTabTest)
     //
 
     auto tab_view = std::make_shared<MockTabView>();
-    EXPECT_CALL(*tab_view, NextTab).Times(1);
+    EXPECT_CALL(*tab_view, OnNextTab).Times(1);
 
     //
 

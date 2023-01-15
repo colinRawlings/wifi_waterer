@@ -1,10 +1,14 @@
 #include "SoftkeyDisplay.h"
 
+#include "HomeTab.h"
 #include "CurrentTimeTab.h"
 #include "FBHourTab.h"
 #include "FBHumidityTab.h"
 #include "ManualPumpTab.h"
 #include "FBDurationTab.h"
+#include "Display.h"
+
+static const long kDisplayOffMs{10000};
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
                                             CKeys_ptr keys, CDisplay_ptr display)
@@ -21,6 +25,7 @@ void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
                                CKeys_ptr keys, CDisplay_ptr display)
 {
     _tabs = {
+        CHomeTab::Create(presenter, shared_from_this(), keys, display),
         CManualPumpTab::Create(presenter, shared_from_this(), keys, display),
         CCurrentTimeTab::Create(presenter, shared_from_this(), keys, display),
         CFBHourTab::Create(presenter, shared_from_this(), keys, display),
@@ -33,13 +38,35 @@ void CSoftkeyDisplay::Update()
 {
     CUpdateable::Update();
     _tabs[_active_tab]->Update();
+
+    if (millis() - _last_keypress_ms > kDisplayOffMs)
+    {
+        TurnOffDisplay();
+    }
 }
 
-void CSoftkeyDisplay::NextTab()
+void CSoftkeyDisplay::TurnOnDisplay()
+{
+    if (!_display)
+        return;
+
+    _display->SetBacklight(true);
+    _active_tab = 0;
+}
+
+void CSoftkeyDisplay::TurnOffDisplay()
+{
+    if (!_display)
+        return;
+
+    _display->SetBacklight(false);
+}
+
+void CSoftkeyDisplay::OnNextTab()
 {
     _active_tab = (_active_tab + 1) % _tabs.size();
 }
-void CSoftkeyDisplay::PreviousTab()
+void CSoftkeyDisplay::OnPreviousTab()
 {
     if (_active_tab == 0)
     {
@@ -50,8 +77,17 @@ void CSoftkeyDisplay::PreviousTab()
     --_active_tab;
 }
 
+void CSoftkeyDisplay::OnKeyPressed()
+{
+    _last_keypress_ms = millis();
+    TurnOnDisplay();
+}
+
 CSoftkeyDisplay::CSoftkeyDisplay(CPresenter_ptr presenter,
                                  CKeys_ptr keys, CDisplay_ptr display)
+    : _presenter(presenter)
+    , _display(display)
 
 {
+    OnKeyPressed();
 }

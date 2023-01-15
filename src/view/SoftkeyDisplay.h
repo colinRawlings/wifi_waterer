@@ -32,8 +32,10 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 
     void Update() override;
 
-    void NextTab() override;
-    void PreviousTab() override;
+    void OnNextTab() override;
+    void OnPreviousTab() override;
+
+    void OnKeyPressed() override;
 
   private:
     CSoftkeyDisplay(CPresenter_ptr presenter,
@@ -43,8 +45,14 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
     void OnCreate(CPresenter_ptr presenter,
                   CKeys_ptr keys, CDisplay_ptr display);
 
+    void TurnOnDisplay();
+    void TurnOffDisplay();
+
     std::vector<CTabBase_ptr> _tabs;
     size_t _active_tab{0};
 
     CPresenter_ptr _presenter;
+    CDisplay_ptr _display;
+
+    long _last_keypress_ms;
 };

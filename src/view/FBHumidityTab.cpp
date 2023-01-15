@@ -7,18 +7,18 @@
 
 #include "../presenter/Presenter.h"
 
-CFBHumdity_ptr CFBHumdityTab::Create(CPresenter_ptr presenter,
-                                     ITabView_ptr tab_view, CKeys_ptr keys,
-                                     CDisplay_ptr display)
+CFBHumdityTab_ptr CFBHumdityTab::Create(CPresenter_ptr presenter,
+                                        ITabView_ptr tab_view, CKeys_ptr keys,
+                                        CDisplay_ptr display)
 {
     auto destroy = [](CFBHumdityTab * display) { delete display; };
-    return CFBHumdity_ptr(new CFBHumdityTab(presenter, tab_view, keys, display),
-                          destroy);
+    return CFBHumdityTab_ptr(new CFBHumdityTab(presenter, tab_view, keys, display),
+                             destroy);
 }
 
 CFBHumdityTab::CFBHumdityTab(CPresenter_ptr presenter, ITabView_ptr tab_view,
                              CKeys_ptr keys, CDisplay_ptr display)
-    : CTabBase("FB Humidity (V)", presenter, tab_view, keys, display)
+    : CTabBase("FB Humidity", presenter, tab_view, keys, display)
 {}
 
 void CFBHumdityTab::UpdateDisplay()

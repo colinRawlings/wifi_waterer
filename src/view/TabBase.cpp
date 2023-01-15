@@ -23,14 +23,14 @@ void CTabBase::OnTabLeftKey()
     if (!_tab_view)
         return;
 
-    _tab_view->PreviousTab();
+    _tab_view->OnPreviousTab();
 }
 void CTabBase::OnTabRightKey()
 {
     if (!_tab_view)
         return;
 
-    _tab_view->NextTab();
+    _tab_view->OnNextTab();
 }
 
 void CTabBase::Update()
@@ -51,6 +51,9 @@ void CTabBase::HandleKeys()
     {
         if (key->KeyPressed())
         {
+            if (_tab_view)
+                _tab_view->OnKeyPressed();
+
             OnTabLeftKey();
             return;
         }
@@ -60,6 +63,9 @@ void CTabBase::HandleKeys()
     {
         if (key->KeyPressed())
         {
+            if (_tab_view)
+                _tab_view->OnKeyPressed();
+
             OnTabRightKey();
             return;
         }
@@ -69,6 +75,9 @@ void CTabBase::HandleKeys()
     {
         if (key->KeyPressed())
         {
+            if (_tab_view)
+                _tab_view->OnKeyPressed();
+
             OnFuncLeftKey();
             return;
         }
@@ -78,6 +87,9 @@ void CTabBase::HandleKeys()
     {
         if (key->KeyPressed())
         {
+            if (_tab_view)
+                _tab_view->OnKeyPressed();
+
             OnFuncRightKey();
             return;
         }
