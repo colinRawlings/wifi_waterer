@@ -19,6 +19,9 @@ class CDigitalOutput
     // loop via Update
     void TurnOnFor(long activation_duration_ms);
 
+    // Returns 0 if not active
+    long RemainingOnTime();
+
     // Get the status
     Statuses GetStatus();
 
@@ -32,12 +35,12 @@ class CDigitalOutput
     void SetState(OutputStates new_state);
 
   private:
-    byte m_Pin;
-    bool m_InvertedOutput;
+    byte _pin;
+    bool _inverted_output;
 
-    long m_TimeActivated_ms;
-    long m_ActivationDuration_ms;
+    long _time_activated_ms;
+    long _activation_duration_ms;
 
-    OutputStates m_OutputState;
-    Statuses m_Status;
+    OutputStates _output_state;
+    Statuses _status;
 };

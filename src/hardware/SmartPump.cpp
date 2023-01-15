@@ -31,6 +31,11 @@ void CSmartPump::TurnOnFor(long activation_duration_ms)
     _pump.TurnOnFor(activation_duration_ms);
 }
 
+long CSmartPump::RemainingOnTimeMs()
+{
+    return _pump.RemainingOnTime();
+}
+
 void CSmartPump::Update()
 {
     _pump.Update();

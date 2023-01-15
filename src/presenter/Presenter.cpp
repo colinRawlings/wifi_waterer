@@ -88,7 +88,10 @@ std::string CPresenter::GetFBHumidityV()
     if (!_fb_settings)
         return "<err>";
 
-    return std::to_string(_fb_settings->HumidityV()).substr(0, 4);
+    char buffer[20];
+    std::snprintf(buffer, 20, "%.2f", _fb_settings->HumidityV());
+
+    return std::string(buffer) + std::string("V");
 }
 void CPresenter::IncFBHumidityV()
 {
@@ -96,6 +99,7 @@ void CPresenter::IncFBHumidityV()
         return;
     _fb_settings->SetHumidityV(_fb_settings->HumidityV() + 0.05);
 }
+
 void CPresenter::DecFBHumidityV()
 {
     if (!_fb_settings)
@@ -104,10 +108,40 @@ void CPresenter::DecFBHumidityV()
     _fb_settings->SetHumidityV(_fb_settings->HumidityV() - 0.05);
 }
 
+std::string CPresenter::GetFBPumpDurationS()
+{
+    if (!_fb_settings)
+        return "<err>";
+
+    return std::to_string(_fb_settings->PumpDurationMs() / 1000) + "s";
+}
+void CPresenter::IncFBPumpDurationMs()
+{
+    if (!_fb_settings)
+        return;
+    _fb_settings->SetPumpDurationMs(_fb_settings->PumpDurationMs() + 10000);
+}
+void CPresenter::DecFBPumpDurationMs()
+{
+    if (!_fb_settings)
+        return;
+
+    _fb_settings->SetPumpDurationMs(_fb_settings->PumpDurationMs() - 10000);
+}
+
 // Smart Pump
+
 void CPresenter::SetSmartPump(ISmartPump_uptr pump)
 {
     _pump = std::move(pump);
+}
+
+bool CPresenter::GetPumpStatus()
+{
+    if (!_pump)
+        return false;
+
+    return _pump->GetStatus();
 }
 
 float CPresenter::GetHumidityV()
@@ -125,6 +159,15 @@ void CPresenter::TurnOnPumpFor(long duration_ms)
 
     _pump->TurnOnFor(duration_ms);
 }
+
+std::string CPresenter::RemainingPumpOnTimeS()
+{
+    if (!_pump)
+        return "err";
+
+    return std::to_string(_pump->RemainingOnTimeMs() / 1000) + "s";
+}
+
 void CPresenter::TurnOffPump()
 {
     if (!_pump)

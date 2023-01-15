@@ -21,6 +21,7 @@ class CSmartPump : public ISmartPump
     bool GetStatus() override;
     void TurnOff() override;
     void TurnOnFor(long activation_duration_ms) override;
+    long RemainingOnTimeMs() override;
 
     //
     void Update() override;

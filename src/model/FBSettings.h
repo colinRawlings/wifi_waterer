@@ -16,13 +16,16 @@ class CFBSettings
 
     byte FBHour();
     float HumidityV();
+    long PumpDurationMs();
 
     void SetFBHour(byte);
     void SetHumidityV(float);
+    void SetPumpDurationMs(long);
 
   protected:
     CFBSettings();
 
     byte _fb_hour;
     float _humidity_v;
+    long _pump_duration_ms;
 };

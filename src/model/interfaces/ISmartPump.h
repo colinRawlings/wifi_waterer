@@ -24,6 +24,7 @@ class ISmartPump
     virtual bool GetStatus() = 0;
     virtual void TurnOff() = 0;
     virtual void TurnOnFor(long activation_duration_ms) = 0;
+    virtual long RemainingOnTimeMs() = 0;
 
     //
     virtual void Update() = 0;

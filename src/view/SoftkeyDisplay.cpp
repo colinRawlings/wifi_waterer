@@ -4,6 +4,7 @@
 #include "FBHourTab.h"
 #include "FBHumidityTab.h"
 #include "ManualPumpTab.h"
+#include "FBDurationTab.h"
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
                                             CKeys_ptr keys, CDisplay_ptr display)
@@ -20,10 +21,11 @@ void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
                                CKeys_ptr keys, CDisplay_ptr display)
 {
     _tabs = {
+        CManualPumpTab::Create(presenter, shared_from_this(), keys, display),
         CCurrentTimeTab::Create(presenter, shared_from_this(), keys, display),
         CFBHourTab::Create(presenter, shared_from_this(), keys, display),
+        CFBDurationTab::Create(presenter, shared_from_this(), keys, display),
         CFBHumdityTab::Create(presenter, shared_from_this(), keys, display),
-        CManualPumpTab::Create(presenter, shared_from_this(), keys, display),
     };
 }
 
