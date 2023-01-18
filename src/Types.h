@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #ifdef ARDUINO_TESTING
 using byte = unsigned char;
 long millis();
@@ -10,3 +12,7 @@ long millis();
     #include <WiFiNINA.h>      // NOLINT
     #include <FlashStorage.h>  // NOLINT
 #endif
+
+void LogBegin(int rate);
+void Log(std::string msg);
+void LogLn(std::string msg);

@@ -28,6 +28,7 @@ class CTabBase : public CUpdateable
 {
   public:
     void Update();
+    std::string Name() { return _name; }
 
   protected:
     CTabBase(std::string name, CPresenter_ptr presenter, ITabView_ptr tab_view,

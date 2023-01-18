@@ -67,6 +67,7 @@ void CSoftkeyDisplay::TurnOffDisplay()
 void CSoftkeyDisplay::OnNextTab()
 {
     _active_tab = (_active_tab + 1) % _tabs.size();
+    LogLn("Selected tab: " + _tabs[_active_tab]->Name());
 }
 void CSoftkeyDisplay::OnPreviousTab()
 {
@@ -77,6 +78,7 @@ void CSoftkeyDisplay::OnPreviousTab()
     }
 
     --_active_tab;
+    LogLn("Selected tab: " + _tabs[_active_tab]->Name());
 }
 
 void CSoftkeyDisplay::OnKeyPressed()

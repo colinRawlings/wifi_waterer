@@ -22,12 +22,16 @@ CPushSwitch::CPushSwitch(uint8_t pin, bool pull_up)
 
 PushSwitchState CPushSwitch::GetCurrentState()
 {
-    uint8_t pushSwitchVal = digitalRead(_pin);
+    uint8_t push_switch_val = digitalRead(_pin);
 
-    if ((_pull_up && pushSwitchVal == 0) || (!_pull_up && pushSwitchVal == 1))
+    if ((_pull_up && push_switch_val == 0) || (!_pull_up && push_switch_val == 1))
+    {
         return PushSwitchState::PRESSED;
+    }
     else
+    {
         return PushSwitchState::UNPRESSED;
+    }
 }
 
 PushSwitchState CPushSwitch::GetState()
