@@ -5,13 +5,13 @@
 
 long millis() { return 0; }
 
-void LogBegin(int rate) {}
+void LogBegin(__attribute__((unused)) int rate) {}
 
 void Log(std::string msg)
 {
     std::cout << msg;
 }
-void logln(std::string msg)
+void LogLn(std::string msg)
 {
     std::cout << msg << std::endl;
 }
