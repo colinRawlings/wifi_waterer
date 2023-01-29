@@ -11,6 +11,9 @@
 class CPresenter;
 using CPresenter_ptr = std::shared_ptr<CPresenter>;
 
+class CWifiServer;
+using CWifiServer_ptr = std::shared_ptr<CWifiServer>;
+
 class CSoftkeyDisplay;
 using CSoftkeyDisplay_ptr = std::shared_ptr<CSoftkeyDisplay>;
 
@@ -23,12 +26,11 @@ class CApplication : public CUpdateable
     static CApplication_ptr Create(SSmartPumpPins smart_pump_pins,
                                    SSoftkeyDisplayPins softkey_display_pins);
 
-    CPresenter_ptr Presenter();
-
   protected:
     CApplication(SSmartPumpPins smart_pump_pins,
                  SSoftkeyDisplayPins softkey_display_pins);
 
     CPresenter_ptr _presenter;
+    CWifiServer_ptr _wifi_server;
     CSoftkeyDisplay_ptr _softkey_display;
 };

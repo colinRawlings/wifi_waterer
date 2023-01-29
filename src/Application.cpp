@@ -5,6 +5,7 @@
 #include "view/DisplayFactory.h"
 #include "view/DisplayKeysFactory.h"
 #include "view/SoftkeyDisplay.h"
+#include "view/WifiServer.h"
 
 CApplication_ptr CApplication::Create(SSmartPumpPins smart_pump_pins,
                                       SSoftkeyDisplayPins softkey_display_pins)
@@ -22,12 +23,9 @@ CApplication::CApplication(SSmartPumpPins smart_pump_pins,
 
     _presenter = CreatePresenter(smart_pump_pins);
 
+    _wifi_server = CWifiServer::Create(_presenter, display);
+
     _softkey_display = CSoftkeyDisplay::Create(_presenter, keys, display);
 
-    SetChildren({_presenter, _softkey_display});
-}
-
-CPresenter_ptr CApplication::Presenter()
-{
-    return _presenter;
+    SetChildren({_presenter, _wifi_server, _softkey_display});
 }

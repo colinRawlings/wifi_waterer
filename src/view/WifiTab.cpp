@@ -5,7 +5,7 @@
 #include "Display.h"
 #include "Helpers.h"
 
-#include "../model/WiFiUtils.h"
+#include "../model/WifiUtils.h"
 
 CWifiTab_ptr CWifiTab::Create(CPresenter_ptr presenter,
                               ITabView_ptr tab_view, CDisplayKeys_ptr keys,
@@ -47,7 +47,7 @@ void CWifiTab::UpdateDisplay()
 
 void CWifiTab::OnFuncLeftKey()
 {
-    LogConnectinfo();
+    LogConnectInfo();
 }
 
 void CWifiTab::OnFuncRightKey()
