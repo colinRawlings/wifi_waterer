@@ -9,6 +9,6 @@ int MaxEndLblLength();
 
 std::string FormatRow(std::string left_label, std::string center_label, std::string right_label);
 
-std::string FormatHumidityV(float humidity_V);
+std::string FormatHumidityV(float humidity_V, bool add_unit = true);
 
 std::string PumpIcon(bool pump_running);

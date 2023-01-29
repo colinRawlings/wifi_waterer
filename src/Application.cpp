@@ -26,3 +26,8 @@ CApplication::CApplication(SSmartPumpPins smart_pump_pins,
 
     SetChildren({_presenter, _softkey_display});
 }
+
+CPresenter_ptr CApplication::Presenter()
+{
+    return _presenter;
+}

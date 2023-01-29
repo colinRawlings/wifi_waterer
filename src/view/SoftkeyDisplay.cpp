@@ -10,7 +10,7 @@
 #include "SaveTab.h"
 #include "Display.h"
 
-static const long kDisplayOffMs{30000};
+static const long kDisplayOffMs{120000};
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
                                             CDisplayKeys_ptr keys, CDisplay_ptr display)

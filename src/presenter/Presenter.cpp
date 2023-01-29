@@ -168,12 +168,12 @@ bool CPresenter::GetPumpStatus()
     return _pump->GetStatus();
 }
 
-std::string CPresenter::GetHumidityV()
+std::string CPresenter::GetHumidityV(bool add_unit)
 {
     if (!_pump)
         return "err";
 
-    return FormatHumidityV(_pump->GetHumidityV());
+    return FormatHumidityV(_pump->GetHumidityV(), add_unit);
 }
 
 void CPresenter::TurnOnPumpFor(long duration_ms)

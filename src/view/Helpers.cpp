@@ -59,12 +59,17 @@ std::string FormatRow(std::string left_label, std::string center_label, std::str
     return left_label + separator + center_label + separator + right_label;
 }
 
-std::string FormatHumidityV(float humidity_V)
+std::string FormatHumidityV(float humidity_V, bool add_unit)
 {
     char buffer[20];
     std::snprintf(buffer, 20, "%.2f", humidity_V);
 
-    return std::string(buffer) + std::string("V");
+    std::string msg(buffer);
+
+    if (add_unit)
+        msg += std::string("V");
+
+    return msg;
 }
 
 std::string PumpIcon(bool pump_running)

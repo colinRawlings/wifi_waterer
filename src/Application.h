@@ -23,6 +23,8 @@ class CApplication : public CUpdateable
     static CApplication_ptr Create(SSmartPumpPins smart_pump_pins,
                                    SSoftkeyDisplayPins softkey_display_pins);
 
+    CPresenter_ptr Presenter();
+
   protected:
     CApplication(SSmartPumpPins smart_pump_pins,
                  SSoftkeyDisplayPins softkey_display_pins);

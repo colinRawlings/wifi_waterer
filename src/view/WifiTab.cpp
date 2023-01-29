@@ -42,7 +42,7 @@ void CWifiTab::UpdateDisplay()
     }
     ip_str += std::to_string(ip[3]);
 
-    _display->SetRow1(ip_str);
+    _display->SetRow1(FormatRow("", ip_str, ""));
 }
 
 void CWifiTab::OnFuncLeftKey()

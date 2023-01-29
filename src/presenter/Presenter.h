@@ -53,7 +53,7 @@ class CPresenter : public CUpdateable
     void SetSmartPump(ISmartPump_uptr pump);
 
     bool GetPumpStatus();
-    std::string GetHumidityV();
+    std::string GetHumidityV(bool add_unit = true);
     void TurnOnPumpFor(long duration_ms);
     std::string RemainingPumpOnTimeS();
     void TurnOffPump();

@@ -7,8 +7,13 @@
 
 #include <memory>
 #include <string>
+#include <map>
+#include <functional>
 
 //
+
+class CKey;
+using CKey_ptr = std::shared_ptr<CKey>;
 
 class CPresenter;
 using CPresenter_ptr = std::shared_ptr<CPresenter>;
@@ -26,6 +31,8 @@ using CTabBase_ptr = std::shared_ptr<CTabBase>;
 
 class CTabBase : public CUpdateable
 {
+    using action_map_t = std::map<CKey_ptr, std::function<void()>>;
+
   public:
     void Update();
     std::string Name() { return _name; }
@@ -44,6 +51,8 @@ class CTabBase : public CUpdateable
 
     void OnTabLeftKey();
     void OnTabRightKey();
+
+    action_map_t _action_map;
 
     std::string _name;
     CPresenter_ptr _presenter;

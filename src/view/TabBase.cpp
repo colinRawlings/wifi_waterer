@@ -6,9 +6,6 @@
 
 #include "Display.h"
 
-#include <functional>
-#include <map>
-
 CTabBase::CTabBase(std::string name, CPresenter_ptr presenter,
                    ITabView_ptr tab_view, CDisplayKeys_ptr keys, CDisplay_ptr display)
     : CUpdateable({})
@@ -17,7 +14,14 @@ CTabBase::CTabBase(std::string name, CPresenter_ptr presenter,
     , _tab_view(tab_view)
     , _keys(keys)
     , _display(display)
-{}
+{
+    _action_map = action_map_t{
+        {_keys->TabLeft(), [this]() { OnTabLeftKey(); }},
+        {_keys->TabRight(), [this]() { OnTabRightKey(); }},
+        {_keys->FuncLeft(), [this]() { OnFuncLeftKey(); }},
+        {_keys->FuncRight(), [this]() { OnFuncRightKey(); }},
+    };
+}
 
 void CTabBase::OnTabLeftKey()
 {
@@ -51,14 +55,7 @@ void CTabBase::HandleKeys()
     if (!_tab_view)
         return;
 
-    std::map<CKey_ptr, std::function<void()>> action_map{
-        {_keys->TabLeft(), [this]() { OnTabLeftKey(); }},
-        {_keys->TabRight(), [this]() { OnTabRightKey(); }},
-        {_keys->FuncLeft(), [this]() { OnFuncLeftKey(); }},
-        {_keys->FuncRight(), [this]() { OnFuncRightKey(); }},
-    };
-
-    for (const auto & pair : action_map)
+    for (const auto & pair : _action_map)
     {
         auto key = pair.first;
         auto callback = pair.second;
