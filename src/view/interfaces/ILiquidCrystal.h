@@ -14,5 +14,7 @@ class ILiquidCrystal
     virtual void Print(std::string msg) = 0;
     virtual void Clear() = 0;
     virtual void SetCursor(int column, int row) = 0;
+
+    virtual bool Backlight() = 0;
     virtual void SetBacklight(bool is_on) = 0;
 };

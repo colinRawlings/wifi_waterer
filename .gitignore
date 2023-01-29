@@ -2,3 +2,4 @@ build/
 arduino_build/
 .venv/
 ConnectInfo.h
+ConnectInfo.cpp

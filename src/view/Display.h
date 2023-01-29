@@ -20,6 +20,7 @@ class CDisplay
     void SetRow0(std::string msg);
     void SetRow1(std::string msg);
 
+    bool Backlight();
     void SetBacklight(bool is_on);
 
     void Print();

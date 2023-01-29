@@ -24,6 +24,11 @@ void CLiquidCrystalDisplay::SetCursor(int column, int row)
     _lcd->setCursor(column, row);
 }
 
+bool CLiquidCrystalDisplay::Backlight()
+{
+    return _backlight_power->GetOutputState() == OutputStates::ON;
+}
+
 void CLiquidCrystalDisplay::SetBacklight(bool is_on)
 {
     if (is_on == (_backlight_power->GetOutputState() == OutputStates::ON))

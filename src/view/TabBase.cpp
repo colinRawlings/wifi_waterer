@@ -7,6 +7,7 @@
 #include "Display.h"
 
 #include <functional>
+#include <map>
 
 CTabBase::CTabBase(std::string name, CPresenter_ptr presenter,
                    ITabView_ptr tab_view, CDisplayKeys_ptr keys, CDisplay_ptr display)
@@ -47,52 +48,31 @@ void CTabBase::HandleKeys()
     if (!_keys)
         return;
 
-    if (auto key = _keys->TabLeft())
+    if (!_tab_view)
+        return;
+
+    std::map<CKey_ptr, std::function<void()>> action_map{
+        {_keys->TabLeft(), [this]() { OnTabLeftKey(); }},
+        {_keys->TabRight(), [this]() { OnTabRightKey(); }},
+        {_keys->FuncLeft(), [this]() { OnFuncLeftKey(); }},
+        {_keys->FuncRight(), [this]() { OnFuncRightKey(); }},
+    };
+
+    for (const auto & pair : action_map)
     {
-        if (key->KeyPressed())
-        {
-            if (_tab_view)
-                _tab_view->OnKeyPressed();
+        auto key = pair.first;
+        auto callback = pair.second;
 
-            OnTabLeftKey();
+        if (!key)
+            continue;
+
+        if (!key->KeyPressed())
+            continue;
+
+        if (_tab_view->OnKeyPressed()) // event handled by base
             return;
-        }
-    }
 
-    if (auto key = _keys->TabRight())
-    {
-        if (key->KeyPressed())
-        {
-            if (_tab_view)
-                _tab_view->OnKeyPressed();
-
-            OnTabRightKey();
-            return;
-        }
-    }
-
-    if (auto key = _keys->FuncLeft())
-    {
-        if (key->KeyPressed())
-        {
-            if (_tab_view)
-                _tab_view->OnKeyPressed();
-
-            OnFuncLeftKey();
-            return;
-        }
-    }
-
-    if (auto key = _keys->FuncRight())
-    {
-        if (key->KeyPressed())
-        {
-            if (_tab_view)
-                _tab_view->OnKeyPressed();
-
-            OnFuncRightKey();
-            return;
-        }
+        callback();
     }
 }
 

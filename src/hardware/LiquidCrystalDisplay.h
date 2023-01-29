@@ -24,6 +24,8 @@ class CLiquidCrystalDisplay : public ILiquidCrystal
     void Print(std::string msg) override;
     void Clear() override;
     void SetCursor(int column, int row) override;
+
+    bool Backlight() override;
     void SetBacklight(bool is_on) override;
 
   protected:

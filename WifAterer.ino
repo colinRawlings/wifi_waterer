@@ -6,6 +6,10 @@
 #include "src/hardware/DisplayKeyPins.h"
 #include "src/hardware/SmartPumpPins.h"
 
+//
+#include "src/model/WiFiUtils.h"
+#include "ConnectInfo.h"
+
 #include <memory>
 #include <vector>
 
@@ -29,6 +33,8 @@ void setup()
 {
     LogBegin(9600);
     LogLn("Settings up");
+
+    SetupWifi(get_ssid(), get_wifi_password());
 
     app = CApplication::Create(smart_pump_pins, softkey_display_pins);
 }

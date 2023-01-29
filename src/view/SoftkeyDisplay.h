@@ -32,10 +32,10 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 
     void Update() override;
 
-    void OnNextTab() override;
-    void OnPreviousTab() override;
+    bool OnNextTab() override;
+    bool OnPreviousTab() override;
 
-    void OnKeyPressed() override;
+    bool OnKeyPressed() override;
 
   private:
     CSoftkeyDisplay(CPresenter_ptr presenter,
