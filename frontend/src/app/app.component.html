@@ -1,0 +1,65 @@
+<mat-card class="container">
+  <mat-card-title>Waterer</mat-card-title>
+
+  <mat-tab-group>
+    <div *ngFor="let channel of channels">
+      <mat-tab>
+        <ng-template mat-tab-label> Pump {{ channel + 1 }} </ng-template>
+        <app-pump [channel]="channel"></app-pump>
+      </mat-tab>
+    </div>
+  </mat-tab-group>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>About</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+      <mat-list-item>
+        <h3 mat-subheader>Backend Version</h3>
+         {{ backend_version }}
+      </mat-list-item>
+      <mat-list-item>
+        <h3 mat-subheader>Frontend Version</h3>
+         {{ frontend_version }}
+      </mat-list-item>
+    </mat-list>
+      <h3 mat-subheader>Devices</h3>
+    <div *ngFor="let device of devices">
+      <mat-list-item>
+        {{ device }}
+      </mat-list-item>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Logs</mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-logs>
+    </app-logs>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Settings</mat-panel-title>
+    </mat-expansion-panel-header>
+    <div fxLayout
+    fxLayout="row"
+    fxLayoutGap="10px"
+    fxLayoutAlign="space-around"
+    fxLayout.xs="column">
+      <mat-slide-toggle
+        [(ngModel)]="autoUpdate"
+        color="primary"
+        (change)="onAutoUpdateChange()"
+      >
+        Auto-Update
+      </mat-slide-toggle>
+      <button mat-stroked-button (click)="onSaveUserSettings()">
+        Save Settings
+      </button>
+      <button mat-stroked-button (click)="onSaveHistory()">
+        Save History
+      </button>
+    </div>
+  </mat-expansion-panel>
+</mat-card>
+<notifier-container></notifier-container>

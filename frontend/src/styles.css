@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 5px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media (max-width: 550px) {
+  body {
+    margin: 1px;
+  }
+}
+
+mat-card {
+  margin: 5px;
+  padding: 5px;
+}
+mat-expansion-panel {
+  margin: 5px;
+  padding: 5px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+}

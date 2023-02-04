@@ -70,5 +70,6 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "fstream": "cpp"
-    }
+    },
+    "python.formatting.blackPath": "${workspaceFolder}/backend/.venv/bin/black"
 }

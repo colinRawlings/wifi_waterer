@@ -1,0 +1,5 @@
+# Editor configuration, see https://editorconfig.org
+root = true
+
+[*.ts]
+quote_type = single

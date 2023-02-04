@@ -1,6 +1,6 @@
 {
     "board": "arduino:samd:nano_33_iot",
     "port": "/dev/ttyACM0",
-    "sketch": "WifAterer.ino",
+    "sketch": "embedded/embedded.ino",
     "output": "/tmp/arduino_build"
 }
