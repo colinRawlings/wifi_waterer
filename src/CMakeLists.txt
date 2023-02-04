@@ -18,6 +18,7 @@ target_sources(
          view/ManualPumpTab.cpp
          view/FBDurationTab.cpp
          view/SaveTab.cpp
+         view/WifiTab.cpp
          view/FBHourTab.cpp
          view/FBHumidityTab.cpp
          view/SoftkeyDisplay.cpp

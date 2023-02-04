@@ -40,11 +40,8 @@ void CWifiServer::StartServer()
 
     if (WiFi.status() == WL_NO_MODULE)
     {
-
+        ErrorLedState(true);
         LogLn("Communication with WiFi module failed!");
-
-        // don't continue
-
         _display->SetRow1("Fail: No Module");
 
         while (true)
@@ -55,9 +52,8 @@ void CWifiServer::StartServer()
 
     if (fv < WIFI_FIRMWARE_LATEST_VERSION)
     {
-
+        ErrorLedState(true);
         LogLn("Please upgrade the firmware");
-
         _display->SetRow1("Fail: Upgrade FW");
 
         while (true)
@@ -65,12 +61,11 @@ void CWifiServer::StartServer()
     }
 
     // attempt to connect to Wifi network:
-
-    while (status != WL_CONNECTED)
+    int attempt(0);
+    while (status != WL_CONNECTED && ++attempt < 6)
     {
 
         Log("Attempting to connect to WPA SSID: ");
-
         _display->SetRow1("Conn: " + get_ssid());
 
         LogLn(get_ssid());
@@ -145,7 +140,7 @@ void CWifiServer::HandleClient()
                             _client.print(_presenter->GetPumpStatus());
                             _client.println(",");
                             _client.print("\"Humidity\": ");
-                            _client.print(_presenter->GetHumidityV(false).c_str());
+                            _client.println(_presenter->GetHumidityV(false).c_str());
                             _client.println("}");
                         }
 

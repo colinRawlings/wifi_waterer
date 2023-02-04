@@ -5,7 +5,7 @@
 static const char kSpinner[5] = "-/|";
 
 int RowLength() { return 16; }
-int MaxEndLblLength() { return 2; }
+int MaxEndLblLength() { return 4; }
 
 std::string FormatRow(std::string left_label, std::string center_label, std::string right_label)
 {

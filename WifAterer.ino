@@ -29,6 +29,7 @@ CApplication_ptr app;
 
 void setup()
 {
+    ErrorLedBegin();
     LogBegin(9600);
     LogLn("Setting up");
     app = CApplication::Create(smart_pump_pins, softkey_display_pins);

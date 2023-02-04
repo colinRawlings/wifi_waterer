@@ -31,7 +31,7 @@ void CSaveTab::UpdateDisplay()
     if (!_display || !_presenter)
         return;
 
-    _display->SetRow1(FormatRow("S", "", "L"));
+    _display->SetRow1(FormatRow("Save", "", "Load"));
 }
 
 void CSaveTab::OnFuncLeftKey()

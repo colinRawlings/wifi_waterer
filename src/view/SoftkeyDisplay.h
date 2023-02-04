@@ -39,11 +39,14 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 
   private:
     CSoftkeyDisplay(CPresenter_ptr presenter,
-                    CDisplayKeys_ptr keys, CDisplay_ptr display);
+                    CDisplayKeys_ptr keys,
+                    CDisplay_ptr display);
+
     virtual ~CSoftkeyDisplay() = default;
 
     void OnCreate(CPresenter_ptr presenter,
-                  CDisplayKeys_ptr keys, CDisplay_ptr display);
+                  CDisplayKeys_ptr keys,
+                  CDisplay_ptr display);
 
     void TurnOnDisplay();
     void TurnOffDisplay();

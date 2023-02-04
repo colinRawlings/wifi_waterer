@@ -16,7 +16,27 @@ void LogLn(std::string msg)
     std::cout << msg << std::endl;
 }
 
+void ErrorLedBegin()
+{
+}
+
+void ErrorLedState(bool is_on)
+{
+    std::cout << "<ERROR_LED>: " << is_on << std::endl;
+}
+
 #else
+
+void ErrorLedBegin()
+{
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
+void ErrorLedState(bool is_on)
+{
+    digitalWrite(LED_BUILTIN, is_on);
+}
 
 void LogBegin(int rate) { Serial.begin(rate); }
 

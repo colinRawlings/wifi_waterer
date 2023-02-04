@@ -23,6 +23,7 @@ CWifiTab::CWifiTab(CPresenter_ptr presenter, ITabView_ptr tab_view,
 
 void CWifiTab::UpdateDisplay()
 {
+#ifndef ARDUINO_TESTING // TODO
     if (!_display || !_presenter)
         return;
 
@@ -43,11 +44,14 @@ void CWifiTab::UpdateDisplay()
     ip_str += std::to_string(ip[3]);
 
     _display->SetRow1(FormatRow("", ip_str, ""));
+#endif
 }
 
 void CWifiTab::OnFuncLeftKey()
 {
+#ifndef ARDUINO_TESTING // TODO
     LogConnectInfo();
+#endif
 }
 
 void CWifiTab::OnFuncRightKey()
