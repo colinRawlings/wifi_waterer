@@ -84,10 +84,14 @@ class WiFiSmartPump:
         self._last_feedback_update_time: ty.Optional[datetime] = None
         self._last_auto_save_time: float = time()
 
+    ###############################################################
+
     def _init_logs(self):
         self._rel_humidity_V_log = FloatStatusLog()
         self._smoothed_rel_humidity_V_log = FloatStatusLog()
         self._pump_status_log = BinaryStatusLog()
+
+    ###############################################################
 
     def _load_settings(self) -> SmartPumpSettings:
         ...
@@ -125,7 +129,9 @@ class WiFiSmartPump:
 
         return SmartPumpSettings(**default_config_dict)
 
-    def save_settings(self) -> str:
+    ###############################################################
+
+    async def save_settings(self) -> str:
 
         user_config_filepath = cfg.get_user_config_filepath()
         if user_config_filepath.is_file():
@@ -134,7 +140,7 @@ class WiFiSmartPump:
         else:
             user_config = {}
 
-        user_config[self.address] = self.settings.dict()
+        user_config[self.address] = (await self.settings()).dict()
 
         cfg.get_user_config_filepath().parent.mkdir(exist_ok=True, parents=True)
 
@@ -144,6 +150,8 @@ class WiFiSmartPump:
         _LOGGER.info(f"{self._channel}: Saved settings to: {user_config_filepath}")
 
         return str(cfg.get_user_config_filepath())
+
+    ###############################################################
 
     def save_history(self) -> str:
 
@@ -166,23 +174,35 @@ class WiFiSmartPump:
 
         return str(cfg.get_pump_history_filepath())
 
+    ###############################################################
+
     @property
     def info(self) -> str:
         assert self._ip is not None
         return f"{self._ip}"
 
+    ###############################################################
+
     @property
     def channel(self) -> int:
         return self._channel
+
+    ###############################################################
 
     @property
     def address(self) -> str:
         assert self._ip and self._ip is not None
         return self._ip
 
-    @property
-    def settings(self) -> SmartPumpSettings:
+    ###############################################################
+
+    async def settings(self) -> SmartPumpSettings:
+
+        await self._update_device_status()
+
         return self._settings
+
+    ###############################################################
 
     async def send_settings(self) -> None:
 
@@ -198,6 +218,8 @@ class WiFiSmartPump:
                 s.wet_humidity_V
                 + s.feedback_setpoint_pcnt / 100 * (s.dry_humidity_V - s.wet_humidity_V)
             ),
+            current_hour=datetime.now().hour,
+            current_minute=datetime.now().minute,
         )
 
         for key, value in embedded_settings.items():
@@ -206,10 +228,14 @@ class WiFiSmartPump:
             ) as resp:
                 _ = await resp.text()
 
+    ###############################################################
+
     async def set_settings(self, value: SmartPumpSettings) -> None:
         self._settings = value
         _LOGGER.info(f"{self._channel}: New settings: {self._settings}")
         await self.send_settings()
+
+    ###############################################################
 
     @property
     def history(self) -> SmartPumpStatusData:
@@ -218,6 +244,8 @@ class WiFiSmartPump:
             smoothed_rel_humidity_V_log=self._smoothed_rel_humidity_V_log.to_data(),
             pump_status_log=self._pump_status_log.to_data(),
         )
+
+    ###############################################################
 
     def load_history(self) -> None:
         filepath = cfg.get_pump_history_filepath()
@@ -256,6 +284,8 @@ class WiFiSmartPump:
         )
         self._pump_status_log = BinaryStatusLog.from_data(history.pump_status_log)
 
+    ###############################################################
+
     def _pcnt_from_V_humidity(
         self, rel_humidity_V: ty.Union[None, float, ty.List[ty.Optional[float]]]
     ) -> ty.Union[None, float, ty.List[float]]:
@@ -286,6 +316,8 @@ class WiFiSmartPump:
                 * 100
             )
 
+    ###############################################################
+
     def _smoothed_humidity(self, rel_humidity_V: float) -> ty.Optional[float]:
         alpha = 1.0 / self._settings.num_smoothing_samples
         _, last_value = self._smoothed_rel_humidity_V_log.get_newest_value()
@@ -296,10 +328,14 @@ class WiFiSmartPump:
 
         return alpha * rel_humidity_V + (1 - alpha) * last_value
 
+    ###############################################################
+
     async def turn_on(self, duration_ms: int = -1):
 
         async with self._client.get(f"http://{self._ip}/on") as resp:
             response = await resp.text()
+
+    ###############################################################
 
     async def turn_off(self):
         async with self._client.get(f"http://{self._ip}/off") as resp:
@@ -309,7 +345,7 @@ class WiFiSmartPump:
     # Access Data
     ###############################################################
 
-    async def _update_status(self) -> bool:
+    async def _update_device_status(self) -> ty.Tuple[float, bool]:
 
         async with self._client.get(f"http://{self._ip}/") as resp:
             txt = await resp.text()
@@ -325,6 +361,14 @@ class WiFiSmartPump:
         assert isinstance(val, float)
         s.feedback_setpoint_pcnt = val
         s.pump_on_time_s = response.FBPumpDurationS
+
+        return rel_humidity_V, pump_status
+
+    ###############################################################
+
+    async def _update_status(self) -> bool:
+
+        rel_humidity_V, pump_status = await self._update_device_status()
 
         smoothed_rel_humidity_V = self._smoothed_humidity(rel_humidity_V)
 
@@ -347,6 +391,8 @@ class WiFiSmartPump:
             self._last_auto_save_time = time()
 
         return True
+
+    ###############################################################
 
     @property
     async def status(self) -> SmartPumpStatus:
@@ -379,10 +425,14 @@ class WiFiSmartPump:
             epoch_time=status_time,
         )
 
+    ###############################################################
+
     def clear_status_logs(self):
         self._rel_humidity_V_log.clear()
         self._smoothed_rel_humidity_V_log.clear()
         self._pump_status_log.clear()
+
+    ###############################################################
 
     def get_status_since(
         self, earliest_epoch_time_s: ty.Optional[float]
@@ -420,73 +470,13 @@ class WiFiSmartPump:
             pump_running=pump_running,
         )
 
-    async def _should_activate(self) -> bool:
-
-        next_update_time = datetime.now()
-
-        should_activate = (
-            self._last_feedback_update_time is not None
-            and ut.update_spans_activation_time(
-                self._last_feedback_update_time,
-                next_update_time,
-                self._settings.pump_activation_time_as_date,
-                self._settings.perform_feedback_hourly,
-            )
-        )
-        self._last_feedback_update_time = next_update_time
-
-        if not should_activate:
-            return False
-
-        #
-
-        _LOGGER.info(
-            f"{self.channel}: Update interval spans activation time - performing feedback"
-        )
-
-        years_day = ut.day_of_the_year()
-
-        _LOGGER.info(
-            f"{self.channel}: Checking period: Day of the year: {years_day}, period: {self._settings.pump_activation_period_days} day(s)"
-        )
-
-        should_activate = years_day % self._settings.pump_activation_period_days == 0
-        if not should_activate:
-            _LOGGER.info(f"{self.channel}: Skipping today ... ")
-            return False
-
-        #
-
-        if not self._settings.feedback_active:
-            _LOGGER.info(f"Feedback inactive so not performing")
-            return False
-
-        #
-
-        (
-            _,
-            current_humidity_V,
-        ) = self._smoothed_rel_humidity_V_log.get_newest_value()
-        current_humidity_pcnt = self._pcnt_from_V_humidity(current_humidity_V)
-
-        _LOGGER.info(
-            f"{self.channel}: Humidity: Current: {current_humidity_pcnt} %, Target: {self._settings.feedback_setpoint_pcnt} %"
-        )
-
-        if (
-            isinstance(current_humidity_pcnt, float)
-            and self._settings.feedback_setpoint_pcnt <= current_humidity_pcnt
-        ):
-            _LOGGER.info(
-                f"{self.channel}: Humidity greater than target skipping feedback"
-            )
-            return False
-
-        return True
+    ###############################################################
 
     async def _do_loop_iteration(self):
 
         ok = await self._update_status()
+
+    ###############################################################
 
     async def run(self):
 
@@ -504,10 +494,15 @@ class WiFiSmartPump:
 
         _LOGGER.info(f"{self.channel}: run() finished")
 
-    def start(self):
+    ###############################################################
+
+    async def start(self):
         self._task = asyncio.get_event_loop().create_task(self.run())
 
-    # Stops the feedback loop
+        await self._update_device_status()
+
+    ###############################################################
+
     async def interrupt(self):
 
         if self._task is not None and not self._task.done():

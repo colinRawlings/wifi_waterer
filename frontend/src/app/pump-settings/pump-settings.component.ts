@@ -87,6 +87,10 @@ export class PumpSettingsComponent implements OnInit {
     this.onSettingsChange();
   }
 
+  onRefreshSettings(): void{
+    this.settingsService.updateSettings(this.channel);
+  }
+
   onSettingsChange(): void {
     this.settingsService.setSettings(this.channel, this.settings).subscribe(
       (data: keyable) => {

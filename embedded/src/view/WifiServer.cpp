@@ -234,6 +234,30 @@ void CWifiServer::HandleClient()
 
                         //
 
+                        test_str = "/current_hour HTTP/1.1";
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        {
+                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
+                            if (_presenter)
+                            {
+                                _presenter->SetCurrentTimeHour(stoi(value));
+                            }
+                        }
+
+                        //
+
+                        test_str = "/current_minute HTTP/1.1";
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        {
+                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
+                            if (_presenter)
+                            {
+                                _presenter->SetCurrentTimeMinute(stoi(value));
+                            }
+                        }
+
+                        //
+
                         currentLine.clear();
                     }
                 }

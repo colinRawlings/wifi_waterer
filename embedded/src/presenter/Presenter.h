@@ -27,6 +27,10 @@ class CPresenter : public CUpdateable
     void SetRealTimeClock(IRealTimeClock_uptr rtc);
 
     std::string GetCurrentTime();
+
+    void SetCurrentTimeHour(int hour);
+    void SetCurrentTimeMinute(int minute);
+
     void IncCurrentTimeHour();
     void IncCurrentTimeMinute();
 

@@ -40,6 +40,22 @@ std::string CPresenter::GetCurrentTime()
            FmtTimeGroup(_rtc->GetMinutes());
 }
 
+void CPresenter::SetCurrentTimeHour(int hour)
+{
+    if (!_rtc)
+        return;
+
+    _rtc->SetHours(hour);
+}
+
+void CPresenter::SetCurrentTimeMinute(int minute)
+{
+    if (!_rtc)
+        return;
+
+    _rtc->SetMinutes(minute);
+}
+
 void CPresenter::IncCurrentTimeHour()
 {
     if (!_rtc)

@@ -93,16 +93,16 @@ class WiFiPumpManager:
     async def set_settings(self, channel: int, settings: sp.SmartPumpSettings) -> None:
         self._check_channel(channel)
         await self._pumps[channel].set_settings(settings)
-        self.save_settings()
+        await self.save_settings()
 
-    def get_settings(self, channel: int) -> sp.SmartPumpSettings:
+    async def get_settings(self, channel: int) -> sp.SmartPumpSettings:
         self._check_channel(channel)
-        return self._pumps[channel].settings
+        return await self._pumps[channel].settings()
 
-    def save_settings(self) -> str:
+    async def save_settings(self) -> str:
 
         for pump in self._pumps:
-            pump.save_settings()
+            await pump.save_settings()
 
         return str(cfg.get_user_config_filepath())
 
@@ -130,7 +130,7 @@ class WiFiPumpManager:
     async def start(self):
         for idx, pump in enumerate(self._pumps):
             logger.info(f"starting pump: {idx+1} / {len(self._pumps)}")
-            pump.start()
+            await pump.start()
             await asyncio.sleep(
                 self._status_update_interval_s
                 / len(self._pumps)  # stagger start to make BLE happy?

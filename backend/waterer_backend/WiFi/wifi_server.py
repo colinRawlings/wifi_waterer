@@ -132,7 +132,7 @@ def create_app(manager: WiFiPumpManager) -> web.Application:
     async def get_settings(request: web.Request):
         channel = request.match_info["channel"]
 
-        settings = get_pump_manager(request).get_settings(channel=int(channel))
+        settings = await get_pump_manager(request).get_settings(channel=int(channel))
 
         settings_dict = {"data": settings.dict()}
 
@@ -152,7 +152,7 @@ def create_app(manager: WiFiPumpManager) -> web.Application:
             channel=int(channel), settings=new_settings
         )
 
-        settings = get_pump_manager(request).get_settings(channel=int(channel))
+        settings = await get_pump_manager(request).get_settings(channel=int(channel))
         return web.json_response({"data": settings.dict()})
 
     @routes.get("/service_logs/{number_log_lines}")
