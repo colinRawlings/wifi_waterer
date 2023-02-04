@@ -1,0 +1,12 @@
+-r base.txt
+
+#
+pytest
+matplotlib
+pydantic # for schema generation
+pytest-env
+
+#
+pre-commit
+black==21.5b2 # sync with .pre-commit file
+isort==5.8.0 # sync with .pre-commit file

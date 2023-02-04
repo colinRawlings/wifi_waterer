@@ -175,10 +175,10 @@ up-frontend: venv
 
 up-backend-dev: export WATERER_FAKE_DATA=1
 up-backend-dev:
-	${BACKEND_VENV_PYTHON} -m waterer_backend.BLE.run_server
+	${BACKEND_VENV_PYTHON} -m waterer_backend.WiFi.run_server
 
 up-backend:
-	${BACKEND_VENV_PYTHON} -m waterer_backend.BLE.run_server
+	${BACKEND_VENV_PYTHON} -m waterer_backend.WiFi.run_server
 
 tests-backend:
 	${BACKEND_VENV_PYTHON} -m pytest ${makefile_dir}/backend/tests
