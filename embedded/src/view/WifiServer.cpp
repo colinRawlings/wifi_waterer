@@ -5,6 +5,8 @@
 
 #include "ConnectInfo.h"
 
+static const std::string kGetPrefix("GET /");
+
 CWifiServer_ptr CWifiServer::Create(CPresenter_ptr presenter,
                                     CDisplay_ptr display)
 {
@@ -175,10 +177,8 @@ void CWifiServer::HandleClient()
                     }
                     else
                     { // if you got a newline, then clear currentLine:
-                        LogLn(currentLine);
-                        std::string get_prefix("GET /");
 
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, "/on HTTP/1.1"))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, "/on HTTP/1.1"))
                         {
                             if (_presenter)
                             {
@@ -186,7 +186,7 @@ void CWifiServer::HandleClient()
                             }
                         }
 
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, "/off HTTP/1.1"))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, "/off HTTP/1.1"))
                         {
                             if (_presenter)
                             {
@@ -197,7 +197,7 @@ void CWifiServer::HandleClient()
                         //
 
                         std::string test_str = "/pump_on_time_s HTTP/1.1";
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
                         {
                             auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
 
@@ -210,7 +210,7 @@ void CWifiServer::HandleClient()
                         //
 
                         test_str = "/fb_hour HTTP/1.1";
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
                         {
                             auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
 
@@ -223,7 +223,7 @@ void CWifiServer::HandleClient()
                         //
 
                         test_str = "/fb_humidity_mv HTTP/1.1";
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
                         {
                             auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
                             if (_presenter)
@@ -235,7 +235,7 @@ void CWifiServer::HandleClient()
                         //
 
                         test_str = "/current_hour HTTP/1.1";
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
                         {
                             auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
                             if (_presenter)
@@ -247,7 +247,7 @@ void CWifiServer::HandleClient()
                         //
 
                         test_str = "/current_minute HTTP/1.1";
-                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
                         {
                             auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
                             if (_presenter)

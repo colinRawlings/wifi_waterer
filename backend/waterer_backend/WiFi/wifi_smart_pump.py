@@ -480,6 +480,9 @@ class WiFiSmartPump:
 
     async def run(self):
 
+        await self._update_device_status()
+        await self.send_settings()
+
         while not self._abort_running:
             try:
                 await self._do_loop_iteration()
@@ -488,9 +491,7 @@ class WiFiSmartPump:
                 _LOGGER.info(f"{self._channel}: run cancelled, stopping ...")
                 break
             except Exception as e:
-                _LOGGER.error(
-                    f"{self.channel}: Encountered exception in run loop:\n\n{tb.format_exc()}"
-                )
+                _LOGGER.error(f"{self.channel}: Encountered exception in run loop: {e}")
 
         _LOGGER.info(f"{self.channel}: run() finished")
 
@@ -498,8 +499,6 @@ class WiFiSmartPump:
 
     async def start(self):
         self._task = asyncio.get_event_loop().create_task(self.run())
-
-        await self._update_device_status()
 
     ###############################################################
 

@@ -51,9 +51,13 @@ std::string FormatRow(std::string left_label, std::string center_label, std::str
     //
 
     std::string separator;
-    if (end_label_length)
+    if (end_label_length == 1)
     {
         separator = "|";
+    }
+    else if (end_label_length > 1)
+    {
+        separator = " ";
     }
 
     return left_label + separator + center_label + separator + right_label;
@@ -62,7 +66,7 @@ std::string FormatRow(std::string left_label, std::string center_label, std::str
 std::string FormatHumidityV(float humidity_V, bool add_unit)
 {
     char buffer[20];
-    std::snprintf(buffer, 20, "%.2f", humidity_V);
+    std::snprintf(buffer, 20, "%.3f", humidity_V);
 
     std::string msg(buffer);
 
