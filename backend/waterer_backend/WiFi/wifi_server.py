@@ -148,7 +148,7 @@ def create_app(manager: WiFiPumpManager) -> web.Application:
         request_dict = await request.json()
 
         new_settings = SmartPumpSettings(**request_dict)  # type: ignore
-        get_pump_manager(request).set_settings(
+        await get_pump_manager(request).set_settings(
             channel=int(channel), settings=new_settings
         )
 

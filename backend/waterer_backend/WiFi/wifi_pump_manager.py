@@ -5,11 +5,10 @@
 ###############################################################
 
 import asyncio
-from aiohttp import ClientSession
 import logging
 import pathlib as pt
 from typing import List, Optional, Union
-from aiohttp import ClientSession
+import aiohttp
 
 import numpy as np
 import waterer_backend.config as cfg
@@ -37,7 +36,7 @@ pump_manager_settings_type = Union[List[sp.SmartPumpSettings], sp.SmartPumpSetti
 class WiFiPumpManager:
     def __init__(
         self,
-        client: ClientSession,
+        client: aiohttp.ClientSession,
         status_update_interval_s: int = 30,
         ips: List[str] = [],
         allow_load_history: bool = True,
@@ -91,9 +90,9 @@ class WiFiPumpManager:
         self._check_channel(channel)
         await self._pumps[channel].turn_off()
 
-    def set_settings(self, channel: int, settings: sp.SmartPumpSettings) -> None:
+    async def set_settings(self, channel: int, settings: sp.SmartPumpSettings) -> None:
         self._check_channel(channel)
-        self._pumps[channel].settings = settings
+        await self._pumps[channel].set_settings(settings)
         self.save_settings()
 
     def get_settings(self, channel: int) -> sp.SmartPumpSettings:
@@ -157,7 +156,7 @@ class PumpManagerContext:
         self._allow_load_history = allow_load_history
         self._scan_duration_s = scan_duration_s
 
-        self._client: Optional[ClientSession] = None
+        self._client: Optional[aiohttp.ClientSession] = None
 
         #
 
@@ -168,7 +167,7 @@ class PumpManagerContext:
     async def __aenter__(self) -> WiFiPumpManager:
         char_logger = logging.getLogger("charset_normalizer")
         char_logger.setLevel(logging.WARNING)
-        self._client = ClientSession()
+        self._client = aiohttp.ClientSession(version=aiohttp.HttpVersion11)
 
         self._pump_manager = WiFiPumpManager(
             client=self._client,

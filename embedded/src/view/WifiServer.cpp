@@ -90,6 +90,27 @@ void CWifiServer::StartServer()
     _server.begin();
 }
 
+static bool endsWith(const std::string & str, const std::string & suffix)
+{
+    return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+}
+
+static bool startsWith(const std::string & str, const std::string & prefix)
+{
+    return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+}
+
+void CWifiServer::SendKeyValue(std::string key, std::string value, bool add_comma)
+{
+    _client.print("\"");
+    _client.print(key.c_str());
+    _client.print("\": ");
+    _client.print(value.c_str());
+
+    if (add_comma)
+        _client.println(",");
+}
+
 void CWifiServer::HandleClient()
 {
     _client = _server.available(); // listen for incoming _clients
@@ -99,7 +120,7 @@ void CWifiServer::HandleClient()
 
         LogLn("new client"); // print a message out the serial port
 
-        String currentLine = ""; // make a String to hold incoming data from the client
+        std::string currentLine = ""; // make a String to hold incoming data from the client
 
         while (_client.connected())
         { // loop while the client's connected
@@ -109,8 +130,6 @@ void CWifiServer::HandleClient()
 
                 char c = _client.read(); // read a byte, then
 
-                // Log(std::string(1, c)); // print it out the serial monitor
-
                 if (c == '\n')
                 { // if the byte is a newline character
 
@@ -118,7 +137,7 @@ void CWifiServer::HandleClient()
 
                     // that's the end of the client HTTP request, so send a response:
 
-                    if (currentLine.length() == 0)
+                    if (currentLine.empty())
                     {
 
                         // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
@@ -135,12 +154,14 @@ void CWifiServer::HandleClient()
 
                         if (_presenter)
                         {
-                            _client.println("{");
-                            _client.print("\"PumpStatus\": ");
-                            _client.print(_presenter->GetPumpStatus());
-                            _client.println(",");
-                            _client.print("\"Humidity\": ");
-                            _client.println(_presenter->GetHumidityV(false).c_str());
+                            _client.print("{");
+                            //
+                            SendKeyValue("PumpStatus", std::to_string(_presenter->GetPumpStatus()), true);
+                            SendKeyValue("Humidity", _presenter->GetHumidityV(false), true);
+                            //
+                            SendKeyValue("FBHumidityV", _presenter->GetFBHumidityV(false), true);
+                            SendKeyValue("FBOnTimeHour", _presenter->GetFBHour(), true);
+                            SendKeyValue("FBPumpDurationS", _presenter->GetFBPumpDurationS(false), false);
                             _client.println("}");
                         }
 
@@ -154,33 +175,75 @@ void CWifiServer::HandleClient()
                     }
                     else
                     { // if you got a newline, then clear currentLine:
+                        LogLn(currentLine);
+                        std::string get_prefix("GET /");
 
-                        currentLine = "";
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, "/on HTTP/1.1"))
+                        {
+                            if (_presenter)
+                            {
+                                _presenter->TurnOnPumpFor(_presenter->GetFBPumpDurationMs());
+                            }
+                        }
+
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, "/off HTTP/1.1"))
+                        {
+                            if (_presenter)
+                            {
+                                _presenter->TurnOffPump();
+                            }
+                        }
+
+                        //
+
+                        std::string test_str = "/pump_on_time_s HTTP/1.1";
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        {
+                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
+
+                            if (_presenter)
+                            {
+                                _presenter->SetFBPumpDurationMs(stoi(value) * 1000);
+                            }
+                        }
+
+                        //
+
+                        test_str = "/fb_hour HTTP/1.1";
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        {
+                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
+
+                            if (_presenter)
+                            {
+                                _presenter->SetFBTime(stoi(value));
+                            }
+                        }
+
+                        //
+
+                        test_str = "/fb_humidity_mv HTTP/1.1";
+                        if (startsWith(currentLine, get_prefix) && endsWith(currentLine, test_str))
+                        {
+                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
+                            if (_presenter)
+                            {
+                                _presenter->SetFBHumidityV(static_cast<float>(stoi(value)) / 1000);
+                            }
+                        }
+
+                        //
+
+                        currentLine.clear();
                     }
                 }
                 else if (c != '\r')
                 { // if you got anything else but a carriage return character,
 
-                    currentLine += c; // add it to the end of the currentLine
+                    currentLine += std::string(1, c); // add it to the end of the currentLine
                 }
 
                 // Check to see if the client request was "GET /H" or "GET /L":
-
-                if (currentLine.endsWith("GET /on"))
-                {
-                    if (_presenter)
-                    {
-                        _presenter->TurnOnPumpFor(_presenter->GetFBPumpDurationMs());
-                    }
-                }
-
-                if (currentLine.endsWith("GET /off"))
-                {
-                    if (_presenter)
-                    {
-                        _presenter->TurnOffPump();
-                    }
-                }
             }
         }
 

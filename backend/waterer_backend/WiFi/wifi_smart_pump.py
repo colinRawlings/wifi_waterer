@@ -20,6 +20,7 @@ import numpy as np
 import waterer_backend.config as cfg
 import waterer_backend.utils as ut
 from waterer_backend.models import (
+    ActivationTime,
     SmartPumpSettings,
     SmartPumpStatus,
     SmartPumpStatusData,
@@ -37,6 +38,9 @@ _LOGGER = logging.getLogger(__name__)
 class Response(BaseModel):
     PumpStatus: bool
     Humidity: float
+    FBHumidityV: float
+    FBOnTimeHour: int
+    FBPumpDurationS: int
 
 
 ###############################################################
@@ -122,24 +126,24 @@ class WiFiSmartPump:
         return SmartPumpSettings(**default_config_dict)
 
     def save_settings(self) -> str:
-        ...
-        # user_config_filepath = cfg.get_user_config_filepath()
-        # if user_config_filepath.is_file():
-        #     with open(user_config_filepath, "r") as fh:
-        #         user_config = json.load(fh)
-        # else:
-        #     user_config = {}
 
-        # user_config[self.address] = self.settings.dict()
+        user_config_filepath = cfg.get_user_config_filepath()
+        if user_config_filepath.is_file():
+            with open(user_config_filepath, "r") as fh:
+                user_config = json.load(fh)
+        else:
+            user_config = {}
 
-        # cfg.get_user_config_filepath().parent.mkdir(exist_ok=True, parents=True)
+        user_config[self.address] = self.settings.dict()
 
-        # with open(cfg.get_user_config_filepath(), "w") as fh:
-        #     json.dump(user_config, fh)
+        cfg.get_user_config_filepath().parent.mkdir(exist_ok=True, parents=True)
 
-        # _LOGGER.info(f"{self._channel}: Saved settings to: {user_config_filepath}")
+        with open(cfg.get_user_config_filepath(), "w") as fh:
+            json.dump(user_config, fh)
 
-        # return str(cfg.get_user_config_filepath())
+        _LOGGER.info(f"{self._channel}: Saved settings to: {user_config_filepath}")
+
+        return str(cfg.get_user_config_filepath())
 
     def save_history(self) -> str:
 
@@ -180,11 +184,32 @@ class WiFiSmartPump:
     def settings(self) -> SmartPumpSettings:
         return self._settings
 
-    @settings.setter
-    def settings(self, value: SmartPumpSettings) -> None:
+    async def send_settings(self) -> None:
+
+        #
+
+        s = self._settings
+
+        embedded_settings = dict(
+            pump_on_time_s=s.pump_on_time_s,
+            fb_hour=s.pump_activation_time.hour,
+            fb_humidity_mv=1000
+            * (
+                s.wet_humidity_V
+                + s.feedback_setpoint_pcnt / 100 * (s.dry_humidity_V - s.wet_humidity_V)
+            ),
+        )
+
+        for key, value in embedded_settings.items():
+            async with self._client.get(
+                f"http://{self._ip}/{int(value)}/{key}"
+            ) as resp:
+                _ = await resp.text()
+
+    async def set_settings(self, value: SmartPumpSettings) -> None:
         self._settings = value
         _LOGGER.info(f"{self._channel}: New settings: {self._settings}")
-        # TODO: right to ip
+        await self.send_settings()
 
     @property
     def history(self) -> SmartPumpStatusData:
@@ -271,102 +296,36 @@ class WiFiSmartPump:
 
         return alpha * rel_humidity_V + (1 - alpha) * last_value
 
-    # async def check_client(self) -> bool:
-
-    #     if self._client is None:
-    #         _LOGGER.warning("No device connected")
-    #         return False
-
-    #     return self._client.is_connected  # n.b. log warning on disconnect
-
     async def turn_on(self, duration_ms: int = -1):
 
         async with self._client.get(f"http://{self._ip}/on") as resp:
             response = await resp.text()
 
-        # if not await self.check_client():
-        #     _LOGGER.info("{self.channel}: turn_on: failed check_client")
-        #     return
-
-        # assert self._client is not None
-
-        # on_code_bytes = bytearray(struct.pack("<I", duration_ms))
-
-        # current_char_bytes = await self._client.read_gatt_char(PUMP_ATTR_ID)
-        # _LOGGER.info(
-        #     f"{self.channel}: preparing to write {on_code_bytes} (current: {current_char_bytes})"
-        # )
-
-        # await self._client.write_gatt_char(PUMP_ATTR_ID, on_code_bytes)
-
     async def turn_off(self):
         async with self._client.get(f"http://{self._ip}/off") as resp:
             response = await resp.text()
 
-        # if not await self.check_client():
-        #     _LOGGER.info("{self.channel}: turn_off: failed check_client")
-        #     return
-
-        # assert self._client is not None
-
-        # off_code_bytes = struct.pack("<I", 0)
-
-        # current_char_bytes = await self._client.read_gatt_char(PUMP_ATTR_ID)
-        # _LOGGER.debug(
-        #     f"{self.channel}: preparing to write {off_code_bytes} (current: {current_char_bytes})"
-        # )
-
-        # await self._client.write_gatt_char(PUMP_ATTR_ID, off_code_bytes)
-
     ###############################################################
     # Access Data
     ###############################################################
-
-    # async def get_humidity_V(self) -> float:
-
-    #     if not await self.check_client():
-    #         _LOGGER.info(
-    #             f"{self.channel}: get_humidity_V: no client returning a humidity of 0.5 V"
-    #         )
-    #         return 0.5
-
-    #     assert self._client is not None
-
-    #     humidity_bytes = await self._client.read_gatt_char(HUMIDITY_ATTR_ID)
-    #     return struct.unpack("f", humidity_bytes)[0]
-
-    # async def get_pump_status(self) -> bool:
-    #     if not await self.check_client():
-    #         _LOGGER.info(
-    #             f"{self.channel}: get_pump_status: no client returning a pump status of False"
-    #         )
-    #         return False
-
-    #     assert self._client is not None
-
-    #     status_bytes = await self._client.read_gatt_char(PUMP_STATUS_ATTR_ID)
-    #     return struct.unpack("b", status_bytes)[0]  # type: ignore
 
     async def _update_status(self) -> bool:
 
         async with self._client.get(f"http://{self._ip}/") as resp:
             txt = await resp.text()
 
-        # if self._client is None:
-        #     _LOGGER.warning("No device connected")
-        #     return False
-
-        # _LOGGER.debug(f"Collecting status of pump: {self._channel}")
-
-        # rel_humidity_V = await self.get_humidity_V()
-        # pump_status = await self.get_pump_status()
-
         response = Response(**json.loads(txt))
 
         rel_humidity_V = response.Humidity
         pump_status = response.PumpStatus
 
-        rel_humidity_pcnt = self._pcnt_from_V_humidity(rel_humidity_V)
+        s = self._settings
+        s.pump_activation_time = ActivationTime(hour=response.FBOnTimeHour, minute=0)
+        val = self._pcnt_from_V_humidity(response.FBHumidityV)
+        assert isinstance(val, float)
+        s.feedback_setpoint_pcnt = val
+        s.pump_on_time_s = response.FBPumpDurationS
+
         smoothed_rel_humidity_V = self._smoothed_humidity(rel_humidity_V)
 
         status_time = time()

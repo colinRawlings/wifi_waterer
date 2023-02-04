@@ -70,6 +70,26 @@ std::string CPresenter::GetFBTime()
 
     return FmtTimeGroup(_fb_settings->FBHour()) + ":" + FmtTimeGroup(0);
 }
+
+std::string CPresenter::GetFBHour()
+{
+    if (!_fb_settings)
+        return "";
+
+    return std::to_string(_fb_settings->FBHour());
+}
+
+void CPresenter::SetFBTime(int hour)
+{
+    if (!_fb_settings)
+        return;
+
+    if (hour < 0 || hour > 23)
+        return;
+
+    _fb_settings->SetFBHour(hour);
+}
+
 void CPresenter::IncFBTime()
 {
     if (!_fb_settings)
@@ -77,6 +97,7 @@ void CPresenter::IncFBTime()
 
     _fb_settings->SetFBHour(_fb_settings->FBHour() + 1);
 }
+
 void CPresenter::DecFBTime()
 {
     if (!_fb_settings)
@@ -85,13 +106,25 @@ void CPresenter::DecFBTime()
     _fb_settings->SetFBHour(_fb_settings->FBHour() - 1);
 }
 
-std::string CPresenter::GetFBHumidityV()
+std::string CPresenter::GetFBHumidityV(bool add_unit)
 {
     if (!_fb_settings)
         return "<err>";
 
-    return FormatHumidityV(_fb_settings->HumidityV());
+    return FormatHumidityV(_fb_settings->HumidityV(), add_unit);
 }
+
+void CPresenter::SetFBHumidityV(float value)
+{
+    if (!_fb_settings)
+        return;
+
+    if (value < 0 || value > 3.3)
+        return;
+
+    _fb_settings->SetHumidityV(value);
+}
+
 void CPresenter::IncFBHumidityV()
 {
     if (!_fb_settings)
@@ -107,12 +140,15 @@ void CPresenter::DecFBHumidityV()
     _fb_settings->SetHumidityV(_fb_settings->HumidityV() - 0.05);
 }
 
-std::string CPresenter::GetFBPumpDurationS()
+std::string CPresenter::GetFBPumpDurationS(bool add_unit)
 {
     if (!_fb_settings)
         return "<err>";
 
-    return std::to_string(_fb_settings->PumpDurationMs() / 1000) + "s";
+    if (add_unit)
+        return std::to_string(_fb_settings->PumpDurationMs() / 1000) + "s";
+
+    return std::to_string(_fb_settings->PumpDurationMs() / 1000);
 }
 
 long CPresenter::GetFBPumpDurationMs()
@@ -121,6 +157,14 @@ long CPresenter::GetFBPumpDurationMs()
         return 0;
 
     return _fb_settings->PumpDurationMs();
+}
+
+void CPresenter::SetFBPumpDurationMs(long duration_ms)
+{
+    if (!_fb_settings)
+        return;
+
+    return _fb_settings->SetPumpDurationMs(duration_ms);
 }
 
 void CPresenter::IncFBPumpDurationMs()

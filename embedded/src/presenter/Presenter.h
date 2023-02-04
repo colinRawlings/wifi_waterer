@@ -34,15 +34,19 @@ class CPresenter : public CUpdateable
     void SetFBSettings(CFBSettings_uptr fb_settings);
 
     std::string GetFBTime();
+    std::string GetFBHour();
+    void SetFBTime(int hour);
     void IncFBTime();
     void DecFBTime();
 
-    std::string GetFBHumidityV();
+    std::string GetFBHumidityV(bool add_unit = true);
+    void SetFBHumidityV(float value);
     void IncFBHumidityV();
     void DecFBHumidityV();
 
-    std::string GetFBPumpDurationS();
+    std::string GetFBPumpDurationS(bool add_unit = true);
     long GetFBPumpDurationMs();
+    void SetFBPumpDurationMs(long duration_ms);
     void IncFBPumpDurationMs();
     void DecFBPumpDurationMs();
 

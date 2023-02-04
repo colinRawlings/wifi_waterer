@@ -30,6 +30,8 @@ class CWifiServer : public CUpdateable, public std::enable_shared_from_this<CWif
 
     void HandleClient();
 
+    void SendKeyValue(std::string key, std::string value, bool add_comma);
+
     WiFiServer _server;
     WiFiClient _client;
 
