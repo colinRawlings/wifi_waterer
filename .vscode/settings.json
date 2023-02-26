@@ -71,5 +71,6 @@
         "variant": "cpp",
         "fstream": "cpp"
     },
-    "python.formatting.blackPath": "${workspaceFolder}/backend/.venv/bin/black"
+    "python.formatting.blackPath": "${workspaceFolder}/backend/.venv/bin/black",
+    "cmake.sourceDirectory": "${workspaceFolder}/embedded"
 }

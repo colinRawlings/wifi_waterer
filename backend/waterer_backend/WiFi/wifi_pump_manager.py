@@ -13,7 +13,7 @@ import aiohttp
 import numpy as np
 import waterer_backend.config as cfg
 import waterer_backend.smart_pump as sp
-from waterer_backend.WiFi.ip_addresses import IPS
+from waterer_backend.WiFi.find_smart_pumps import find_smart_pump_ips
 from waterer_backend.WiFi.wifi_smart_pump import WiFiSmartPump
 
 ###############################################################
@@ -162,17 +162,20 @@ class PumpManagerContext:
 
         self._pump_manager: Optional[WiFiPumpManager] = None
 
-        self._ips: List[str] = IPS  # TODO: discovery
-
     async def __aenter__(self) -> WiFiPumpManager:
         char_logger = logging.getLogger("charset_normalizer")
         char_logger.setLevel(logging.WARNING)
         self._client = aiohttp.ClientSession(version=aiohttp.HttpVersion11)
 
+        ips = await find_smart_pump_ips(self._client)
+
+        if len(ips) == 0:
+            raise RuntimeError("No smart pumps detected on network")
+
         self._pump_manager = WiFiPumpManager(
             client=self._client,
             status_update_interval_s=self._status_update_interval_s,
-            ips=self._ips,
+            ips=ips,
             allow_load_history=self._allow_load_history,
         )
 
