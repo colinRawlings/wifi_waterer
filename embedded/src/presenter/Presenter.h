@@ -13,6 +13,9 @@
 class CFBSettings;
 using CFBSettings_ptr = std::shared_ptr<CFBSettings>;
 
+class CFBRunner;
+using CFBRunner_ptr = std::shared_ptr<CFBRunner>;
+
 //
 
 class CPresenter;
@@ -66,8 +69,8 @@ class CPresenter : public CUpdateable
     std::string RemainingPumpOnTimeS();
     void TurnOffPump();
 
-    //
-    void Update() override;
+    // FB Runner
+    void SetFBRunner(CFBRunner_ptr runner);
 
   protected:
     CPresenter();
@@ -76,4 +79,5 @@ class CPresenter : public CUpdateable
     IRealTimeClock_ptr _rtc;
     CFBSettings_ptr _fb_settings;
     ISmartPump_ptr _pump;
+    CFBRunner_ptr _fb_runner;
 };

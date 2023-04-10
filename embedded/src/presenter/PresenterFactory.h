@@ -8,20 +8,22 @@
 
 #include "../hardware/RealTimeClock.h"
 #include "../hardware/SmartPump.h"
-#include "../model/FBSettings.h"
+#include "../model/FBRunner.h"
 
 CPresenter_ptr CreatePresenter(SSmartPumpPins smart_pump_pins)
 {
     auto presenter = CPresenter::Create();
 
-    auto rtc = CRealTimeClock::Create();
-    presenter->SetRealTimeClock(std::move(rtc));
+    auto clock = CRealTimeClock::Create();
+    presenter->SetRealTimeClock(clock);
 
     auto fb_settings = CFBSettings::Create();
-    presenter->SetFBSettings(std::move(fb_settings));
+    presenter->SetFBSettings(fb_settings);
 
     auto pump = CSmartPump::Create(smart_pump_pins);
-    presenter->SetSmartPump(std::move(pump));
+    presenter->SetSmartPump(pump);
+
+    auto fb_runner = CFBRunner::Create(clock, pump, fb_settings);
 
     return presenter;
 }

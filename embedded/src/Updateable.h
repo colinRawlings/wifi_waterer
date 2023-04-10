@@ -18,6 +18,8 @@ class CUpdateable
 
   protected:
     void SetChildren(CUpdateable_vec children);
+    void AddChild(CUpdateable_ptr child);
+
 
   private:
     CUpdateable_vec _children;
