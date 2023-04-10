@@ -106,11 +106,6 @@ install-dev: | install-host-dev-tools venv
 	cd ${FRONTEND_DIR} && yarn install --production=false
 	cd ${FRONTEND_DIR}/node_modules/@types && ${RENAME_CMD} plotly.js plotly.js-dist ; exit 0
 
-install-fw:
-	sudo cp ${makefile_dir}/BLE_fw/rtl8761b_config /lib/firmware/rtl_bt/rtl8761bu_config.bin
-	sudo cp ${makefile_dir}/BLE_fw/rtl8761b_fw /lib/firmware/rtl_bt/rtl8761bu_fw.bin
-
-
 install: | install-host-tools venv
 	${COMMENT_CHAR} Install Backend
 	${BACKEND_VENV_PYTHON} -m pip install pip-tools
@@ -127,6 +122,14 @@ install-services: | backend_startup_script frontend_startup_script
 	sudo cp ${makefile_dir}/waterer_frontend.service /etc/systemd/system/waterer_frontend.service
 	sudo systemctl enable waterer_frontend
 
+
+uninstall-services:
+	sudo systemctl stop waterer_backend
+	sudo systemctl disable waterer_backend
+	sudo systemctl stop waterer_frontend
+	sudo systemctl disable waterer_frontend
+	systemctl daemon-reload
+	systemctl reset-failed
 
 set-timezone:
 	sudo timedatectl set-timezone ${SERVER_TIMEZONE}
