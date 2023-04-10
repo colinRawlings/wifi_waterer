@@ -3,6 +3,7 @@
 #include "../view/Helpers.h"
 
 #include "../model/FBSettings.h"
+#include "../model/FBRunner.h"
 
 #include <string>
 
@@ -26,7 +27,7 @@ CPresenter_ptr CPresenter::Create()
 CPresenter::CPresenter() {}
 
 // Current Time
-void CPresenter::SetRealTimeClock(IRealTimeClock_uptr rtc)
+void CPresenter::SetRealTimeClock(IRealTimeClock_ptr rtc)
 {
     _rtc = std::move(rtc);
 }
@@ -74,7 +75,7 @@ void CPresenter::IncCurrentTimeMinute()
 
 // FB Settings
 
-void CPresenter::SetFBSettings(CFBSettings_uptr fb_settings)
+void CPresenter::SetFBSettings(CFBSettings_ptr fb_settings)
 {
     _fb_settings = std::move(fb_settings);
 }
@@ -215,9 +216,11 @@ void CPresenter::SaveFBSettingsToFlash()
 
 // Smart Pump
 
-void CPresenter::SetSmartPump(ISmartPump_uptr pump)
+void CPresenter::SetSmartPump(ISmartPump_ptr pump)
 {
-    _pump = std::move(pump);
+    _pump = pump;
+    if (auto updateable_pump = std::dynamic_pointer_cast<CUpdateable>(pump))
+        AddChild(updateable_pump);
 }
 
 bool CPresenter::GetPumpStatus()
@@ -236,12 +239,12 @@ std::string CPresenter::GetHumidityV(bool add_unit)
     return FormatHumidityV(_pump->GetHumidityV(), add_unit);
 }
 
-void CPresenter::TurnOnPumpFor(long duration_ms)
+void CPresenter::TurnOnPumpForMs(long duration_ms)
 {
     if (!_pump)
         return;
 
-    _pump->TurnOnFor(duration_ms);
+    _pump->TurnOnForMs(duration_ms);
 }
 
 std::string CPresenter::RemainingPumpOnTimeS()
@@ -260,14 +263,9 @@ void CPresenter::TurnOffPump()
     _pump->TurnOff();
 }
 
-//
-
-void CPresenter::Update()
+void CPresenter::SetFBRunner(CFBRunner_ptr fb_runner)
 {
-    CUpdateable::Update();
-
-    if (_pump)
-    {
-        _pump->Update();
-    }
+    _fb_runner = fb_runner;
+    if (auto updateable_fb_runner = std::dynamic_pointer_cast<CUpdateable>(fb_runner))
+        AddChild(updateable_fb_runner);
 }

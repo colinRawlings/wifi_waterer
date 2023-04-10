@@ -5,7 +5,7 @@
 #include <memory>
 
 class IRealTimeClock;
-using IRealTimeClock_uptr = std::unique_ptr<IRealTimeClock>;
+using IRealTimeClock_ptr = std::shared_ptr<IRealTimeClock>;
 
 class IRealTimeClock
 {
@@ -17,4 +17,6 @@ class IRealTimeClock
     virtual void SetHours(byte) = 0;
     virtual void SetMinutes(byte) = 0;
     virtual void SetSeconds(byte) = 0;
+
+    virtual ~IRealTimeClock() = default;
 };

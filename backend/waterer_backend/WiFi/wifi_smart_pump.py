@@ -35,6 +35,7 @@ from waterer_backend.status_log import BinaryStatusLog, FloatStatusLog
 
 _LOGGER = logging.getLogger(__name__)
 
+_CLOCK_SYNC_HOUR = 2 # sync at 2am hack to work around shitty rtc in arduino
 
 class Response(BaseModel):
     PumpStatus: bool
@@ -42,6 +43,13 @@ class Response(BaseModel):
     FBHumidityV: float
     FBOnTimeHour: int
     FBPumpDurationS: int
+
+###############################################################
+# Functions
+###############################################################
+
+def get_current_hour()->int:
+    return datetime.now().hour
 
 
 ###############################################################
@@ -85,7 +93,7 @@ class WiFiSmartPump:
             self._init_logs()
 
         self._last_feedback_update_time: ty.Optional[datetime] = None
-        self._last_auto_save_time: float = time()
+        self._last_update_hour: int = get_current_hour()
 
     ###############################################################
 
@@ -498,9 +506,23 @@ class WiFiSmartPump:
 
     ###############################################################
 
+    async def _update_arduino_clock(self):
+        this_update_hour = get_current_hour()
+
+        if self._last_update_hour != this_update_hour and this_update_hour == _CLOCK_SYNC_HOUR:
+            _LOGGER.info(f"Re-sending the time to keep the arduino in sync")
+            await self.send_settings()
+            
+        self._last_update_hour = this_update_hour
+        
+
+    ###############################################################
+
     async def _do_loop_iteration(self):
 
-        ok = await self._update_status()
+        await self._update_status()
+        
+        await self._update_arduino_clock()
 
     ###############################################################
 

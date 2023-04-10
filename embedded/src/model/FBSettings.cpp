@@ -14,7 +14,7 @@ FlashStorage(flash_store_fb_settings, SPersistentFbSettings);
 
 //
 
-CFBSettings_uptr CFBSettings::Create()
+CFBSettings_ptr CFBSettings::Create()
 {
     return std::unique_ptr<CFBSettings>(new CFBSettings);
 }

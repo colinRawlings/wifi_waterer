@@ -14,4 +14,6 @@ class IPushSwitch
 {
   public:
     virtual PushSwitchState GetState() = 0;
+
+    virtual ~IPushSwitch() = default;
 };

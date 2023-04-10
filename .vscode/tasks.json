@@ -3,7 +3,7 @@
         {
             "label": "gtest",
             "type": "shell",
-            "command": "${workspaceFolder}/build/test/test_runner",
+            "command": "${workspaceFolder}/build/tests/test_runner",
             "problemMatcher": []
         }
     ]

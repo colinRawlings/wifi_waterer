@@ -7,12 +7,12 @@
 //
 
 class CFBSettings;
-using CFBSettings_uptr = std::unique_ptr<CFBSettings>;
+using CFBSettings_ptr = std::shared_ptr<CFBSettings>;
 
 class CFBSettings
 {
   public:
-    static CFBSettings_uptr Create();
+    static CFBSettings_ptr Create();
 
     byte FBHour();
     float HumidityV();

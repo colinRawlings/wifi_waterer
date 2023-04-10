@@ -17,4 +17,6 @@ class ILiquidCrystal
 
     virtual bool Backlight() = 0;
     virtual void SetBacklight(bool is_on) = 0;
+
+    virtual ~ILiquidCrystal() = default;
 };

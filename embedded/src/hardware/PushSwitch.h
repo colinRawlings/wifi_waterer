@@ -17,10 +17,11 @@ class CPushSwitch : public IPushSwitch
 
     PushSwitchState GetState() override;
 
-    CPushSwitch(uint8_t pin_, bool pullUp_);
     ~CPushSwitch() = default;
 
   private:
+    CPushSwitch(uint8_t pin_, bool pullUp_);
+    
     uint8_t _pin;
     bool _pull_up;
 

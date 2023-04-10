@@ -11,7 +11,10 @@
 //
 
 class CFBSettings;
-using CFBSettings_uptr = std::unique_ptr<CFBSettings>;
+using CFBSettings_ptr = std::shared_ptr<CFBSettings>;
+
+class CFBRunner;
+using CFBRunner_ptr = std::shared_ptr<CFBRunner>;
 
 //
 
@@ -24,7 +27,7 @@ class CPresenter : public CUpdateable
     static CPresenter_ptr Create();
 
     // Current Time
-    void SetRealTimeClock(IRealTimeClock_uptr rtc);
+    void SetRealTimeClock(IRealTimeClock_ptr rtc);
 
     std::string GetCurrentTime();
 
@@ -35,7 +38,7 @@ class CPresenter : public CUpdateable
     void IncCurrentTimeMinute();
 
     // FB Settings
-    void SetFBSettings(CFBSettings_uptr fb_settings);
+    void SetFBSettings(CFBSettings_ptr fb_settings);
 
     std::string GetFBTime();
     std::string GetFBHour();
@@ -58,22 +61,23 @@ class CPresenter : public CUpdateable
     void SaveFBSettingsToFlash();
 
     // Smart Pump
-    void SetSmartPump(ISmartPump_uptr pump);
+    void SetSmartPump(ISmartPump_ptr pump);
 
     bool GetPumpStatus();
     std::string GetHumidityV(bool add_unit = true);
-    void TurnOnPumpFor(long duration_ms);
+    void TurnOnPumpForMs(long duration_ms);
     std::string RemainingPumpOnTimeS();
     void TurnOffPump();
 
-    //
-    void Update() override;
+    // FB Runner
+    void SetFBRunner(CFBRunner_ptr runner);
 
   protected:
     CPresenter();
     virtual ~CPresenter() = default;
 
-    IRealTimeClock_uptr _rtc;
-    CFBSettings_uptr _fb_settings;
-    ISmartPump_uptr _pump;
+    IRealTimeClock_ptr _rtc;
+    CFBSettings_ptr _fb_settings;
+    ISmartPump_ptr _pump;
+    CFBRunner_ptr _fb_runner;
 };

@@ -3,7 +3,7 @@
 #include <memory>
 
 class ISmartPump;
-using ISmartPump_uptr = std::unique_ptr<ISmartPump>;
+using ISmartPump_ptr = std::shared_ptr<ISmartPump>;
 
 enum class OutputStates : byte {
     OFF = false,
@@ -23,9 +23,11 @@ class ISmartPump
     // pump
     virtual bool GetStatus() = 0;
     virtual void TurnOff() = 0;
-    virtual void TurnOnFor(long activation_duration_ms) = 0;
+    virtual void TurnOnForMs(long activation_duration_ms) = 0;
     virtual long RemainingOnTimeMs() = 0;
 
     //
     virtual void Update() = 0;
+
+    virtual ~ISmartPump() = default;
 };

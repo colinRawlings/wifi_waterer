@@ -24,8 +24,6 @@ logger = logging.getLogger(__name__)
 
 SCAN_DURATION_S = 5
 
-MIN_RSSI = -95
-
 ###############################################################
 # Class
 ###############################################################
@@ -131,10 +129,7 @@ class WiFiPumpManager:
         for idx, pump in enumerate(self._pumps):
             logger.info(f"starting pump: {idx+1} / {len(self._pumps)}")
             await pump.start()
-            await asyncio.sleep(
-                self._status_update_interval_s
-                / len(self._pumps)  # stagger start to make BLE happy?
-            )
+
 
     async def interrupt(self):
         for pump in self._pumps:
