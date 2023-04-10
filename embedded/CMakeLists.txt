@@ -4,7 +4,10 @@ cmake_minimum_required(VERSION 3.22)
 project(waterer VERSION 3.22)
 
 set(CMAKE_CXX_STANDARD 14)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 add_definitions(-DARDUINO_TESTING)
 add_compile_definitions(ARDUINO_TESTING)
