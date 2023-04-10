@@ -31,7 +31,7 @@ void CSmartPump::TurnOff()
     _pump.TurnOff();
 }
 
-void CSmartPump::TurnOnFor(long activation_duration_ms)
+void CSmartPump::TurnOnForMs(long activation_duration_ms)
 {
     _pump.TurnOnFor(activation_duration_ms);
 }

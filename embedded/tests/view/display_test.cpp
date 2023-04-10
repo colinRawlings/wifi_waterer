@@ -15,7 +15,6 @@ TEST(DisplaySuite, SetRow_withCache)
     EXPECT_CALL(*lcd, Print).Times(testing::Exactly(2));
     EXPECT_CALL(*lcd, SetCursor).Times(testing::Exactly(2));
 
-    testing::Mock::AllowLeak(lcd.get());
     ASSERT_TRUE(display);
 
     //

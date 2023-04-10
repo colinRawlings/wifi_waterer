@@ -39,7 +39,7 @@ void CManualPumpTab::OnFuncRightKey()
     if (!_presenter)
         return;
 
-    _presenter->TurnOnPumpFor(_presenter->GetFBPumpDurationMs());
+    _presenter->TurnOnPumpForMs(_presenter->GetFBPumpDurationMs());
 }
 
 void CManualPumpTab::OnFuncLeftKey()

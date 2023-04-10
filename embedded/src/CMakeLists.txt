@@ -6,6 +6,7 @@ target_sources(
          Types.cpp
          #
          model/FBSettings.cpp
+         model/FBRunner.cpp
          #
          presenter/Presenter.cpp
          #

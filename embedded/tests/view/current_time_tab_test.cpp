@@ -26,7 +26,6 @@ TEST(TabSuite, NextTabTest)
     auto rtc = std::make_unique<MockRealTimeClock>();
     EXPECT_CALL(*rtc, GetHours).Times(1).WillOnce(testing::Return(11));
     EXPECT_CALL(*rtc, GetMinutes).Times(1).WillOnce(testing::Return(42));
-    testing::Mock::AllowLeak(rtc.get());
 
     auto presenter = CPresenter::Create();
     presenter->SetRealTimeClock(std::move(rtc));
@@ -35,6 +34,8 @@ TEST(TabSuite, NextTabTest)
 
     auto tab_view = std::make_shared<MockTabView>();
     EXPECT_CALL(*tab_view, OnNextTab).Times(1);
+    EXPECT_CALL(*tab_view, OnKeyPressed)
+        .Times(1);
 
     //
 
@@ -46,8 +47,6 @@ TEST(TabSuite, NextTabTest)
         .WillOnce(testing::Return(PushSwitchState::UNPRESSED)) // on set
         .WillOnce(testing::Return(PushSwitchState::PRESSED))   // first call (press)
         ;
-
-    testing::Mock::AllowLeak(next_tab_push_switch.get());
 
     next_tab_key->SetPushSwitch(std::move(next_tab_push_switch));
 
@@ -76,7 +75,6 @@ TEST(TabSuite, IncHourTest)
     EXPECT_CALL(*rtc, GetHours).Times(2).WillRepeatedly(testing::Return(11));
     EXPECT_CALL(*rtc, GetMinutes).Times(1).WillOnce(testing::Return(42));
     EXPECT_CALL(*rtc, SetHours(12)).Times(1);
-    testing::Mock::AllowLeak(rtc.get());
 
     auto presenter = CPresenter::Create();
     presenter->SetRealTimeClock(std::move(rtc));
@@ -84,6 +82,8 @@ TEST(TabSuite, IncHourTest)
     //
 
     auto tab_view = std::make_shared<MockTabView>();
+    EXPECT_CALL(*tab_view, OnKeyPressed)
+        .Times(1);
 
     //
 
@@ -95,8 +95,6 @@ TEST(TabSuite, IncHourTest)
         .WillOnce(testing::Return(PushSwitchState::UNPRESSED)) // on set
         .WillOnce(testing::Return(PushSwitchState::PRESSED))   // first call (press)
         ;
-
-    testing::Mock::AllowLeak(left_func_push_switch.get());
 
     left_func_key->SetPushSwitch(std::move(left_func_push_switch));
 

@@ -18,8 +18,6 @@ TEST(KeySuite, KeyPress)
         .WillOnce(testing::Return(PushSwitchState::UNPRESSED)) // third call (not pressed)
         ;
 
-    testing::Mock::AllowLeak(push_switch.get());
-
     //
 
     key->SetPushSwitch(std::move(push_switch));

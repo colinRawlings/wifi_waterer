@@ -12,7 +12,7 @@
 class CSmartPump : public ISmartPump
 {
   public:
-    static ISmartPump_uptr Create(SSmartPumpPins pins);
+    static ISmartPump_ptr Create(SSmartPumpPins pins);
 
     // sensor
     float GetHumidityV() override;
@@ -20,7 +20,7 @@ class CSmartPump : public ISmartPump
     // pump
     bool GetStatus() override;
     void TurnOff() override;
-    void TurnOnFor(long activation_duration_ms) override;
+    void TurnOnForMs(long activation_duration_ms) override;
     long RemainingOnTimeMs() override;
 
     //

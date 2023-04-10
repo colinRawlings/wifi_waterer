@@ -34,7 +34,7 @@ class CTabBase : public CUpdateable
     using action_map_t = std::map<CKey_ptr, std::function<void()>>;
 
   public:
-    void Update();
+    void Update() override;
     std::string Name() { return _name; }
 
   protected:

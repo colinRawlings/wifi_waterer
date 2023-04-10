@@ -26,7 +26,7 @@ CPresenter_ptr CPresenter::Create()
 CPresenter::CPresenter() {}
 
 // Current Time
-void CPresenter::SetRealTimeClock(IRealTimeClock_uptr rtc)
+void CPresenter::SetRealTimeClock(IRealTimeClock_ptr rtc)
 {
     _rtc = std::move(rtc);
 }
@@ -74,7 +74,7 @@ void CPresenter::IncCurrentTimeMinute()
 
 // FB Settings
 
-void CPresenter::SetFBSettings(CFBSettings_uptr fb_settings)
+void CPresenter::SetFBSettings(CFBSettings_ptr fb_settings)
 {
     _fb_settings = std::move(fb_settings);
 }
@@ -215,9 +215,9 @@ void CPresenter::SaveFBSettingsToFlash()
 
 // Smart Pump
 
-void CPresenter::SetSmartPump(ISmartPump_uptr pump)
+void CPresenter::SetSmartPump(ISmartPump_ptr pump)
 {
-    _pump = std::move(pump);
+    _pump = pump;
 }
 
 bool CPresenter::GetPumpStatus()
@@ -236,12 +236,12 @@ std::string CPresenter::GetHumidityV(bool add_unit)
     return FormatHumidityV(_pump->GetHumidityV(), add_unit);
 }
 
-void CPresenter::TurnOnPumpFor(long duration_ms)
+void CPresenter::TurnOnPumpForMs(long duration_ms)
 {
     if (!_pump)
         return;
 
-    _pump->TurnOnFor(duration_ms);
+    _pump->TurnOnForMs(duration_ms);
 }
 
 std::string CPresenter::RemainingPumpOnTimeS()
