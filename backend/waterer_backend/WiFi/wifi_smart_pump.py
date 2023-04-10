@@ -15,6 +15,7 @@ from datetime import datetime
 from time import time
 from aiohttp import ClientSession
 from pydantic import BaseModel
+from aiohttp import client_exceptions
 
 import numpy as np
 import waterer_backend.config as cfg
@@ -75,6 +76,8 @@ class WiFiSmartPump:
 
         self._channel = channel
 
+        self._connected = True
+
         self._client = client
 
         self._settings = self._load_settings()
@@ -102,7 +105,6 @@ class WiFiSmartPump:
     ###############################################################
 
     def _load_settings(self) -> SmartPumpSettings:
-        ...
 
         assert self.address is not None
 
@@ -212,6 +214,28 @@ class WiFiSmartPump:
 
     ###############################################################
 
+    async def _transact_with_client(self, url: str) -> ty.Optional[str]:
+
+        success = False
+        try:
+            async with self._client.get(url) as resp:
+                txt_response = await resp.text()
+                success = True
+        except client_exceptions.ClientConnectorError as e:
+            txt_response = None
+            success = False
+
+        if not success and self._connected:
+            _LOGGER.warning(f"Lost connection to: {self.address}")
+        elif success and not self._connected:
+            _LOGGER.info(f"Regained connection to: {self.address}")
+
+        self._connected = success
+
+        return txt_response
+
+    ###############################################################
+
     async def send_settings(self) -> None:
 
         #
@@ -231,10 +255,9 @@ class WiFiSmartPump:
         )
 
         for key, value in embedded_settings.items():
-            async with self._client.get(
+            _ = await self._transact_with_client(
                 f"http://{self._ip}/{int(value)}/{key}"
-            ) as resp:
-                _ = await resp.text()
+            )
 
     ###############################################################
 
@@ -340,23 +363,22 @@ class WiFiSmartPump:
 
     async def turn_on(self, duration_ms: int = -1):
 
-        async with self._client.get(f"http://{self._ip}/on") as resp:
-            response = await resp.text()
+        await self._transact_with_client(f"http://{self._ip}/on")
 
     ###############################################################
 
     async def turn_off(self):
-        async with self._client.get(f"http://{self._ip}/off") as resp:
-            response = await resp.text()
+        await self._transact_with_client(f"http://{self._ip}/off")
 
     ###############################################################
     # Access Data
     ###############################################################
 
-    async def _update_device_status(self) -> ty.Tuple[float, bool]:
+    async def _update_device_status(self) -> ty.Optional[ty.Tuple[float, bool]]:
 
-        async with self._client.get(f"http://{self._ip}/") as resp:
-            txt = await resp.text()
+        txt = await self._transact_with_client(f"http://{self._ip}/")
+        if txt is None:
+            return None
 
         response = Response(**json.loads(txt))
 
@@ -376,7 +398,11 @@ class WiFiSmartPump:
 
     async def _update_status(self) -> bool:
 
-        rel_humidity_V, pump_status = await self._update_device_status()
+        result = await self._update_device_status()
+        if result is None:
+            return False
+
+        rel_humidity_V, pump_status = result
 
         smoothed_rel_humidity_V = self._smoothed_humidity(rel_humidity_V)
 
@@ -405,7 +431,7 @@ class WiFiSmartPump:
     @property
     async def status(self) -> SmartPumpStatus:
 
-        await self._update_status()
+        ok = await self._update_status()
 
         status_time, pump_status = self._pump_status_log.get_newest_value()
         assert status_time is not None

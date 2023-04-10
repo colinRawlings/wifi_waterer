@@ -3,5 +3,5 @@ __pycache__/
 *.egg-info/
 build/
 dist/
-waterer_backend/history/
 waterer_backend/config/
+waterer_backend/history/
