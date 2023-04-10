@@ -5,13 +5,12 @@
 #include "../model/interfaces/IRealTimeClock.h"
 
 class CRealTimeClock;
-using CRealTimeClock_uptr = std::unique_ptr<CRealTimeClock>;
 
 class CRealTimeClock : public IRealTimeClock
 {
 
   public:
-    static CRealTimeClock_uptr Create();
+    static IRealTimeClock_ptr Create();
 
     byte GetHours() override;
     byte GetMinutes() override;

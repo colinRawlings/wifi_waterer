@@ -1,8 +1,8 @@
 #include "RealTimeClock.h"
 
-CRealTimeClock_uptr CRealTimeClock::Create()
+IRealTimeClock_ptr CRealTimeClock::Create()
 {
-    return CRealTimeClock_uptr(new CRealTimeClock);
+    return IRealTimeClock_ptr(new CRealTimeClock);
 }
 
 byte CRealTimeClock::GetHours()

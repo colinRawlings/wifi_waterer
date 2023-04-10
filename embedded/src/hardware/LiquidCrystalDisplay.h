@@ -12,6 +12,7 @@
 
 class LiquidCrystal;
 class CDigitalOutput;
+using CDigitalOutput_ptr = std::shared_ptr<CDigitalOutput>;
 
 class CLiquidCrystalDisplay;
 using CLiquidCrystalDisplay_uptr = std::unique_ptr<CLiquidCrystalDisplay>;
@@ -32,5 +33,5 @@ class CLiquidCrystalDisplay : public ILiquidCrystal
     CLiquidCrystalDisplay(SLCDPins pins);
 
     std::unique_ptr<LiquidCrystal> _lcd;
-    std::unique_ptr<CDigitalOutput> _backlight_power;
+    CDigitalOutput_ptr _backlight_power;
 };

@@ -219,8 +219,7 @@ void CPresenter::SaveFBSettingsToFlash()
 void CPresenter::SetSmartPump(ISmartPump_ptr pump)
 {
     _pump = pump;
-    if (auto updateable_pump = std::dynamic_pointer_cast<CUpdateable>(pump))
-        AddChild(updateable_pump);
+    AddChild(_pump);
 }
 
 bool CPresenter::GetPumpStatus()
@@ -266,6 +265,5 @@ void CPresenter::TurnOffPump()
 void CPresenter::SetFBRunner(CFBRunner_ptr fb_runner)
 {
     _fb_runner = fb_runner;
-    if (auto updateable_fb_runner = std::dynamic_pointer_cast<CUpdateable>(fb_runner))
-        AddChild(updateable_fb_runner);
+    AddChild(fb_runner);
 }

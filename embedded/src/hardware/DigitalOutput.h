@@ -3,14 +3,21 @@
 #include "../Types.h"
 
 #include "../model/interfaces/ISmartPump.h"
+#include "../Updateable.h"
 
-class CDigitalOutput
+#include <memory>
+
+class CDigitalOutput;
+using CDigitalOutput_ptr = std::shared_ptr<CDigitalOutput>;
+
+class CDigitalOutput : public CUpdateable
 {
   public:
-    CDigitalOutput(byte pin, bool inverted_output);
+    static CDigitalOutput_ptr Create(byte pin, bool inverted_output);
 
     // Turn on the pin - this cancels any timed activation
-    void TurnOn();
+    void
+    TurnOn();
 
     // Turn off the pin - this cancels any timed activation
     void TurnOff();
@@ -32,6 +39,8 @@ class CDigitalOutput
     void Update();
 
   private:
+    CDigitalOutput(byte pin, bool inverted_output);
+
     void SetState(OutputStates new_state);
 
   private:

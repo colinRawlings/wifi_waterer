@@ -9,6 +9,22 @@ CLiquidCrystalDisplay_uptr CLiquidCrystalDisplay::Create(SLCDPins pins)
     return CLiquidCrystalDisplay_uptr(new CLiquidCrystalDisplay(pins));
 }
 
+CLiquidCrystalDisplay::CLiquidCrystalDisplay(SLCDPins pins)
+    : _backlight_power(CDigitalOutput::Create(pins.backlight, false))
+{
+    _lcd = std::unique_ptr<LiquidCrystal>(new LiquidCrystal(
+        pins.Rs,
+        pins.E,
+        pins.D4_D7[0],
+        pins.D4_D7[1],
+        pins.D4_D7[2],
+        pins.D4_D7[3]));
+
+    _lcd->begin(16, 2);
+
+    _backlight_power->TurnOn();
+}
+
 void CLiquidCrystalDisplay::Print(std::string msg)
 {
     _lcd->print(String(msg.c_str()));
@@ -38,20 +54,4 @@ void CLiquidCrystalDisplay::SetBacklight(bool is_on)
         _backlight_power->TurnOn();
     else
         _backlight_power->TurnOff();
-}
-
-CLiquidCrystalDisplay::CLiquidCrystalDisplay(SLCDPins pins)
-{
-    _lcd = std::unique_ptr<LiquidCrystal>(new LiquidCrystal(
-        pins.Rs,
-        pins.E,
-        pins.D4_D7[0],
-        pins.D4_D7[1],
-        pins.D4_D7[2],
-        pins.D4_D7[3]));
-
-    _lcd->begin(16, 2);
-
-    _backlight_power = std::unique_ptr<CDigitalOutput>(new CDigitalOutput(pins.backlight, false));
-    _backlight_power->TurnOn();
 }

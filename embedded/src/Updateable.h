@@ -2,25 +2,21 @@
 
 #include "Types.h"
 
+#include "IUpdateable.h"
+
 #include <vector>
 #include <memory>
 
-class CUpdateable;
-using CUpdateable_ptr = std::shared_ptr<CUpdateable>;
-using CUpdateable_vec = std::vector<CUpdateable_ptr>;
-
-class CUpdateable
+class CUpdateable : public IUpdateable
 {
   public:
     CUpdateable();
 
-    virtual void Update();
+    void Update() override;
 
-  protected:
-    void SetChildren(CUpdateable_vec children);
-    void AddChild(CUpdateable_ptr child);
-
+    void AddChild(IUpdateable_ptr child) override;
+    void SetChildren(IUpdateable_ptr_vec children) override;
 
   private:
-    CUpdateable_vec _children;
+    IUpdateable_ptr_vec _children;
 };
