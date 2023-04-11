@@ -67,21 +67,17 @@ else
 	# This probably only works on ubuntu
 	sudo apt update
 	#
-	sudo apt install -y build-essential gcc make clang-format
-	# Currently have to force python3.9
-	sudo add-apt-repository ppa:deadsnakes/ppa
-	sudo apt update
-	sudo apt-get install -y python3.9-dev\
-	 python3.9-venv
-	# matplotlib (deps)
-	sudo apt install -y python3-matplotlib
+	sudo apt install -y \
+		build-essential \
+		gcc \
+		make \
+		clang-format \
+		software-properties-common
 	# node
 	curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 	sudo apt install -y nodejs
 	sudo npm install -g -y yarn
 	sudo npm install -g -y lite-server
-	# bluetooth
-	sudo apt install -y bluez
 endif
 
 install-host-dev-tools: install-host-tools

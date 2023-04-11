@@ -1,3 +1,4 @@
 .venv/
 build/
 backend/waterer_backend/history/pump_history.json
+launch_backend.sh
