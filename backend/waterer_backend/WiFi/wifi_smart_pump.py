@@ -94,6 +94,7 @@ class WiFiSmartPump:
 
         self._last_feedback_update_time: ty.Optional[datetime] = None
         self._last_update_hour: int = get_current_hour()
+        self._last_auto_save_time: float = time()
 
     ###############################################################
 
