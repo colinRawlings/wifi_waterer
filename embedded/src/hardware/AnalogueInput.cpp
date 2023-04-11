@@ -1,7 +1,14 @@
 #include "AnalogueInput.h"
 
+CAnalogueInput_ptr CAnalogueInput::Create(byte pin,
+                                          bool pull_up,
+                                          float averaging_time_constant_samples /*= 10*/)
+{
+    return CAnalogueInput_ptr(new CAnalogueInput(pin, pull_up, averaging_time_constant_samples));
+}
+
 CAnalogueInput::CAnalogueInput(byte pin, bool pull_up,
-                               float averaging_time_constant_samples /*= 10*/)
+                               float averaging_time_constant_samples)
     : m_Pin(pin)
     , m_PullUp(false)
     , m_AveragingTimeConstant_samples(averaging_time_constant_samples)

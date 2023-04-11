@@ -130,7 +130,6 @@ class WiFiPumpManager:
             logger.info(f"starting pump: {idx+1} / {len(self._pumps)}")
             await pump.start()
 
-
     async def interrupt(self):
         for pump in self._pumps:
             logger.info(f"interrupting: {pump.channel}")
@@ -165,6 +164,7 @@ class PumpManagerContext:
         ips = await find_smart_pump_ips(self._client)
 
         if len(ips) == 0:
+            await self._client.close()
             raise RuntimeError("No smart pumps detected on network")
 
         self._pump_manager = WiFiPumpManager(

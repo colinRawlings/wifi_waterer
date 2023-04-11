@@ -3,16 +3,18 @@
 static const int kSmoothedSamples{500};
 constexpr float kSmoothingFactor = 1.0f / kSmoothedSamples;
 
-ISmartPump_uptr CSmartPump::Create(SSmartPumpPins pins)
+ISmartPump_ptr CSmartPump::Create(SSmartPumpPins pins)
 {
-    return std::unique_ptr<CSmartPump>(new CSmartPump(pins));
+    return ISmartPump_ptr(new CSmartPump(pins));
 }
 
 CSmartPump::CSmartPump(SSmartPumpPins pins)
-    : _pump(pins.pump_pin, false)
-    , _humidity_sensor(pins.sensor_pin, false)
+    : _pump(CDigitalOutput::Create(pins.pump_pin, false))
+    , _humidity_sensor(CAnalogueInput::Create(pins.sensor_pin, false))
 {
-    _smoothed_humidity_V = _humidity_sensor.GetVoltage();
+    _smoothed_humidity_V = _humidity_sensor->GetVoltage();
+
+    SetChildren({_pump, _humidity_sensor});
 }
 
 float CSmartPump::GetHumidityV()
@@ -23,28 +25,27 @@ float CSmartPump::GetHumidityV()
 // pump
 bool CSmartPump::GetStatus()
 {
-    return _pump.GetOutputState() == OutputStates::ON;
+    return _pump->GetOutputState() == OutputStates::ON;
 }
 
 void CSmartPump::TurnOff()
 {
-    _pump.TurnOff();
+    _pump->TurnOff();
 }
 
 void CSmartPump::TurnOnForMs(long activation_duration_ms)
 {
-    _pump.TurnOnFor(activation_duration_ms);
+    _pump->TurnOnFor(activation_duration_ms);
 }
 
 long CSmartPump::RemainingOnTimeMs()
 {
-    return _pump.RemainingOnTime();
+    return _pump->RemainingOnTime();
 }
 
 void CSmartPump::Update()
 {
-    _pump.Update();
-    _humidity_sensor.Update();
+    CUpdateable::Update();
 
-    _smoothed_humidity_V = kSmoothingFactor * _humidity_sensor.GetVoltage() + (1 - kSmoothingFactor) * _smoothed_humidity_V;
+    _smoothed_humidity_V = kSmoothingFactor * _humidity_sensor->GetVoltage() + (1 - kSmoothingFactor) * _smoothed_humidity_V;
 }

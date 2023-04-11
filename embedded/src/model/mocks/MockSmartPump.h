@@ -17,4 +17,6 @@ class MockSmartPump : public ISmartPump
     MOCK_METHOD(long, RemainingOnTimeMs, (), (override));
 
     MOCK_METHOD(void, Update, (), (override));
+    MOCK_METHOD(void, AddChild, (IUpdateable_ptr), (override));
+    MOCK_METHOD(void, SetChildren, (IUpdateable_ptr_vec), (override));
 };

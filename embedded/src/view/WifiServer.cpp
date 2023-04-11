@@ -182,7 +182,7 @@ void CWifiServer::HandleClient()
                         {
                             if (_presenter)
                             {
-                                _presenter->TurnOnPumpFor(_presenter->GetFBPumpDurationMs());
+                                _presenter->TurnOnPumpForMs(_presenter->GetFBPumpDurationMs());
                             }
                         }
 

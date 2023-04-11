@@ -9,6 +9,7 @@
 #include "../hardware/RealTimeClock.h"
 #include "../hardware/SmartPump.h"
 #include "../model/FBRunner.h"
+#include "../model/FBSettings.h"
 
 CPresenter_ptr CreatePresenter(SSmartPumpPins smart_pump_pins)
 {

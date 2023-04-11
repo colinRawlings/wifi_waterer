@@ -4,6 +4,11 @@ namespace {
 bool _xor(bool A, bool B) { return !A != !B; }
 } // namespace
 
+CDigitalOutput_ptr CDigitalOutput::Create(byte pin, bool inverted_output)
+{
+    return CDigitalOutput_ptr(new CDigitalOutput(pin, inverted_output));
+}
+
 CDigitalOutput::CDigitalOutput(byte pin, bool inverted_output)
     : _pin(pin)
     , _inverted_output(inverted_output)
@@ -64,6 +69,8 @@ long CDigitalOutput::RemainingOnTime()
 
 void CDigitalOutput::Update()
 {
+    CUpdateable::Update();
+
     if (_status != Statuses::RUNNING)
     {
         return;

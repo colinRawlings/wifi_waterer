@@ -3,12 +3,12 @@
 CUpdateable::CUpdateable()
 {}
 
-void CUpdateable::SetChildren(CUpdateable_vec children)
+void CUpdateable::SetChildren(IUpdateable_ptr_vec children)
 {
     _children = children;
 }
 
-void CUpdateable::AddChild(CUpdateable_ptr child)
+void CUpdateable::AddChild(IUpdateable_ptr child)
 {
     _children.push_back(child);
 }

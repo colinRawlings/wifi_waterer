@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../IUpdateable.h"
+
 #include <memory>
 
 class ISmartPump;
@@ -14,7 +16,7 @@ enum class Statuses : int { NOT_READY = 0,
                             READY,
                             RUNNING };
 
-class ISmartPump
+class ISmartPump : public IUpdateable
 {
   public:
     // sensor
@@ -27,7 +29,6 @@ class ISmartPump
     virtual long RemainingOnTimeMs() = 0;
 
     //
-    virtual void Update() = 0;
 
     virtual ~ISmartPump() = default;
 };
