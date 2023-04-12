@@ -192,7 +192,7 @@ up-backend-service:
 up-frontend-service:
 	sudo systemctl start waterer_frontend.service
 
-make up-services: | up-backend-service up-frontend-service
+up-services: | up-backend-service up-frontend-service
 
 #
 
