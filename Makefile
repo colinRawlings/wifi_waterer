@@ -168,7 +168,7 @@ up-frontend-dev: venv
 
 # useful for the rpi that lacks the power to build the frontend
 up-frontend: venv
-	${BACKEND_VENV_PYTHON} ${makefile_dir}/make_templates.py
+	${BACKEND_VENV_PYTHON} ${FRONTEND_DIR}/make_templates.py
 	cd ${FRONTEND_DIR} && lite-server
 
 
