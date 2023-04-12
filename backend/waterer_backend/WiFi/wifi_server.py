@@ -120,7 +120,7 @@ def create_app(manager: WiFiPumpManager) -> web.Application:
 
     @routes.get("/save_settings")
     async def save_settings(request: web.Request):
-        saved_filepath = get_pump_manager(request).save_settings()
+        saved_filepath = await get_pump_manager(request).save_settings()
         return web.json_response({"data": saved_filepath})
 
     @routes.get("/save_history")

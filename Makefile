@@ -216,7 +216,6 @@ up-frontend-status:
 
 # clean up any dangling connections
 restart-backend-service:
-	sudo systemctl restart bluetooth.service
 	sudo systemctl restart waterer_backend.service
 
 restart-frontend-service:
