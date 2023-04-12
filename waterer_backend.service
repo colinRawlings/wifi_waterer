@@ -1,0 +1,10 @@
+[Unit]
+After=network.service
+
+[Service]
+ExecStart=/home/ubuntu/wifi_waterer/launch_backend.sh
+KillSignal=SIGINT
+Restart=always
+
+[Install]
+WantedBy=default.target
