@@ -25,6 +25,7 @@ CPresenter_ptr CreatePresenter(SSmartPumpPins smart_pump_pins)
     presenter->SetSmartPump(pump);
 
     auto fb_runner = CFBRunner::Create(clock, pump, fb_settings);
+    presenter->SetFBRunner(fb_runner);
 
     return presenter;
 }

@@ -265,5 +265,5 @@ void CPresenter::TurnOffPump()
 void CPresenter::SetFBRunner(CFBRunner_ptr fb_runner)
 {
     _fb_runner = fb_runner;
-    AddChild(fb_runner);
+    AddChild(_fb_runner);
 }
