@@ -9,7 +9,7 @@
 #include <memory.h>
 
 class CFBRunner;
-using CFBRunner_uptr = std::unique_ptr<CFBRunner>;
+using CFBRunner_ptr = std::shared_ptr<CFBRunner>;
 
 class CFBSettings;
 using CFBSettings_ptr = std::shared_ptr<CFBSettings>;
@@ -17,9 +17,9 @@ using CFBSettings_ptr = std::shared_ptr<CFBSettings>;
 class CFBRunner : public CUpdateable, public std::enable_shared_from_this<CFBRunner>
 {
   public:
-    static CFBRunner_uptr Create(IRealTimeClock_ptr clock,
-                                 ISmartPump_ptr pump,
-                                 CFBSettings_ptr settings);
+    static CFBRunner_ptr Create(IRealTimeClock_ptr clock,
+                                ISmartPump_ptr pump,
+                                CFBSettings_ptr settings);
 
     void Update() override;
 

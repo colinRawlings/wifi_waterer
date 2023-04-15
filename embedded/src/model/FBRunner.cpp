@@ -2,11 +2,11 @@
 
 #include "FBSettings.h"
 
-CFBRunner_uptr CFBRunner::Create(IRealTimeClock_ptr clock,
-                                 ISmartPump_ptr pump,
-                                 CFBSettings_ptr settings)
+CFBRunner_ptr CFBRunner::Create(IRealTimeClock_ptr clock,
+                                ISmartPump_ptr pump,
+                                CFBSettings_ptr settings)
 {
-    return CFBRunner_uptr(new CFBRunner(clock, pump, settings));
+    return CFBRunner_ptr(new CFBRunner(clock, pump, settings));
 }
 
 CFBRunner::CFBRunner(IRealTimeClock_ptr clock,
