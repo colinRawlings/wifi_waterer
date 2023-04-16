@@ -4,6 +4,9 @@ makefile_dir := $(patsubst %/,%,$(dir $(makefile_path)))
 FRONTEND_DIR = ${makefile_dir}/frontend
 BACKEND_DIR = ${makefile_dir}/backend
 BACKEND_VENV_DIR = ${BACKEND_DIR}/.venv
+EMBEDDED_DIR = ${makefile_dir}/embedded
+
+EMBEDDED_TESTBUILD_DIR = ${EMBEDDED_DIR}/build
 
 backend_startup_script := $(makefile_dir)/launch_backend.sh
 frontend_startup_script := $(makefile_dir)/launch_frontend.sh
@@ -26,8 +29,9 @@ ifdef OS
 	RENAME_CMD = rename
 	ACTIVATE_CMD = ${BACKEND_VENV_DIR}/Scripts/activate
 else
+	SHELL=/bin/bash
 	COMMENT_CHAR = \#
-	BASE_PYTHON = python3.9
+	BASE_PYTHON = python3
 	BACKEND_VENV_PYTHON = ${BACKEND_VENV_DIR}/bin/python
 	BACKEND_VENV_PIP_SYNC = ${BACKEND_VENV_DIR}/bin/pip-sync
 	RENAME_CMD = mv
@@ -109,8 +113,7 @@ install: | install-host-tools venv
 	${BACKEND_VENV_PYTHON} -m pip install -e ${BACKEND_DIR}
 	${COMMENT_CHAR} Install Frontend
 	cd ${FRONTEND_DIR} && yarn install --production=true
-	${COMMENT_CHAR} For pi run: make install-service; make install-fw
-
+	${COMMENT_CHAR} For pi run: make install-service
 
 install-services: | backend_startup_script frontend_startup_script
 	sudo cp ${makefile_dir}/waterer_backend.service /etc/systemd/system/waterer_backend.service
@@ -181,7 +184,12 @@ up-backend:
 
 tests-backend:
 	${BACKEND_VENV_PYTHON} -m pytest ${makefile_dir}/backend/tests
-	${ACTIVATE_CMD} && pyright --verbose
+	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright --verbose
+
+tests-embedded:
+	mkdir -p ${EMBEDDED_TESTBUILD_DIR}
+	cd ${EMBEDDED_TESTBUILD_DIR} && cmake -S .. &&  cmake --build . -j
+	${EMBEDDED_TESTBUILD_DIR}/tests/test_runner
 
 # waterer service
 .PHONY: waterer-shell restart-services up-status

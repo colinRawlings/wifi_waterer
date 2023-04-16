@@ -1,0 +1,6 @@
+{
+    "include": [
+        "./backend/waterer_backend",
+        "./backend/tests"
+    ]
+}
