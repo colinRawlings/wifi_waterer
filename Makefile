@@ -54,9 +54,15 @@ ${BACKEND_VENV_DIR}:
 
 requirements: venv
 	${BACKEND_VENV_PYTHON} -m pip install pip-tools
-	${BACKEND_VENV_PYTHON} -m piptools compile ${BACKEND_DIR}/requirements/base.in
-	${BACKEND_VENV_PYTHON} -m piptools compile ${BACKEND_DIR}/requirements/dev.in
+	${BACKEND_VENV_PYTHON} -m piptools compile --resolver=backtracking ${BACKEND_DIR}/requirements/base.in
+	${BACKEND_VENV_PYTHON} -m piptools compile --resolver=backtracking ${BACKEND_DIR}/requirements/dev.in
 	${COMMENT_CHAR} Call install(-dev) to update ...
+
+update-reqs-dev: | requirements
+	${BACKEND_VENV_PIP_SYNC} ${BACKEND_DIR}/requirements/dev.txt
+	${BACKEND_VENV_PYTHON} -m pip install -e ${BACKEND_DIR}
+	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright --verbose
+
 
 install-ssh:
 	sudo apt update
@@ -89,7 +95,6 @@ install-host-dev-tools: install-host-tools
 	sudo apt update
 	# installing arduino IDE
 	sudo snap install arduino
-	sudo usermod -aG dialout $(shell whoami)
 	sudo npm install -g -y @angular/cli
 
 
@@ -184,7 +189,7 @@ up-backend:
 
 tests-backend:
 	${BACKEND_VENV_PYTHON} -m pytest ${makefile_dir}/backend/tests
-	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright --verbose
+	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright
 
 tests-embedded:
 	mkdir -p ${EMBEDDED_TESTBUILD_DIR}

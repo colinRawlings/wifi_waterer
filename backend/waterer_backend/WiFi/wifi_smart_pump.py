@@ -427,7 +427,7 @@ class WiFiSmartPump:
             smoothed_rel_humidity_V,
         ) = self._smoothed_rel_humidity_V_log.get_newest_value()
 
-        smoothed_rel_humidity_pcnt = self._pcnt_from_V_humidity(smoothed_rel_humidity_V)
+        smoothed_rel_humidity_pcnt = self._pcnt_from_V_humidity(smoothed_rel_humidity_V)  # type: ignore
         assert isinstance(smoothed_rel_humidity_pcnt, float)
 
         return SmartPumpStatus(

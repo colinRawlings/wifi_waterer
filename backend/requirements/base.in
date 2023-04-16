@@ -1,13 +1,7 @@
-Flask
-flask-cors
 python-socketio
-pyserial
-jsonschema
-dataclasses; python_version == '3.6'
 Jinja2
 numpy
 pydantic
-bleak
 aiohttp
 aiohttp-cors
 debugpy
