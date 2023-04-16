@@ -13,7 +13,7 @@ from aiohttp import web
 from waterer_backend import __version__
 from waterer_backend.WiFi.wifi_pump_manager import WiFiPumpManager
 from waterer_backend.service_logs import get_service_logs
-from waterer_backend.smart_pump import SmartPumpSettings
+from waterer_backend.models import SmartPumpSettings
 
 ###############################################################
 # Definitions
