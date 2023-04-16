@@ -142,11 +142,11 @@ set-timezone:
 #
 
 push-frontend:
-	ng build
+	cd ${FRONTEND_DIR} && ng build
 ifdef OS
-	${COMMENT_CHAR} Run: wsl scp -r ./dist	$(SERVER_USER)@$(SERVER_IP):/home/ubuntu/waterer/
+	${COMMENT_CHAR} Run: wsl scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 else
-	scp -r ./dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/waterer/
+	scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 endif
 	# don't forget to make waterer-shell && cd waterer && git pull && make restart-services
 
