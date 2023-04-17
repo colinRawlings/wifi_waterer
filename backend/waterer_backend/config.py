@@ -9,7 +9,6 @@ import logging
 import pathlib as pt
 import typing as ty
 
-import jsonschema
 import pkg_resources as rc
 from waterer_backend.models import SmartPumpSettings
 

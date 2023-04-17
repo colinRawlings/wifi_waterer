@@ -12,7 +12,7 @@ import aiohttp
 
 import numpy as np
 import waterer_backend.config as cfg
-import waterer_backend.smart_pump as sp
+import waterer_backend.models as mdl
 from waterer_backend.WiFi.find_smart_pumps import find_smart_pump_ips
 from waterer_backend.WiFi.wifi_smart_pump import WiFiSmartPump
 
@@ -28,7 +28,7 @@ SCAN_DURATION_S = 5
 # Class
 ###############################################################
 
-pump_manager_settings_type = Union[List[sp.SmartPumpSettings], sp.SmartPumpSettings]
+pump_manager_settings_type = Union[List[mdl.SmartPumpSettings], mdl.SmartPumpSettings]
 
 
 class WiFiPumpManager:
@@ -88,12 +88,12 @@ class WiFiPumpManager:
         self._check_channel(channel)
         await self._pumps[channel].turn_off()
 
-    async def set_settings(self, channel: int, settings: sp.SmartPumpSettings) -> None:
+    async def set_settings(self, channel: int, settings: mdl.SmartPumpSettings) -> None:
         self._check_channel(channel)
         await self._pumps[channel].set_settings(settings)
         await self.save_settings()
 
-    async def get_settings(self, channel: int) -> sp.SmartPumpSettings:
+    async def get_settings(self, channel: int) -> mdl.SmartPumpSettings:
         self._check_channel(channel)
         return await self._pumps[channel].settings()
 
@@ -111,7 +111,7 @@ class WiFiPumpManager:
 
         return str(cfg.get_pump_history_filepath())
 
-    async def get_status(self, channel: int) -> sp.SmartPumpStatus:
+    async def get_status(self, channel: int) -> mdl.SmartPumpStatus:
         self._check_channel(channel)
         return await self._pumps[channel].status
 
@@ -121,7 +121,7 @@ class WiFiPumpManager:
 
     def get_status_since(
         self, channel: int, earliest_epoch_time_s: Optional[float]
-    ) -> sp.SmartPumpStatusHistory:
+    ) -> mdl.SmartPumpStatusHistory:
         self._check_channel(channel)
         return self._pumps[channel].get_status_since(earliest_epoch_time_s)
 

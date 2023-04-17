@@ -1,5 +1,5 @@
 {
-    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.buildDirectory": "${workspaceFolder}/embedded/build",
     "cmake.ctestArgs": [
         "-V",
         "--test-dir",
@@ -69,8 +69,16 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "unordered_set": "cpp"
     },
     "python.formatting.blackPath": "${workspaceFolder}/backend/.venv/bin/black",
-    "cmake.sourceDirectory": "${workspaceFolder}/embedded"
+    "cmake.sourceDirectory": "${workspaceFolder}/embedded",
+    "python.testing.pytestArgs": [
+        "backend"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

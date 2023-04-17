@@ -4,6 +4,9 @@ makefile_dir := $(patsubst %/,%,$(dir $(makefile_path)))
 FRONTEND_DIR = ${makefile_dir}/frontend
 BACKEND_DIR = ${makefile_dir}/backend
 BACKEND_VENV_DIR = ${BACKEND_DIR}/.venv
+EMBEDDED_DIR = ${makefile_dir}/embedded
+
+EMBEDDED_TESTBUILD_DIR = ${EMBEDDED_DIR}/build
 
 backend_startup_script := $(makefile_dir)/launch_backend.sh
 frontend_startup_script := $(makefile_dir)/launch_frontend.sh
@@ -26,8 +29,9 @@ ifdef OS
 	RENAME_CMD = rename
 	ACTIVATE_CMD = ${BACKEND_VENV_DIR}/Scripts/activate
 else
+	SHELL=/bin/bash
 	COMMENT_CHAR = \#
-	BASE_PYTHON = python3.9
+	BASE_PYTHON = python3
 	BACKEND_VENV_PYTHON = ${BACKEND_VENV_DIR}/bin/python
 	BACKEND_VENV_PIP_SYNC = ${BACKEND_VENV_DIR}/bin/pip-sync
 	RENAME_CMD = mv
@@ -50,9 +54,15 @@ ${BACKEND_VENV_DIR}:
 
 requirements: venv
 	${BACKEND_VENV_PYTHON} -m pip install pip-tools
-	${BACKEND_VENV_PYTHON} -m piptools compile ${BACKEND_DIR}/requirements/base.in
-	${BACKEND_VENV_PYTHON} -m piptools compile ${BACKEND_DIR}/requirements/dev.in
+	${BACKEND_VENV_PYTHON} -m piptools compile --resolver=backtracking ${BACKEND_DIR}/requirements/base.in
+	${BACKEND_VENV_PYTHON} -m piptools compile --resolver=backtracking ${BACKEND_DIR}/requirements/dev.in
 	${COMMENT_CHAR} Call install(-dev) to update ...
+
+update-reqs-dev: | requirements
+	${BACKEND_VENV_PIP_SYNC} ${BACKEND_DIR}/requirements/dev.txt
+	${BACKEND_VENV_PYTHON} -m pip install -e ${BACKEND_DIR}
+	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright --verbose
+
 
 install-ssh:
 	sudo apt update
@@ -85,7 +95,6 @@ install-host-dev-tools: install-host-tools
 	sudo apt update
 	# installing arduino IDE
 	sudo snap install arduino
-	sudo usermod -aG dialout $(shell whoami)
 	sudo npm install -g -y @angular/cli
 
 
@@ -109,8 +118,7 @@ install: | install-host-tools venv
 	${BACKEND_VENV_PYTHON} -m pip install -e ${BACKEND_DIR}
 	${COMMENT_CHAR} Install Frontend
 	cd ${FRONTEND_DIR} && yarn install --production=true
-	${COMMENT_CHAR} For pi run: make install-service; make install-fw
-
+	${COMMENT_CHAR} For pi run: make install-service
 
 install-services: | backend_startup_script frontend_startup_script
 	sudo cp ${makefile_dir}/waterer_backend.service /etc/systemd/system/waterer_backend.service
@@ -134,11 +142,11 @@ set-timezone:
 #
 
 push-frontend:
-	ng build
+	cd ${FRONTEND_DIR} && ng build
 ifdef OS
-	${COMMENT_CHAR} Run: wsl scp -r ./dist	$(SERVER_USER)@$(SERVER_IP):/home/ubuntu/waterer/
+	${COMMENT_CHAR} Run: wsl scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 else
-	scp -r ./dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/waterer/
+	scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 endif
 	# don't forget to make waterer-shell && cd waterer && git pull && make restart-services
 
@@ -181,7 +189,12 @@ up-backend:
 
 tests-backend:
 	${BACKEND_VENV_PYTHON} -m pytest ${makefile_dir}/backend/tests
-	${ACTIVATE_CMD} && pyright --verbose
+	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright
+
+tests-embedded:
+	mkdir -p ${EMBEDDED_TESTBUILD_DIR}
+	cd ${EMBEDDED_TESTBUILD_DIR} && cmake -S .. &&  cmake --build . -j
+	${EMBEDDED_TESTBUILD_DIR}/tests/test_runner
 
 # waterer service
 .PHONY: waterer-shell restart-services up-status

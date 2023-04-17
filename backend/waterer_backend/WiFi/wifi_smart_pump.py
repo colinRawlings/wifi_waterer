@@ -35,7 +35,8 @@ from waterer_backend.status_log import BinaryStatusLog, FloatStatusLog
 
 _LOGGER = logging.getLogger(__name__)
 
-_CLOCK_SYNC_HOUR = 2 # sync at 2am hack to work around shitty rtc in arduino
+_CLOCK_SYNC_HOUR = 2  # sync at 2am hack to work around shitty rtc in arduino
+
 
 class Response(BaseModel):
     PumpStatus: bool
@@ -44,11 +45,13 @@ class Response(BaseModel):
     FBOnTimeHour: int
     FBPumpDurationS: int
 
+
 ###############################################################
 # Functions
 ###############################################################
 
-def get_current_hour()->int:
+
+def get_current_hour() -> int:
     return datetime.now().hour
 
 
@@ -247,9 +250,8 @@ class WiFiSmartPump:
             pump_on_time_s=s.pump_on_time_s,
             fb_hour=s.pump_activation_time.hour,
             fb_humidity_mv=1000
-            * (
-                s.wet_humidity_V
-                + s.feedback_setpoint_pcnt / 100 * (s.dry_humidity_V - s.wet_humidity_V)
+            * ut.humidity_v_from_pcnt(
+                s.dry_humidity_V, s.wet_humidity_V, s.feedback_setpoint_pcnt
             ),
             current_hour=datetime.now().hour,
             current_minute=datetime.now().minute,
@@ -318,35 +320,11 @@ class WiFiSmartPump:
 
     ###############################################################
 
-    def _pcnt_from_V_humidity(
-        self, rel_humidity_V: ty.Union[None, float, ty.List[ty.Optional[float]]]
-    ) -> ty.Union[None, float, ty.List[float]]:
+    def _pcnt_from_V_humidity(self, rel_humidity_V: ut.HumidityT) -> ut.HumidityT:
 
-        if rel_humidity_V is None:
-            return None
-
-        if isinstance(rel_humidity_V, list):
-
-            arr = np.asarray(rel_humidity_V)
-            none_vals = arr == None
-            arr[none_vals] = 0
-
-            scaled_arr = (
-                (self._settings.dry_humidity_V - arr)
-                / (self._settings.dry_humidity_V - self._settings.wet_humidity_V)
-                * 100
-            )
-
-            scaled_optional_arr = scaled_arr
-            scaled_optional_arr[none_vals] = None
-            return scaled_optional_arr.tolist()
-
-        else:
-            return (
-                (self._settings.dry_humidity_V - rel_humidity_V)
-                / (self._settings.dry_humidity_V - self._settings.wet_humidity_V)
-                * 100
-            )
+        return ut.humidity_pcnt_from_v(
+            self._settings.dry_humidity_V, self._settings.wet_humidity_V, rel_humidity_V
+        )
 
     ###############################################################
 
@@ -449,7 +427,7 @@ class WiFiSmartPump:
             smoothed_rel_humidity_V,
         ) = self._smoothed_rel_humidity_V_log.get_newest_value()
 
-        smoothed_rel_humidity_pcnt = self._pcnt_from_V_humidity(smoothed_rel_humidity_V)
+        smoothed_rel_humidity_pcnt = self._pcnt_from_V_humidity(smoothed_rel_humidity_V)  # type: ignore
         assert isinstance(smoothed_rel_humidity_pcnt, float)
 
         return SmartPumpStatus(
@@ -510,19 +488,21 @@ class WiFiSmartPump:
     async def _update_arduino_clock(self):
         this_update_hour = get_current_hour()
 
-        if self._last_update_hour != this_update_hour and this_update_hour == _CLOCK_SYNC_HOUR:
+        if (
+            self._last_update_hour != this_update_hour
+            and this_update_hour == _CLOCK_SYNC_HOUR
+        ):
             _LOGGER.info(f"Re-sending the time to keep the arduino in sync")
             await self.send_settings()
-            
+
         self._last_update_hour = this_update_hour
-        
 
     ###############################################################
 
     async def _do_loop_iteration(self):
 
         await self._update_status()
-        
+
         await self._update_arduino_clock()
 
     ###############################################################
