@@ -14,7 +14,6 @@
 // defs
 
 auto display_key_pins = SDisplayKeyPins(15, 21, 3, 20);
-// auto display_key_pins = SDisplayKeyPins(15, 14, 3, 2);
 
 auto lcd_pins = SLCDPins({4, 5, 6, 7}, 9, 8, 18);
 auto smart_pump_pins = SSmartPumpPins(16, A3);
