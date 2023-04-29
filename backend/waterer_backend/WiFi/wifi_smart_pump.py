@@ -327,7 +327,7 @@ class WiFiSmartPump:
 
     ###############################################################
 
-    async def turn_on(self, duration_ms: int = -1):
+    async def turn_on(self):
 
         await self._transact_with_client(f"http://{self._ip}/on")
 

@@ -71,19 +71,6 @@ def create_app(manager: WiFiPumpManager) -> web.Application:
         await get_pump_manager(request).turn_on(channel=int(channel))
         return web.json_response({"data": ""})
 
-    @routes.post("/turn_on_for/{channel}")
-    async def turn_on_for(request: web.Request):
-
-        request_dict = await request.json()
-        channel = request.match_info["channel"]
-
-        duration_s = int(request_dict["duration_s"])  # type: ignore
-
-        await get_pump_manager(request).turn_on(
-            channel=int(channel), duration_ms=duration_s * 1000
-        )
-        return web.json_response({"data": ""})
-
     @routes.get("/turn_off/{channel}")
     async def turn_off(request: web.Request):
 

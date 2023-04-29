@@ -82,7 +82,7 @@ class WiFiPumpManager:
 
     async def turn_on(self, channel: int, duration_ms: int = 0) -> None:
         self._check_channel(channel)
-        await self._pumps[channel].turn_on(duration_ms=duration_ms)
+        await self._pumps[channel].turn_on()
 
     async def turn_off(self, channel: int) -> None:
         self._check_channel(channel)
