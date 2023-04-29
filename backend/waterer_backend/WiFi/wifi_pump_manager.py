@@ -91,18 +91,14 @@ class WiFiPumpManager:
     async def set_settings(self, channel: int, settings: mdl.SmartPumpSettings) -> None:
         self._check_channel(channel)
         await self._pumps[channel].set_settings(settings)
-        await self.save_settings()
 
     async def get_settings(self, channel: int) -> mdl.SmartPumpSettings:
         self._check_channel(channel)
         return await self._pumps[channel].settings()
 
-    async def save_settings(self) -> str:
-
-        for pump in self._pumps:
-            await pump.save_settings()
-
-        return str(cfg.get_user_config_filepath())
+    async def save_settings(self, channel: int) -> str:
+        self._check_channel(channel)
+        return await self._pumps[channel].save_settings()
 
     def save_history(self) -> str:
 

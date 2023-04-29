@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { NotifierService } from 'angular-notifier';
 import { PumpSettingsService } from '../pump-settings.service';
 import { PumpStatusService } from '../pump-status.service';
+import { ConstantsService } from '../constants.service';
 import {
   Subscription,
 } from 'rxjs';
@@ -22,9 +24,13 @@ export class PumpSettingsComponent implements OnInit {
   private settingsIsReadySubscription: Subscription;
   private statusIsReadySubscription: Subscription;
 
-  constructor(private notifierService: NotifierService,
-              private settingsService: PumpSettingsService,
-              private statusService: PumpStatusService) {
+  constructor(
+    private http: HttpClient,
+    private notifierService: NotifierService,
+    private settingsService: PumpSettingsService,
+    private statusService: PumpStatusService,
+    private constantsService: ConstantsService
+  ) {
     this.settings = {};
   }
 
@@ -36,22 +42,22 @@ export class PumpSettingsComponent implements OnInit {
 
     console.log(`ngOnInit Pump-Settings Component`);
 
-    if(this.settingsService.isReady){
+    if (this.settingsService.isReady) {
       this.doInitSettings();
     } else {
-      this.settingsIsReadySubscription = this.settingsService.isReady$.subscribe((settingsIsReady: boolean)=>{
-        if(!settingsIsReady) console.error('settingsService.isReady$ emitted false');
+      this.settingsIsReadySubscription = this.settingsService.isReady$.subscribe((settingsIsReady: boolean) => {
+        if (!settingsIsReady) console.error('settingsService.isReady$ emitted false');
         this.settingsIsReadySubscription.unsubscribe();
         this.doInitSettings();
       })
       this.settingsService.Init();
     }
 
-    if(this.statusService.isReady){
+    if (this.statusService.isReady) {
       this.doInitStatus();
     } else {
-      this.statusIsReadySubscription = this.statusService.isReady$.subscribe((statusIsReady: boolean)=>{
-        if(!statusIsReady) console.error('statusService.isReady$ emitted false');
+      this.statusIsReadySubscription = this.statusService.isReady$.subscribe((statusIsReady: boolean) => {
+        if (!statusIsReady) console.error('statusService.isReady$ emitted false');
         this.statusIsReadySubscription.unsubscribe();
         this.doInitStatus();
       })
@@ -87,7 +93,7 @@ export class PumpSettingsComponent implements OnInit {
     this.onSettingsChange();
   }
 
-  onRefreshSettings(): void{
+  onRefreshSettings(): void {
     this.settingsService.updateSettings(this.channel);
   }
 
@@ -102,6 +108,17 @@ export class PumpSettingsComponent implements OnInit {
         this.notifierService.notify('error', `setSettings Error:  ${error.message}`);
       }
     )
+  }
+
+  onSaveSettings(): void {
+    this.http.get(`${this.constantsService.kBackendURL}save_settings/${this.channel}`).subscribe(
+      (data: keyable) => {
+        this.notifierService.notify('success', `Saved settings to pump ${this.channel}'s flash memory`);
+      },
+      (error: keyable) => {
+        this.notifierService.notify('error', `Save Error:  ${error.message}`);
+      }
+    );
   }
 
 }

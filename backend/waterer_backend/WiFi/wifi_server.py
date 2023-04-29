@@ -118,10 +118,13 @@ def create_app(manager: WiFiPumpManager) -> web.Application:
         )
         return web.json_response({"data": status_history.dict()})
 
-    @routes.get("/save_settings")
+    @routes.get("/save_settings/{channel}")
     async def save_settings(request: web.Request):
-        saved_filepath = await get_pump_manager(request).save_settings()
-        return web.json_response({"data": saved_filepath})
+        channel = request.match_info["channel"]
+        saved_channel = await get_pump_manager(request).save_settings(
+            channel=int(channel)
+        )
+        return web.json_response({"data": saved_channel})
 
     @routes.get("/save_history")
     async def save_history(request: web.Request):

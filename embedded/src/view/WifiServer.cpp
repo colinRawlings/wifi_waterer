@@ -257,7 +257,16 @@ void CWifiServer::HandleClient()
                         }
 
                         //
+                        test_str = "/save HTTP/1.1";
+                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
+                        {
+                            if (_presenter)
+                            {
+                                _presenter->SaveFBSettingsToFlash();
+                            }
+                        }
 
+                        //
                         currentLine.clear();
                     }
                 }

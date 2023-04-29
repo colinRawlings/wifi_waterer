@@ -147,23 +147,10 @@ class WiFiSmartPump:
 
     async def save_settings(self) -> str:
 
-        user_config_filepath = cfg.get_user_config_filepath()
-        if user_config_filepath.is_file():
-            with open(user_config_filepath, "r") as fh:
-                user_config = json.load(fh)
-        else:
-            user_config = {}
+        if (await self._transact_with_client(f"http://{self._ip}/save")) is None:
+            return "save failed"
 
-        user_config[self.address] = (await self.settings()).dict()
-
-        cfg.get_user_config_filepath().parent.mkdir(exist_ok=True, parents=True)
-
-        with open(cfg.get_user_config_filepath(), "w") as fh:
-            json.dump(user_config, fh)
-
-        _LOGGER.info(f"{self._channel}: Saved settings to: {user_config_filepath}")
-
-        return str(cfg.get_user_config_filepath())
+        return f"Saved to: {self.channel}"
 
     ###############################################################
 
