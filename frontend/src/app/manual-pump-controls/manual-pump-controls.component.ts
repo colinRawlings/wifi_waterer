@@ -27,7 +27,7 @@ export class ManualPumpControlsComponent implements OnInit {
   ) {}
 
   onTurnOn(): void {
-    this.http.post(`${this.constantsService.kBackendURL}turn_on/${this.channel}`).subscribe(
+    this.http.get(`${this.constantsService.kBackendURL}turn_on/${this.channel}`).subscribe(
       (data: keyable) => {
         this.notifierService.notify('success', `Turned on pump ${this.channel}`);
       },
