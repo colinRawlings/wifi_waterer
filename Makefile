@@ -148,7 +148,7 @@ ifdef OS
 else
 	scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 endif
-	# don't forget to make waterer-shell && cd waterer && git pull && make restart-services
+	# don't forget to make waterer-shell && cd wifi_waterer && git pull && make restart-services
 
 #
 
