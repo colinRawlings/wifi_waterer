@@ -6,7 +6,6 @@
 
 import typing as ty
 
-# from pydantic.dataclasses import dataclass
 from datetime import datetime
 
 from pydantic import BaseModel

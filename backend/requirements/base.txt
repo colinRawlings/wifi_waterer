@@ -38,10 +38,6 @@ multidict==6.0.4
     #   yarl
 numpy==1.21.0
     # via -r /home/test/Desktop/WifAterer/backend/requirements/base.in
-packaging==23.1
-    # via pip-check-reqs
-pip-check-reqs==2.4.4
-    # via -r /home/test/Desktop/WifAterer/backend/requirements/base.in
 pydantic==1.8.2
     # via -r /home/test/Desktop/WifAterer/backend/requirements/base.in
 python-engineio==4.2.0
@@ -52,6 +48,3 @@ typing-extensions==3.10.0.0
     # via pydantic
 yarl==1.8.2
     # via aiohttp
-
-# The following packages are considered to be unsafe in a requirements file:
-# pip

@@ -7,9 +7,6 @@
 import asyncio
 import json
 import logging
-import os
-import struct
-import traceback as tb
 import typing as ty
 from datetime import datetime
 from time import time
@@ -17,7 +14,6 @@ from aiohttp import ClientSession
 from pydantic import BaseModel
 from aiohttp import client_exceptions
 
-import numpy as np
 import waterer_backend.config as cfg
 import waterer_backend.utils as ut
 from waterer_backend.models import (
@@ -83,7 +79,7 @@ class WiFiSmartPump:
 
         self._client = client
 
-        self._settings = self._load_settings()
+        self._settings: SmartPumpSettings = SmartPumpSettings()
 
         self._abort_running = False
 
@@ -95,7 +91,6 @@ class WiFiSmartPump:
         else:
             self._init_logs()
 
-        self._last_feedback_update_time: ty.Optional[datetime] = None
         self._last_update_hour: int = get_current_hour()
         self._last_auto_save_time: float = time()
 
@@ -105,43 +100,6 @@ class WiFiSmartPump:
         self._rel_humidity_V_log = FloatStatusLog()
         self._smoothed_rel_humidity_V_log = FloatStatusLog()
         self._pump_status_log = BinaryStatusLog()
-
-    ###############################################################
-
-    def _load_settings(self) -> SmartPumpSettings:
-
-        assert self.address is not None
-
-        user_config_path = cfg.get_user_config_filepath()
-        default_config_path = cfg.get_default_config_filepath()
-        if not default_config_path.is_file():
-            raise RuntimeError(
-                f"{self._channel}: No default config found at: {default_config_path}"
-            )
-
-        if user_config_path.is_file():
-
-            _LOGGER.info(
-                f"{self._channel}: Attempting to load user config: {user_config_path}"
-            )
-
-            with open(user_config_path, "r") as fh:
-                user_config_dict = json.load(fh)
-
-            if self.address in user_config_dict:
-                _LOGGER.info(
-                    f"{self._channel}: Loading entry for device {self.address} in user config, loading ..."
-                )
-                return SmartPumpSettings(**user_config_dict[self.address])
-
-        _LOGGER.info(
-            f"{self._channel}: Falling back to default user settings for device: {self.address}"
-        )
-
-        with open(default_config_path, "r") as fh:
-            default_config_dict = json.load(fh)
-
-        return SmartPumpSettings(**default_config_dict)
 
     ###############################################################
 
@@ -318,7 +276,6 @@ class WiFiSmartPump:
     def _smoothed_humidity(self, rel_humidity_V: float) -> ty.Optional[float]:
         alpha = 1.0 / self._settings.num_smoothing_samples
         _, last_value = self._smoothed_rel_humidity_V_log.get_newest_value()
-        _, last_status = self._pump_status_log.get_newest_value()
 
         if last_value is None:
             return rel_humidity_V
@@ -397,7 +354,7 @@ class WiFiSmartPump:
     @property
     async def status(self) -> SmartPumpStatus:
 
-        ok = await self._update_status()
+        _ = await self._update_status()
 
         status_time, pump_status = self._pump_status_log.get_newest_value()
         assert status_time is not None

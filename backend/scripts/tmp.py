@@ -76,7 +76,7 @@ async def run_probes():
 
         ips = [f"{ip_prefix}.{i+1}" for i, x in enumerate(results) if x == True]
 
-        ip_strs = "\\n- ".join(ips)
+        ip_strs = "\n- ".join(ips)
 
         print(
             f"Found {len(ip_strs)} waterer(s) on network (in {perf_counter() - T0:.0f}s):\n- {ip_strs}"

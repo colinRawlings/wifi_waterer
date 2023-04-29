@@ -3,6 +3,7 @@
 #
 pytest
 pydantic # for schema generation
+vulture
 #
 pre-commit
 black==21.5b2 # sync with .pre-commit file

@@ -88,9 +88,7 @@ async def main():
     init_logging()
     init_debugging()
 
-    async with PumpManagerContext(
-        scan_duration_s=10, allow_load_history=True
-    ) as manager:
+    async with PumpManagerContext(allow_load_history=True) as manager:
 
         await manager.start()
         app = create_app(manager)

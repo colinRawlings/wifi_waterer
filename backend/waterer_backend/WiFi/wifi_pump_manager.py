@@ -4,13 +4,10 @@
 # Import
 ###############################################################
 
-import asyncio
 import logging
-import pathlib as pt
-from typing import List, Optional, Union
+from typing import List, Optional
 import aiohttp
 
-import numpy as np
 import waterer_backend.config as cfg
 import waterer_backend.models as mdl
 from waterer_backend.WiFi.find_smart_pumps import find_smart_pump_ips
@@ -22,13 +19,10 @@ from waterer_backend.WiFi.wifi_smart_pump import WiFiSmartPump
 
 logger = logging.getLogger(__name__)
 
-SCAN_DURATION_S = 5
 
 ###############################################################
 # Class
 ###############################################################
-
-pump_manager_settings_type = Union[List[mdl.SmartPumpSettings], mdl.SmartPumpSettings]
 
 
 class WiFiPumpManager:
@@ -42,7 +36,6 @@ class WiFiPumpManager:
 
         self._client = client
         self._status_update_interval_s = status_update_interval_s
-        self._ips = ips
 
         self._allow_load_history = allow_load_history
 
@@ -80,7 +73,7 @@ class WiFiPumpManager:
                 f"Channel ({channel}) cannot be greater than or equal to {self.num_pumps}"
             )
 
-    async def turn_on(self, channel: int, duration_ms: int = 0) -> None:
+    async def turn_on(self, channel: int) -> None:
         self._check_channel(channel)
         await self._pumps[channel].turn_on()
 
@@ -139,12 +132,10 @@ class PumpManagerContext:
         self,
         status_update_interval_s: int = 10,
         allow_load_history: bool = False,
-        scan_duration_s: float = SCAN_DURATION_S,
     ) -> None:
 
         self._status_update_interval_s = status_update_interval_s
         self._allow_load_history = allow_load_history
-        self._scan_duration_s = scan_duration_s
 
         self._client: Optional[aiohttp.ClientSession] = None
 
@@ -172,7 +163,7 @@ class PumpManagerContext:
 
         return self._pump_manager
 
-    async def __aexit__(self, exc_type, exc_value, exc_traceback):
+    async def __aexit__(self, *_):
 
         logger.info("Pump manager context shutting down ... ")
         if self._pump_manager:

@@ -4,11 +4,12 @@
 # Imports
 ###############################################################
 
-import json
 import typing as ty
 from abc import ABC, abstractmethod
 from collections import deque
 from threading import Lock
+from typing import Generic, TypeVar
+from pydantic import BaseModel
 
 import numpy as np
 from waterer_backend.models import (
@@ -22,16 +23,19 @@ from waterer_backend.models import (
 # Definitions
 ###############################################################
 
+LogDataType = TypeVar("LogDataType", bound=BaseModel)
+LogSettingsType = TypeVar("LogSettingsType", bound=BaseModel)
+
 
 ###############################################################
 # Classes
 ###############################################################
 
 
-class AbstractStatusLog(ABC):
+class AbstractStatusLog(ABC, Generic[LogDataType, LogSettingsType]):
     @staticmethod
     @abstractmethod
-    def from_data(serialized_log: str) -> "AbstractStatusLog":
+    def from_data(log_data: LogDataType, settings: LogSettingsType) -> "AbstractStatusLog":
         ...
 
     @abstractmethod
@@ -57,7 +61,7 @@ class AbstractStatusLog(ABC):
         ...
 
 
-class FloatStatusLog(AbstractStatusLog):
+class FloatStatusLog(AbstractStatusLog[FloatStatusLogData, FloatStatusLogSettings]):
 
     """
     Manages a log in which all samples younger than:
@@ -204,7 +208,7 @@ class FloatStatusLog(AbstractStatusLog):
             return self._high_res_times[-1], self._high_res_values[-1]
 
 
-class BinaryStatusLog(AbstractStatusLog):
+class BinaryStatusLog(AbstractStatusLog[BinaryStatusLogData, BinaryStatusLogSettings]):
     def __init__(
         self, settings: BinaryStatusLogSettings = BinaryStatusLogSettings()
     ) -> None:

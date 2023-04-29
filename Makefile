@@ -190,6 +190,9 @@ up-backend:
 tests-backend:
 	${BACKEND_VENV_PYTHON} -m pytest ${makefile_dir}/backend/tests
 	cd ${BACKEND_DIR} && ${ACTIVATE_CMD} && pyright
+	cd ${BACKEND_DIR} && \
+	 ${ACTIVATE_CMD} && \
+	 python -m vulture vulture_whitelist.py ./waterer_backend --exclude="waterer_backend/models.py"
 
 tests-embedded:
 	mkdir -p ${EMBEDDED_TESTBUILD_DIR}
