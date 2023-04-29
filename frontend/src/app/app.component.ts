@@ -100,15 +100,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSaveUserSettings(): void {
-    this.http.get(`${this.constantsService.kBackendURL}save_settings`).subscribe(
-      (data: keyable) => {
-        this.notifierService.notify('success', `Saved settings to ${data.data}`);
-      },
-      (err) => this.notifierService.notify('error', `HTTP Error:  ${err.message}`)
-    );
-  }
-
   onSaveHistory(): void {
     this.http.get(`${this.constantsService.kBackendURL}save_history`).subscribe(
       (data: keyable) => {
