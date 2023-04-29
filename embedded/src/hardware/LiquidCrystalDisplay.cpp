@@ -32,7 +32,7 @@ void CLiquidCrystalDisplay::Print(std::string msg)
 
 void CLiquidCrystalDisplay::Clear()
 {
-    _lcd->clear();
+    _lcd->begin(16, 2); // Temp hack until caps are in place on all boards ...
 }
 
 void CLiquidCrystalDisplay::SetCursor(int column, int row)
