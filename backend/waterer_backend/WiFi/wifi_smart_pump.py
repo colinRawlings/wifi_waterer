@@ -79,7 +79,9 @@ class WiFiSmartPump:
 
         self._client = client
 
-        self._settings: SmartPumpSettings = SmartPumpSettings()
+        self._settings: SmartPumpSettings = (
+            self._load_settings()
+        )  # n.b. device will have a chance to overwrite when it starts
 
         self._abort_running = False
 
@@ -107,7 +109,61 @@ class WiFiSmartPump:
 
     ###############################################################
 
+    def _load_settings(self) -> SmartPumpSettings:
+
+        assert self.address is not None
+
+        user_config_path = cfg.get_user_config_filepath()
+        default_config_path = cfg.get_default_config_filepath()
+        if not default_config_path.is_file():
+            raise RuntimeError(
+                f"{self._channel}: No default config found at: {default_config_path}"
+            )
+
+        if user_config_path.is_file():
+
+            _LOGGER.info(
+                f"{self._channel}: Attempting to load user config: {user_config_path}"
+            )
+
+            with open(user_config_path, "r") as fh:
+                user_config_dict = json.load(fh)
+
+            if self.address in user_config_dict:
+                _LOGGER.info(
+                    f"{self._channel}: Loading entry for device {self.address} in user config, loading ..."
+                )
+                return SmartPumpSettings(**user_config_dict[self.address])
+
+        _LOGGER.info(
+            f"{self._channel}: Falling back to default user settings for device: {self.address}"
+        )
+
+        with open(default_config_path, "r") as fh:
+            default_config_dict = json.load(fh)
+
+        return SmartPumpSettings(**default_config_dict)
+
+    ###############################################################
+
     async def save_settings(self) -> str:
+
+        # save to disk (e.g. Name, Humidity etc)
+
+        config_filepath = cfg.get_user_config_filepath()
+
+        if config_filepath.is_file():
+            with open(config_filepath, "r") as fh:
+                current_configs = json.load(fh)
+        else:
+            current_configs: ty.Dict[str, SmartPumpSettings] = dict()
+
+        current_configs[self.address] = self._settings
+
+        with open(config_filepath, "w") as fh:
+            json.dump(current_configs, fh)
+
+        # save to device
 
         if (await self._transact_with_client(f"http://{self._ip}/save")) is None:
             return "save failed"
