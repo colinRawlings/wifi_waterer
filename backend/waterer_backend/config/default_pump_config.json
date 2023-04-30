@@ -1,7 +1,7 @@
     {
-            "dry_humidity_V": 1.7,
-            "wet_humidity_V": 1.2,
-            "pump_on_time_s": 200,
+            "dry_humidity_V": 3.3,
+            "wet_humidity_V": 0.0,
+            "pump_on_time_s": 40,
             "pump_activation_time": {
                 "hour": 8,
                 "minute": 0
@@ -9,6 +9,6 @@
             "pump_activation_period_days": 1,
             "feedback_active": false,
             "feedback_setpoint_pcnt": 50,
-            "name": "pump 0",
+            "name": "unnamed pump",
             "num_smoothing_samples": 10
     }

@@ -158,7 +158,7 @@ class WiFiSmartPump:
         else:
             current_configs: ty.Dict[str, SmartPumpSettings] = dict()
 
-        current_configs[self.address] = self._settings
+        current_configs[self.address] = self._settings.dict()
 
         with open(config_filepath, "w") as fh:
             json.dump(current_configs, fh)
