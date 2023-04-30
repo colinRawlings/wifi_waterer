@@ -94,6 +94,10 @@ class WiFiSmartPump:
         self._last_update_hour: int = get_current_hour()
         self._last_auto_save_time: float = time()
 
+        _LOGGER.info(
+            f"Created smart pump for channel {self._channel}@{self._ip} with update interval: {self._status_update_interval_s}s"
+        )
+
     ###############################################################
 
     def _init_logs(self):
@@ -211,7 +215,7 @@ class WiFiSmartPump:
 
     async def set_settings(self, value: SmartPumpSettings) -> None:
         self._settings = value
-        _LOGGER.info(f"{self._channel}: New settings: {self._settings}")
+        _LOGGER.info(f"{self._channel}: new settings")
         await self.send_settings()
 
     ###############################################################

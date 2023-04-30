@@ -3,45 +3,35 @@
 
     <mat-card>
       <mat-card-content>
-        <plotly-plot
-          [data]="graph.data"
-          [layout]="graph.layout"
-          [config]="graph.config"
-        ></plotly-plot>
+        <plotly-plot [data]="graph.data" [layout]="graph.layout" [config]="graph.config"></plotly-plot>
       </mat-card-content>
-      <div
-      fxLayout
-      fxLayout="row"
-      fxLayoutGap="10px"
-      fxLayoutAlign="space-around"
-      fxLayout.xs="column"
-    >
-        <mat-slide-toggle
-          [(ngModel)]="display_voltage"
-          color="primary"
-          (change)="onDisplayVoltageChange()"
-        >
+      <div fxLayout fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-around" fxLayout.xs="column">
+        <mat-slide-toggle [(ngModel)]="display_voltage" color="primary" (change)="onDisplayVoltageChange()">
           Display Voltage
         </mat-slide-toggle>
         <button mat-stroked-button (click)="onClearHistory()">
           Clear
         </button>
-    </div>
+      </div>
     </mat-card>
     <mat-expansion-panel>
+
       <mat-expansion-panel-header>
         <mat-panel-title>Settings</mat-panel-title>
       </mat-expansion-panel-header>
 
       <app-pump-settings [channel]="channel"></app-pump-settings>
+
     </mat-expansion-panel>
 
     <mat-expansion-panel>
+
       <mat-expansion-panel-header>
         <mat-panel-title>Pump Controls</mat-panel-title>
       </mat-expansion-panel-header>
-      <app-manual-pump-controls
-      ></app-manual-pump-controls>
+
+      <app-manual-pump-controls [channel]="channel"></app-manual-pump-controls>
+
     </mat-expansion-panel>
   </mat-card>
 </div>

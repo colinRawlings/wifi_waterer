@@ -130,7 +130,7 @@ class WiFiPumpManager:
 class PumpManagerContext:
     def __init__(
         self,
-        status_update_interval_s: int = 10,
+        status_update_interval_s: int = 30,
         allow_load_history: bool = False,
     ) -> None:
 
