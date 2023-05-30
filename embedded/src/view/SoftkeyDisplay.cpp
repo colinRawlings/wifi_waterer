@@ -1,4 +1,5 @@
 #include "SoftkeyDisplay.h"
+#include "WifiServer.h"
 
 #include "HomeTab.h"
 #include "CurrentTimeTab.h"
@@ -10,25 +11,35 @@
 #include "SaveTab.h"
 #include "Display.h"
 
+#include "../presenter/Presenter.h"
+
 static const long kDisplayOffMs{120000};
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
-                                            CDisplayKeys_ptr keys, CDisplay_ptr display)
+                                            CWifiServer_ptr wifi_server,
+                                            CDisplayKeys_ptr keys,
+                                            CDisplay_ptr display)
 {
     auto destroy = [](CSoftkeyDisplay * raw_app) { delete raw_app; };
-    auto app = CSoftkeyDisplay_ptr(new CSoftkeyDisplay(presenter, keys, display), destroy);
+    auto app = CSoftkeyDisplay_ptr(new CSoftkeyDisplay(presenter,
+                                                       wifi_server,
+                                                       keys,
+                                                       display),
+                                   destroy);
 
-    app->OnCreate(presenter, keys, display);
+    app->OnCreate(presenter, wifi_server, keys, display);
 
     return app;
 }
 
 void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
-                               CDisplayKeys_ptr keys, CDisplay_ptr display)
+                               CWifiServer_ptr wifi_server,
+                               CDisplayKeys_ptr keys,
+                               CDisplay_ptr display)
 {
     _tabs = {
         CHomeTab::Create(presenter, shared_from_this(), keys, display),
-        CWifiTab::Create(presenter, shared_from_this(), keys, display),
+        CWifiTab::Create(presenter, wifi_server, shared_from_this(), keys, display),
         CManualPumpTab::Create(presenter, shared_from_this(), keys, display),
         CCurrentTimeTab::Create(presenter, shared_from_this(), keys, display),
         CFBHourTab::Create(presenter, shared_from_this(), keys, display),
@@ -104,8 +115,11 @@ bool CSoftkeyDisplay::OnKeyPressed()
 }
 
 CSoftkeyDisplay::CSoftkeyDisplay(CPresenter_ptr presenter,
-                                 CDisplayKeys_ptr keys, CDisplay_ptr display)
+                                 CWifiServer_ptr wifi_server,
+                                 CDisplayKeys_ptr keys,
+                                 CDisplay_ptr display)
     : _presenter(presenter)
+    , _wifi_server(wifi_server)
     , _display(display)
     , _keys(keys)
 {

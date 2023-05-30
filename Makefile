@@ -143,6 +143,7 @@ set-timezone:
 
 push-frontend:
 	cd ${FRONTEND_DIR} && ng build
+	rm -f ${FRONTEND_DIR}/dist/waterer/env.js
 ifdef OS
 	${COMMENT_CHAR} Run: wsl scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 else

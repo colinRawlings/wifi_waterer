@@ -6,13 +6,14 @@
 #include "ConnectInfo.h"
 
 static const std::string kGetPrefix("GET /");
+static constexpr int kReconnectInterval_ms = 1000 * 1800; // initially 30 min
 
 CWifiServer_ptr CWifiServer::Create(CPresenter_ptr presenter,
                                     CDisplay_ptr display)
 {
     auto server = CWifiServer_ptr(new CWifiServer(presenter, display));
 
-    server->StartServer();
+    server->Init();
 
     return server;
 }
@@ -23,7 +24,14 @@ void CWifiServer::Update()
 
     //
 
-    HandleClient();
+    if (ConnectionStatus() == WL_CONNECTED)
+    {
+        HandleClient();
+    }
+    else
+    {
+        UpdateConnection();
+    }
 }
 
 CWifiServer::CWifiServer(CPresenter_ptr presenter,
@@ -34,13 +42,15 @@ CWifiServer::CWifiServer(CPresenter_ptr presenter,
 {
 }
 
-void CWifiServer::StartServer()
+void CWifiServer::Init()
 {
     _display->SetRow0("Starting Wifi...");
 
+    _last_connection_attempt_ms = millis();
+
     int status = WL_IDLE_STATUS;
 
-    if (WiFi.status() == WL_NO_MODULE)
+    if (ConnectionStatus() == WL_NO_MODULE)
     {
         ErrorLedState(true);
         LogLn("Communication with WiFi module failed!");
@@ -62,13 +72,28 @@ void CWifiServer::StartServer()
             ;
     }
 
+    // clean up any existing connection if necessary
+    LogLn("_first_run: " + std::to_string(_first_run));
+
+    if (_first_run)
+    {
+        _first_run = false;
+    }
+    else
+    {
+        WiFi.end();
+    }
+
+    delay(1000); // not sure if this is necessary
+
     // attempt to connect to Wifi network:
     int attempt(0);
-    while (status != WL_CONNECTED && ++attempt < 6)
+    while (ConnectionStatus() != WL_CONNECTED && ++attempt < 6)
     {
+        _display->SetRow0("Starting Wifi: " + std::to_string(attempt));
 
         Log("Attempting to connect to WPA SSID: ");
-        _display->SetRow1("Conn: " + get_ssid());
+        _display->SetRow1(get_ssid());
 
         LogLn(get_ssid());
 
@@ -78,7 +103,12 @@ void CWifiServer::StartServer()
 
         // wait 10 seconds for connection:
 
-        delay(10000);
+        int wait_attempts{0};
+        while (ConnectionStatus() != WL_CONNECTED && wait_attempts < 20)
+        {
+            ++wait_attempts;
+            delay(500);
+        }
     }
 
     // you're connected now, so print out the data:
@@ -89,7 +119,12 @@ void CWifiServer::StartServer()
 
     //
 
-    _server.begin();
+    _server.begin(); // re(start) server
+}
+
+uint8_t CWifiServer::ConnectionStatus()
+{
+    return WiFi.status();
 }
 
 static bool endsWith(const std::string & str, const std::string & suffix)
@@ -100,6 +135,15 @@ static bool endsWith(const std::string & str, const std::string & suffix)
 static bool startsWith(const std::string & str, const std::string & prefix)
 {
     return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+}
+
+void CWifiServer::UpdateConnection()
+{
+    LogLn("CWifiServer::UpdateConnection");
+    if ((millis() - _last_connection_attempt_ms) < kReconnectInterval_ms)
+        return;
+
+    Init();
 }
 
 void CWifiServer::SendKeyValue(std::string key, std::string value, bool add_comma)

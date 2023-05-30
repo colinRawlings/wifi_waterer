@@ -22,13 +22,19 @@ class CWifiServer : public CUpdateable, public std::enable_shared_from_this<CWif
 
     void Update() override;
 
+    void Init();
+
+    // Give the status of the network connection (n.b. not the status of the _server(s) or any _client connected to this _server)
+    uint8_t ConnectionStatus();
+
   private:
     CWifiServer(CPresenter_ptr presenter,
                 CDisplay_ptr display);
 
-    void StartServer();
-
     void HandleClient();
+
+    // Periodically (kReconnectInterval_ms) try to re-establish connection in case of disconnect
+    void UpdateConnection();
 
     void SendKeyValue(std::string key, std::string value, bool add_comma);
 
@@ -37,4 +43,6 @@ class CWifiServer : public CUpdateable, public std::enable_shared_from_this<CWif
 
     CPresenter_ptr _presenter;
     CDisplay_ptr _display;
+    bool _first_run = true;
+    long _last_connection_attempt_ms = 0;
 };

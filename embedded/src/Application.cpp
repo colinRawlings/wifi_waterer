@@ -25,7 +25,7 @@ CApplication::CApplication(SSmartPumpPins smart_pump_pins,
 
     _wifi_server = CWifiServer::Create(_presenter, display);
 
-    _softkey_display = CSoftkeyDisplay::Create(_presenter, keys, display);
+    _softkey_display = CSoftkeyDisplay::Create(_presenter, _wifi_server, keys, display);
 
     SetChildren({_presenter, _wifi_server, _softkey_display});
 }

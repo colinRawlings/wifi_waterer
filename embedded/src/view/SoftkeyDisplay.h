@@ -19,6 +19,12 @@ using CDisplay_ptr = std::shared_ptr<CDisplay>;
 class CPresenter;
 using CPresenter_ptr = std::shared_ptr<CPresenter>;
 
+class CPresenter;
+using CPresenter_ptr = std::shared_ptr<CPresenter>;
+
+class CWifiServer;
+using CWifiServer_ptr = std::shared_ptr<CWifiServer>;
+
 //
 
 class CSoftkeyDisplay;
@@ -28,7 +34,9 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 {
   public:
     static CSoftkeyDisplay_ptr Create(CPresenter_ptr presenter,
-                                      CDisplayKeys_ptr keys, CDisplay_ptr display);
+                                      CWifiServer_ptr wifi_server,
+                                      CDisplayKeys_ptr keys,
+                                      CDisplay_ptr display);
 
     void Update() override;
 
@@ -39,12 +47,14 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
 
   private:
     CSoftkeyDisplay(CPresenter_ptr presenter,
+                    CWifiServer_ptr wifi_server,
                     CDisplayKeys_ptr keys,
                     CDisplay_ptr display);
 
     virtual ~CSoftkeyDisplay() = default;
 
     void OnCreate(CPresenter_ptr presenter,
+                  CWifiServer_ptr wifi_server,
                   CDisplayKeys_ptr keys,
                   CDisplay_ptr display);
 
@@ -55,8 +65,9 @@ class CSoftkeyDisplay : public ITabView, public std::enable_shared_from_this<CSo
     size_t _active_tab{0};
 
     CPresenter_ptr _presenter;
-    CDisplay_ptr _display;
+    CWifiServer_ptr _wifi_server;
     CDisplayKeys_ptr _keys;
+    CDisplay_ptr _display;
 
     long _last_keypress_ms;
 };
