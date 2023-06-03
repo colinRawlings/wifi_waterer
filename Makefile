@@ -242,7 +242,7 @@ restart-services: | restart-frontend-service restart-backend-service
 
 #
 
-waterer-shell:
+shell:
 	ssh $(SERVER_USER)@$(SERVER_IP)
 
 

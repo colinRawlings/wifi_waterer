@@ -102,6 +102,7 @@ class SmartPumpStatus(BaseModel):
     smoothed_rel_humidity_pcnt: ty.Optional[float]
     pump_running: int
     epoch_time: float
+    is_connected: bool
 
 
 class SmartPumpStatusHistory(BaseModel):
@@ -116,3 +117,5 @@ class SmartPumpStatusHistory(BaseModel):
 
     pump_running: ty.List[int]
     pump_running_epoch_time: ty.List[float]
+
+    is_connected: bool

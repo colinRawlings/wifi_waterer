@@ -156,7 +156,7 @@ class WiFiSmartPump:
             with open(config_filepath, "r") as fh:
                 current_configs = json.load(fh)
         else:
-            current_configs: ty.Dict[str, SmartPumpSettings] = dict()
+            current_configs: ty.Dict[str, ty.Dict] = dict()
 
         current_configs[self.address] = self._settings.dict()
 
@@ -189,7 +189,7 @@ class WiFiSmartPump:
         with open(pump_history_filepath, "w") as fh:
             json.dump(pump_history, fh)
 
-        _LOGGER.info(f"{self._channel}: Saved history to: {pump_history_filepath}")
+        _LOGGER.debug(f"{self._channel}: Saved history to: {pump_history_filepath}")
 
         return str(cfg.get_pump_history_filepath())
 
@@ -212,6 +212,12 @@ class WiFiSmartPump:
     def address(self) -> str:
         assert self._ip and self._ip is not None
         return self._ip
+
+    ###############################################################
+
+    @property
+    def connected(self) -> bool:
+        return self._connected
 
     ###############################################################
 
@@ -440,6 +446,7 @@ class WiFiSmartPump:
             smoothed_rel_humidity_pcnt=smoothed_rel_humidity_pcnt,
             pump_running=pump_status,
             epoch_time=status_time,
+            is_connected=self.connected,
         )
 
     ###############################################################
@@ -485,6 +492,7 @@ class WiFiSmartPump:
             smoothed_rel_humidity_pcnt_epoch_time=smoothed_rel_humidity_V_epoch_time,
             pump_running_epoch_time=pump_running_epoch_time,
             pump_running=pump_running,
+            is_connected=self.connected,
         )
 
     ###############################################################
