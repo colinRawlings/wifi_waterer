@@ -121,7 +121,7 @@ export class PumpComponent implements OnInit {
   }
 
   private doInitStatus(): void {
-    this.statusService.statuses$[this.channel].subscribe((data: keyable) => {
+    this.statusService.allStatuses[this.channel].subscribe((data: keyable) => {
       this.onReceivedStatusData(data);
     });
   }

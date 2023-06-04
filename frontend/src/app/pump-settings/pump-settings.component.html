@@ -37,7 +37,7 @@
     </div>
     <div>
       <mat-form-field (change)="onSettingsChange()" class="example-form-field">
-        <mat-label>Run Hour ({{ settings.pump_activation_time.hour }}:00 (24 Hour))</mat-label>
+        <mat-label>Run Hour ({{ settings.pump_activation_time ? settings.pump_activation_time.hour : 0 }}:00 (24 Hour))</mat-label>
         <input matInput type="number" min="0" max="23" [(ngModel)]="settings.pump_activation_time.hour" />
       </mat-form-field>
     </div>

@@ -13,7 +13,7 @@ interface keyable {
 })
 export class LogsComponent implements OnInit {
 
-  public numberLogLines: number = 100;
+  public numberLogLines: number = 20;
   public serviceLogs: string
 
   constructor(

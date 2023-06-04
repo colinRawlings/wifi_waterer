@@ -32,7 +32,7 @@ export class PumpStatusService {
   //
 
   private statusSubjects: Subject<keyable>[] = [];
-  public statuses$: Observable<keyable>[] = [];
+  public allStatuses: Observable<keyable>[] = [];
   private subscriptionsMap: keyable = {};
 
   public lastUpdateTime: Nullable<number>[] = [];
@@ -65,7 +65,7 @@ export class PumpStatusService {
   public Init(): void {
     for (let p = 0; p < this.constantsService.numChannels; ++p) {
       this.statusSubjects.push(new Subject<keyable>());
-      this.statuses$.push(this.statusSubjects[p].asObservable());
+      this.allStatuses.push(this.statusSubjects[p].asObservable());
       this.lastUpdateTime.push(null);
     }
 

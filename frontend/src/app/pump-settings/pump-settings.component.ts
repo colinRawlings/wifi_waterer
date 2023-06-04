@@ -31,7 +31,7 @@ export class PumpSettingsComponent implements OnInit {
     private statusService: PumpStatusService,
     private constantsService: ConstantsService
   ) {
-    this.settings = {};
+    this.settings = {pump_activation_time: {hour: 0}};
   }
 
   settings: keyable;
@@ -77,7 +77,7 @@ export class PumpSettingsComponent implements OnInit {
   }
 
   private doInitStatus(): void {
-    this.statusService.statuses$[this.channel].subscribe((data: keyable) => {
+    this.statusService.allStatuses[this.channel].subscribe((data: keyable) => {
       this.status = data.data;
     });
   }
