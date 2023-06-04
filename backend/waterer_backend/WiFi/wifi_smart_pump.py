@@ -504,7 +504,9 @@ class WiFiSmartPump:
             self._last_update_hour != this_update_hour
             and this_update_hour == _CLOCK_SYNC_HOUR
         ):
-            _LOGGER.info(f"Re-sending the time to keep the arduino in sync")
+            _LOGGER.info(
+                f"{self._channel}: Re-sending the time to keep the arduino in sync"
+            )
             await self.send_settings()
 
         self._last_update_hour = this_update_hour
