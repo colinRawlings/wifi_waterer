@@ -5,3 +5,4 @@ launch_backend.sh
 launch_frontend.sh
 frontend/dist/
 frontend/src/env.js
+.vscode/c_cpp_properties.json

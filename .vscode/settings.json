@@ -80,5 +80,8 @@
         "backend"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "C_Cpp.intelliSenseEngine": "default",
+    "clangd.enable": false,
+    "clangd.detectExtensionConflicts": false
 }

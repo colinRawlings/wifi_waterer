@@ -1,4 +1,3 @@
 build/
 arduino_build/
-ConnectInfo.h
 ConnectInfo.cpp
