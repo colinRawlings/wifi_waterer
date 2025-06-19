@@ -47,7 +47,7 @@ bool CLiquidCrystalDisplay::Backlight()
 
 void CLiquidCrystalDisplay::SetBacklight(bool is_on)
 {
-    if (is_on == (_backlight_power->GetOutputState() == OutputStates::ON))
+    if (is_on == Backlight())
         return;
 
     if (is_on)

@@ -13,7 +13,20 @@
 
 #include "../presenter/Presenter.h"
 
-static const long kDisplayOffMs{120000};
+static const long kDisplayStandbyMs{20000};
+
+CSoftkeyDisplay::CSoftkeyDisplay(CPresenter_ptr presenter,
+                                 CWifiServer_ptr wifi_server,
+                                 CDisplayKeys_ptr keys,
+                                 CDisplay_ptr display)
+    : _presenter(presenter)
+    , _wifi_server(wifi_server)
+    , _display(display)
+    , _keys(keys)
+    , _last_keypress_ms(millis())
+{
+    OnKeyPressed();
+}
 
 CSoftkeyDisplay_ptr CSoftkeyDisplay::Create(CPresenter_ptr presenter,
                                             CWifiServer_ptr wifi_server,
@@ -52,12 +65,18 @@ void CSoftkeyDisplay::OnCreate(CPresenter_ptr presenter,
 void CSoftkeyDisplay::Update()
 {
     CUpdateable::Update();
-    _tabs[_active_tab]->Update();
 
-    if (millis() - _last_keypress_ms > kDisplayOffMs)
+    if (millis() - _last_keypress_ms > kDisplayStandbyMs)
     {
         TurnOffDisplay();
         _active_tab = 0;
+        _display->SetRow0("Standby");
+        _display->SetRow1("Press Any Key");
+        _tabs[_active_tab]->HandleKeys();
+    }
+    else
+    {
+        _tabs[_active_tab]->Update();
     }
 }
 
@@ -112,16 +131,4 @@ bool CSoftkeyDisplay::OnKeyPressed()
     }
 
     return false;
-}
-
-CSoftkeyDisplay::CSoftkeyDisplay(CPresenter_ptr presenter,
-                                 CWifiServer_ptr wifi_server,
-                                 CDisplayKeys_ptr keys,
-                                 CDisplay_ptr display)
-    : _presenter(presenter)
-    , _wifi_server(wifi_server)
-    , _display(display)
-    , _keys(keys)
-{
-    OnKeyPressed();
 }

@@ -26,10 +26,12 @@ class CDisplay
     void Print();
 
   private:
-    CDisplay() = default;
+    CDisplay();
 
     void SetRow(int row_index, std::string msg);
 
     ILiquidCrystal_uptr _lcd;
     std::array<std::string, 2> _rows;
+    std::array<long, 2> _last_row_update;
+ 
 };
