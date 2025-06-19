@@ -4,12 +4,17 @@
 #include <vector>
 
 static const int kRowLength{16};
+static const long kUpdateIntervalMs{1000};
 
 CDisplay_ptr CDisplay::Create()
 {
     auto destroy = [](CDisplay * display) { delete display; };
     return CDisplay_ptr(new CDisplay, destroy);
 }
+
+CDisplay::CDisplay()
+    : _last_row_update{millis(), millis()}
+{}
 
 void CDisplay::SetLcd(ILiquidCrystal_uptr lcd) { _lcd = std::move(lcd); }
 
@@ -40,6 +45,11 @@ void CDisplay::SetRow(int row_idx, std::string msg)
 
     if (_rows[row_idx] == msg)
         return;
+
+    if(millis()-_last_row_update[row_idx] < kUpdateIntervalMs)
+        return;
+
+    _last_row_update[row_idx] = millis();
 
     _rows[row_idx] = msg;
 

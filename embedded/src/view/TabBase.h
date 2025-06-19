@@ -36,6 +36,7 @@ class CTabBase : public CUpdateable
   public:
     void Update() override;
     std::string Name() { return _name; }
+    void HandleKeys();
 
   protected:
     CTabBase(std::string name, CPresenter_ptr presenter, ITabView_ptr tab_view,
@@ -43,7 +44,6 @@ class CTabBase : public CUpdateable
 
     virtual ~CTabBase() = default;
 
-    void HandleKeys();
     virtual void UpdateDisplay();
 
     virtual void OnFuncLeftKey() = 0;
