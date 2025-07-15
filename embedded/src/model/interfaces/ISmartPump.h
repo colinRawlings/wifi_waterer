@@ -24,6 +24,10 @@ class ISmartPump : public IUpdateable
 
     // pump
     virtual bool GetStatus() = 0;
+
+    /// @brief  Reports if pump ran since last poll
+    virtual bool GetPumpRan() = 0;
+
     virtual void TurnOff() = 0;
     virtual void TurnOnForMs(long activation_duration_ms) = 0;
     virtual long RemainingOnTimeMs() = 0;
