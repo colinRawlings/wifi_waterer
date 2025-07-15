@@ -40,6 +40,7 @@ class Response(BaseModel):
     FBHumidityV: float
     FBOnTimeHour: int
     FBPumpDurationS: int
+    PumpRan: bool = False
 
 
 ###############################################################
@@ -372,7 +373,7 @@ class WiFiSmartPump:
         response = Response(**json.loads(txt))
 
         rel_humidity_V = response.Humidity
-        pump_status = response.PumpStatus
+        pump_status = response.PumpRan
 
         s = self._settings
         s.pump_activation_time = ActivationTime(hour=response.FBOnTimeHour, minute=0)

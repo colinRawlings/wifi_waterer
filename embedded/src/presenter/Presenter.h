@@ -64,6 +64,10 @@ class CPresenter : public CUpdateable
     void SetSmartPump(ISmartPump_ptr pump);
 
     bool GetPumpStatus();
+
+    /// @brief  Reports if pump ran since last poll
+    bool GetPumpRan();
+
     std::string GetHumidityV(bool add_unit = true);
     void TurnOnPumpForMs(long duration_ms);
     std::string RemainingPumpOnTimeS();

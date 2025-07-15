@@ -230,6 +230,14 @@ bool CPresenter::GetPumpStatus()
     return _pump->GetStatus();
 }
 
+bool CPresenter::GetPumpRan()
+{
+    if (!_pump)
+        return false;
+
+    return _pump->GetPumpRan();
+}
+
 std::string CPresenter::GetHumidityV(bool add_unit)
 {
     if (!_pump)

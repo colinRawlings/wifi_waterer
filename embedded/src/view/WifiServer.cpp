@@ -127,14 +127,14 @@ uint8_t CWifiServer::ConnectionStatus()
     return WiFi.status();
 }
 
-static bool endsWith(const std::string & str, const std::string & suffix)
-{
-    return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
-}
-
-static bool startsWith(const std::string & str, const std::string & prefix)
+static bool starts_with(const std::string & str, const std::string & prefix)
 {
     return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+}
+
+static bool ends_with(const std::string & str, const std::string & suffix)
+{
+    return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
 }
 
 void CWifiServer::UpdateConnection()
@@ -160,174 +160,155 @@ void CWifiServer::SendKeyValue(std::string key, std::string value, bool add_comm
 void CWifiServer::HandleClient()
 {
     _client = _server.available(); // listen for incoming _clients
+    if (not _client)
+        return;
 
-    if (_client)
-    { // if you get a client,
+    LogLn("new client"); 
 
-        LogLn("new client"); // print a message out the serial port
+    std::string current_line = ""; 
 
-        std::string currentLine = ""; // make a String to hold incoming data from the client
+    while (_client.connected())
+    { 
+        if (not _client.available())
+            continue;
 
-        while (_client.connected())
-        { // loop while the client's connected
+        char c = _client.read(); // read a byte, then
 
-            if (_client.available())
-            { // if there's bytes to read from the client,
+        if (c == '\n')
+        { // if the byte is a newline character
 
-                char c = _client.read(); // read a byte, then
-
-                if (c == '\n')
-                { // if the byte is a newline character
-
-                    // if the current line is blank, you got two newline characters in a row.
-
-                    // that's the end of the client HTTP request, so send a response:
-
-                    if (currentLine.empty())
-                    {
-
-                        // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
-
-                        // and a content-type so the client knows what's coming, then a blank line:
-
-                        _client.println("HTTP/1.1 200 OK");
-
-                        _client.println("Content-type:text/html");
-
-                        _client.println();
-
-                        // the content of the HTTP response follows the header:
-
-                        if (_presenter)
-                        {
-                            _client.print("{");
-                            //
-                            SendKeyValue("PumpStatus", std::to_string(_presenter->GetPumpStatus()), true);
-                            SendKeyValue("Humidity", _presenter->GetHumidityV(false), true);
-                            //
-                            SendKeyValue("FBHumidityV", _presenter->GetFBHumidityV(false), true);
-                            SendKeyValue("FBOnTimeHour", _presenter->GetFBHour(), true);
-                            SendKeyValue("FBPumpDurationS", _presenter->GetFBPumpDurationS(false), false);
-                            _client.println("}");
-                        }
-
-                        // The HTTP response ends with another blank line:
-
-                        _client.println();
-
-                        // break out of the while loop:
-
-                        break;
-                    }
-                    else
-                    { // if you got a newline, then clear currentLine:
-
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, "/on HTTP/1.1"))
-                        {
-                            if (_presenter)
-                            {
-                                _presenter->TurnOnPumpForMs(_presenter->GetFBPumpDurationMs());
-                            }
-                        }
-
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, "/off HTTP/1.1"))
-                        {
-                            if (_presenter)
-                            {
-                                _presenter->TurnOffPump();
-                            }
-                        }
-
-                        //
-
-                        std::string test_str = "/pump_on_time_s HTTP/1.1";
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
-                        {
-                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
-
-                            if (_presenter)
-                            {
-                                _presenter->SetFBPumpDurationMs(stoi(value) * 1000);
-                            }
-                        }
-
-                        //
-
-                        test_str = "/fb_hour HTTP/1.1";
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
-                        {
-                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
-
-                            if (_presenter)
-                            {
-                                _presenter->SetFBTime(stoi(value));
-                            }
-                        }
-
-                        //
-
-                        test_str = "/fb_humidity_mv HTTP/1.1";
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
-                        {
-                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
-                            if (_presenter)
-                            {
-                                _presenter->SetFBHumidityV(static_cast<float>(stoi(value)) / 1000);
-                            }
-                        }
-
-                        //
-
-                        test_str = "/current_hour HTTP/1.1";
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
-                        {
-                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
-                            if (_presenter)
-                            {
-                                _presenter->SetCurrentTimeHour(stoi(value));
-                            }
-                        }
-
-                        //
-
-                        test_str = "/current_minute HTTP/1.1";
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
-                        {
-                            auto value = currentLine.substr(5, currentLine.size() - test_str.size() - 5);
-                            if (_presenter)
-                            {
-                                _presenter->SetCurrentTimeMinute(stoi(value));
-                            }
-                        }
-
-                        //
-                        test_str = "/save HTTP/1.1";
-                        if (startsWith(currentLine, kGetPrefix) && endsWith(currentLine, test_str))
-                        {
-                            if (_presenter)
-                            {
-                                _presenter->SaveFBSettingsToFlash();
-                            }
-                        }
-
-                        //
-                        currentLine.clear();
-                    }
-                }
-                else if (c != '\r')
-                { // if you got anything else but a carriage return character,
-
-                    currentLine += std::string(1, c); // add it to the end of the currentLine
-                }
-
-                // Check to see if the client request was "GET /H" or "GET /L":
+            // if the current line is blank, you got two newline characters in a row.
+            // that's the end of the client HTTP request, so send a response:
+            if (current_line.empty())
+            {
+                SendResponse();
+                break;
             }
+
+            HandleRequest(current_line);
+            //
+            current_line.clear();
         }
-
-        // close the connection:
-
-        _client.stop();
-
-        LogLn("client disconnected");
+        else if (c != '\r')
+        { 
+            current_line += std::string(1, c); 
+        }
     }
+
+    _client.stop();
+
+    LogLn("client disconnected");
+}
+
+void CWifiServer::HandleRequest(const std::string & request)
+{
+
+    if (starts_with(request, kGetPrefix) && ends_with(request, "/on HTTP/1.1"))
+    {
+        if (_presenter)
+        {
+            _presenter->TurnOnPumpForMs(_presenter->GetFBPumpDurationMs());
+        }
+    }
+
+    if (starts_with(request, kGetPrefix) && ends_with(request, "/off HTTP/1.1"))
+    {
+        if (_presenter)
+        {
+            _presenter->TurnOffPump();
+        }
+    }
+
+    std::string test_str = "/pump_on_time_s HTTP/1.1";
+    if (starts_with(request, kGetPrefix) && ends_with(request, test_str))
+    {
+        auto value = request.substr(5, request.size() - test_str.size() - 5);
+
+        if (_presenter)
+        {
+            _presenter->SetFBPumpDurationMs(stoi(value) * 1000);
+        }
+    }
+
+    test_str = "/fb_hour HTTP/1.1";
+    if (starts_with(request, kGetPrefix) && ends_with(request, test_str))
+    {
+        auto value = request.substr(5, request.size() - test_str.size() - 5);
+
+        if (_presenter)
+        {
+            _presenter->SetFBTime(stoi(value));
+        }
+    }
+
+    test_str = "/fb_humidity_mv HTTP/1.1";
+    if (starts_with(request, kGetPrefix) && ends_with(request, test_str))
+    {
+        auto value = request.substr(5, request.size() - test_str.size() - 5);
+        if (_presenter)
+        {
+            _presenter->SetFBHumidityV(static_cast<float>(stoi(value)) / 1000);
+        }
+    }
+
+    test_str = "/current_hour HTTP/1.1";
+    if (starts_with(request, kGetPrefix) && ends_with(request, test_str))
+    {
+        auto value = request.substr(5, request.size() - test_str.size() - 5);
+        if (_presenter)
+        {
+            _presenter->SetCurrentTimeHour(stoi(value));
+        }
+    }
+
+    test_str = "/current_minute HTTP/1.1";
+    if (starts_with(request, kGetPrefix) && ends_with(request, test_str))
+    {
+        auto value = request.substr(5, request.size() - test_str.size() - 5);
+        if (_presenter)
+        {
+            _presenter->SetCurrentTimeMinute(stoi(value));
+        }
+    }
+
+    test_str = "/save HTTP/1.1";
+    if (starts_with(request, kGetPrefix) && ends_with(request, test_str))
+    {
+        if (_presenter)
+        {
+            _presenter->SaveFBSettingsToFlash();
+        }
+    }
+}
+
+void CWifiServer::SendResponse()
+{
+    // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
+    // and a content-type so the client knows what's coming, then a blank line:
+
+    _client.println("HTTP/1.1 200 OK");
+
+    _client.println("Content-type:text/html");
+
+    _client.println();
+
+    // the content of the HTTP response follows the header:
+
+    if (_presenter)
+    {
+        _client.print("{");
+        //
+        SendKeyValue("PumpStatus", std::to_string(_presenter->GetPumpStatus()), true);
+        SendKeyValue("PumpRan", std::to_string(_presenter->GetPumpRan()), true);
+        SendKeyValue("Humidity", _presenter->GetHumidityV(false), true);
+        //
+        SendKeyValue("FBHumidityV", _presenter->GetFBHumidityV(false), true);
+        SendKeyValue("FBOnTimeHour", _presenter->GetFBHour(), true);
+        SendKeyValue("FBPumpDurationS", _presenter->GetFBPumpDurationS(false), false);
+        _client.println("}");
+    }
+
+    // The HTTP response ends with another blank line:
+
+    _client.println();
 }

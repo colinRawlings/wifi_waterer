@@ -28,6 +28,17 @@ bool CSmartPump::GetStatus()
     return _pump->GetOutputState() == OutputStates::ON;
 }
 
+bool CSmartPump::GetPumpRan()
+{
+    if (pump_ran)
+    {
+        pump_ran = false;
+        return true;
+    }
+
+    return false;
+}
+
 void CSmartPump::TurnOff()
 {
     _pump->TurnOff();
@@ -35,6 +46,7 @@ void CSmartPump::TurnOff()
 
 void CSmartPump::TurnOnForMs(long activation_duration_ms)
 {
+    pump_ran = true;
     _pump->TurnOnFor(activation_duration_ms);
 }
 

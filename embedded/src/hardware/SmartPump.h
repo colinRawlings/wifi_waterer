@@ -21,6 +21,10 @@ class CSmartPump : public CUpdateable, public ISmartPump
 
     // pump
     bool GetStatus() override;
+
+    /// @brief  Reports if pump ran since last poll
+    bool GetPumpRan() override;
+
     void TurnOff() override;
     void TurnOnForMs(long activation_duration_ms) override;
     long RemainingOnTimeMs() override;
@@ -37,4 +41,5 @@ class CSmartPump : public CUpdateable, public ISmartPump
 
     CDigitalOutput_ptr _pump;
     CAnalogueInput_ptr _humidity_sensor;
+    bool pump_ran{};
 };

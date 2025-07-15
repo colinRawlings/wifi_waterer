@@ -32,6 +32,8 @@ class CWifiServer : public CUpdateable, public std::enable_shared_from_this<CWif
                 CDisplay_ptr display);
 
     void HandleClient();
+    void HandleRequest(const std::string & line);
+    void SendResponse();
 
     // Periodically (kReconnectInterval_ms) try to re-establish connection in case of disconnect
     void UpdateConnection();
