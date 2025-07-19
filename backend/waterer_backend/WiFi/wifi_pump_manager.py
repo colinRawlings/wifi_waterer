@@ -29,7 +29,7 @@ class WiFiPumpManager:
     def __init__(
         self,
         client: aiohttp.ClientSession,
-        status_update_interval_s: int = 30,
+        status_update_interval_s: int = 300,
         ips: List[str] = [],
         allow_load_history: bool = True,
     ) -> None:
