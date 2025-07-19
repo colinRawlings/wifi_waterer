@@ -3,6 +3,8 @@
 #include "../model/WifiUtils.h"
 #include "Display.h"
 
+#include "Sodaq_wdt.h"
+
 #include "ConnectInfo.h"
 
 static const std::string kGetPrefix("GET /");
@@ -55,6 +57,9 @@ void CWifiServer::Init()
         ErrorLedState(true);
         LogLn("Communication with WiFi module failed!");
         _display->SetRow1("Fail: No Module");
+
+        // Try a reset (in 8s)
+        sodaq_wdt_enable(WDT_PERIOD_8X);
 
         while (true)
             ;
