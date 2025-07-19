@@ -8,4 +8,5 @@
   - WiFiNINA
   - FlashStorage
   - LiquidCrystal
+  - Sodaq_wdt
 - Implement: `src/view/ConnectInfo.cpp`
