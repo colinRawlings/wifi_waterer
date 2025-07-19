@@ -11,7 +11,7 @@ EMBEDDED_TESTBUILD_DIR = ${EMBEDDED_DIR}/build
 backend_startup_script := $(makefile_dir)/launch_backend.sh
 frontend_startup_script := $(makefile_dir)/launch_frontend.sh
 
-SERVER_IP = 192.168.8.133
+SERVER_IP = 192.168.0.94
 SERVER_USER = ubuntu
 SERVER_TIMEZONE = Europe/Zurich
 
@@ -84,7 +84,7 @@ else
 		clang-format \
 		software-properties-common
 	# node
-	curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+	curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 	sudo apt install -y nodejs
 	sudo npm install -g -y yarn
 	sudo npm install -g -y lite-server
@@ -141,6 +141,7 @@ set-timezone:
 
 #
 
+push-frontend: export NODE_OPTIONS=--openssl-legacy-provider
 push-frontend:
 	cd ${FRONTEND_DIR} && ng build
 	rm -f ${FRONTEND_DIR}/dist/waterer/env.js
@@ -150,6 +151,9 @@ else
 	scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 endif
 	# don't forget to make waterer-shell && cd wifi_waterer && git pull && make restart-services
+
+copy-frontend:
+	scp -r ${FRONTEND_DIR}/dist  $(SERVER_USER)@$(SERVER_IP):/home/ubuntu/wifi_waterer/frontend
 
 #
 
